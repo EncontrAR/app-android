@@ -1,0 +1,19 @@
+<resources>
+
+    <!-- General -->
+    <string name="general_app_name">Encontrar</string>
+
+    <!-- Error -->
+    <string name="error_network">No hay conexión a internet, intentalo nuevamente más tarde…</string>
+
+    <!-- Screen: Detail -->
+    <string name="screen_detail_share">Compartir</string>
+
+    <!-- Component: ShareMethod -->
+    <string name="component_sharemethod_other">Otras apps…</string>
+    <string name="component_sharemethod_app_message">Por favor, estamos buscando a esta persona: </string>
+
+    <!-- Component: SearchBar -->
+    <string name="component_searchbar_hint">Buscar algo…</string>
+
+</resources>
