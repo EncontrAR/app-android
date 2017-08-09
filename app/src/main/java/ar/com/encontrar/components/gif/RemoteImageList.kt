@@ -33,10 +33,10 @@ import trikita.anvil.recyclerview.Recycler
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class RemoteImageRecycler(
+class RemoteImageList(
         context: Context,
-        val gifs: List<Metadata>,
-        val onGifSelected: (view: View, gif: Metadata) -> Unit) : RenderableView(context) {
+        val items: List<Metadata>,
+        val onItemSelected: (view: View, gif: Metadata) -> Unit) : RenderableView(context) {
 
     init {
         view()
@@ -58,20 +58,20 @@ class RemoteImageRecycler(
             // Fixed height for improved performance
             recycler.setHasFixedSize(true)
 
-            // Simple gifs list adapter
+            // Simple items list adapter
             recycler.adapter =
-                    Recycler.Adapter.simple(gifs) {
+                    Recycler.Adapter.simple(items) {
                         viewHolder ->
 
                         RemoteImageComponent(
                                 context,
                                 MATCH,
                                 dip(360),
-                                gifs[viewHolder.adapterPosition].images.scrollItem.webp)
+                                items[viewHolder.adapterPosition].images.scrollItem.webp)
 
                         // Callback to report a gif being clicked
                         onClick { view ->
-                            onGifSelected(view, gifs[viewHolder.adapterPosition])
+                            onItemSelected(view, items[viewHolder.adapterPosition])
                         }
                     }
 

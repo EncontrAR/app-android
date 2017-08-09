@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
 import ar.com.encontrar.R
-import ar.com.encontrar.components.gif.RemoteImageRecycler
+import ar.com.encontrar.components.gif.RemoteImageList
 import ar.com.encontrar.components.search.CategoriesBarComponent
 import ar.com.encontrar.components.search.SearchBarComponent
 import ar.com.encontrar.screens.detail.DetailScreen
@@ -42,7 +42,7 @@ class SearchView(context: Context) : BaseScreenView<SearchScreen>(context) {
 
                     }
 
-                    RemoteImageRecycler(context, screen.store.state.gifs) { _, gif ->
+                    RemoteImageList(context, screen.store.state.gifs) { _, gif ->
                         screen.navigator.
                                 overrideTransition(NoAnimationTransition())
                                 .show(DetailScreen(gif))
