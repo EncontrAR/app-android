@@ -7,6 +7,7 @@
     <string name="error_network">No hay conexión a internet, intentalo nuevamente más tarde…</string>
 
     <!-- Screen: Home -->
+    <string name="screen_home_title">Inicio</string>
     <string name="screen_home_loading">Actualizando casos…</string>
 
     <!-- Screen: Detail -->

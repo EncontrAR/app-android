@@ -1,6 +1,8 @@
 package ar.com.encontrar.screens.home
 
 import android.content.Context
+import ar.com.encontrar.App
+import ar.com.encontrar.R
 import com.brianegan.bansa.BaseStore
 import com.wealthfront.magellan.Screen
 import trikita.anvil.Anvil
@@ -22,5 +24,9 @@ class HomeScreen : Screen<HomeView>() {
         super.onShow(context)
 
         if (store.state.gifs.isEmpty()) presenter.getGifs()
+    }
+
+    override fun getTitle(context: Context?): String {
+        return App.sInstance.getString(R.string.screen_home_title)
     }
 }

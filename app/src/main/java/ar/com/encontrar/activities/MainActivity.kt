@@ -3,6 +3,8 @@ package ar.com.encontrar.activities
 import android.os.Bundle
 import ar.com.encontrar.R
 import ar.com.encontrar.screens.home.HomeScreen
+import com.wealthfront.magellan.ActionBarConfig
+import com.wealthfront.magellan.NavigationListener
 import com.wealthfront.magellan.Navigator
 import com.wealthfront.magellan.support.SingleActivity
 
@@ -28,7 +30,7 @@ import com.wealthfront.magellan.support.SingleActivity
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class MainActivity : SingleActivity() {
+class MainActivity : SingleActivity(), NavigationListener {
 
     override fun createNavigator(): Navigator {
         return Navigator.withRoot(HomeScreen()).build()
@@ -37,5 +39,11 @@ class MainActivity : SingleActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setSupportActionBar(findViewById(R.id.activity_toolbar))
+    }
+
+    override fun onNavigate(actionBarConfig: ActionBarConfig?) {
+        // Do something with the toolbar if the screen changes
     }
 }
