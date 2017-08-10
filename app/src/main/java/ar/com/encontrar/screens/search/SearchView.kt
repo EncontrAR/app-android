@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
 import ar.com.encontrar.R
-import ar.com.encontrar.components.gif.RemoteImageList
+import ar.com.encontrar.components.lists.RemoteImageList
 import ar.com.encontrar.components.search.CategoriesBarComponent
 import ar.com.encontrar.components.search.SearchBarComponent
 import ar.com.encontrar.screens.detail.DetailScreen

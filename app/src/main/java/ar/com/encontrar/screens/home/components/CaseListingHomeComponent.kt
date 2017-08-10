@@ -3,7 +3,7 @@ package ar.com.encontrar.screens.home.components
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
 import ar.com.encontrar.R
-import ar.com.encontrar.components.gif.RemoteImageGrid
+import ar.com.encontrar.components.lists.RemoteImageGrid
 import ar.com.encontrar.screens.detail.DetailScreen
 import ar.com.encontrar.screens.home.HomeScreen
 import ar.com.encontrar.screens.search.SearchScreen

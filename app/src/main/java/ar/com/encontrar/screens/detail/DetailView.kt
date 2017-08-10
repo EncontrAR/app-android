@@ -7,7 +7,7 @@ import android.support.v7.widget.CardView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import ar.com.encontrar.R
-import ar.com.encontrar.components.gif.RemoteImageComponent
+import ar.com.encontrar.components.lists.RemoteImageComponent
 import ar.com.encontrar.components.share.ShareMethodComponent
 import ar.com.encontrar.components.share.SocialNetwork
 import com.facebook.drawee.drawable.ScalingUtils

@@ -4,11 +4,13 @@
     <!-- Base colors -->
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
+    <color name="black_60">#99000000</color>
 
     <!-- Theme colors -->
     <color name="theme_color_1">#F2F7FF</color>
     <color name="theme_color_2">#0B409C</color>
     <color name="theme_color_3">#10316B</color>
     <color name="theme_color_4">#FDBE34</color>
+    <color name="theme_color_5">#F5F5F5</color>
 
 </resources>

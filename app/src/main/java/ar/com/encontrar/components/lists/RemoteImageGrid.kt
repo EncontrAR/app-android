@@ -1,4 +1,4 @@
-package ar.com.encontrar.components.gif
+package ar.com.encontrar.components.lists
 
 import android.content.Context
 import android.support.v7.widget.GridLayoutManager
@@ -60,11 +60,8 @@ class RemoteImageGrid(
                     Recycler.Adapter.simple(items) {
                         viewHolder ->
 
-                        RemoteImageComponent(
-                                context,
-                                MATCH,
-                                dip(360),
-                                items[viewHolder.adapterPosition].images.scrollItem.webp)
+                        RemoteImageGridItem(context, items[viewHolder.adapterPosition])
+
 
                         // Callback to report a gif being clicked
                         onClick { view ->

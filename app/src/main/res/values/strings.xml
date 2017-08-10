@@ -1,13 +1,13 @@
 <resources>
 
     <!-- General -->
-    <string name="general_app_name">Encontrar</string>
+    <string name="general_app_name">EncontrAR</string>
 
     <!-- Error -->
     <string name="error_network">No hay conexión a internet, intentalo nuevamente más tarde…</string>
 
     <!-- Screen: Home -->
-    <string name="screen_home_title">Inicio</string>
+    <string name="screen_home_title">EncontrAR</string>
     <string name="screen_home_loading">Actualizando casos…</string>
 
     <!-- Screen: Detail -->

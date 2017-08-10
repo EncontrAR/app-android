@@ -1,4 +1,4 @@
-package ar.com.encontrar.components.gif
+package ar.com.encontrar.components.lists
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
