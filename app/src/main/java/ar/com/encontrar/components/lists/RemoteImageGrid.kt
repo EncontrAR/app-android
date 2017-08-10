@@ -63,7 +63,7 @@ class RemoteImageGrid(
                         RemoteImageGridItem(context, items[viewHolder.adapterPosition])
 
 
-                        // Callback to report a gif being clicked
+                        // Callback to report an item being clicked
                         onClick { view ->
                             onItemSelected(view, items[viewHolder.adapterPosition])
                         }

@@ -1,19 +1,13 @@
 package ar.com.encontrar.screens.detail
 
 import android.content.Context
-import android.graphics.Typeface
+import android.graphics.Color
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.CardView
-import android.widget.ImageView
 import android.widget.LinearLayout
 import ar.com.encontrar.R
 import ar.com.encontrar.components.lists.RemoteImageComponent
-import ar.com.encontrar.components.share.ShareMethodComponent
-import ar.com.encontrar.components.share.SocialNetwork
 import com.facebook.drawee.drawable.ScalingUtils
-import com.mcxiaoke.koi.ext.isAppInstalled
 import com.wealthfront.magellan.BaseScreenView
-import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView
 
@@ -24,7 +18,7 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
         addView(object : RenderableView(context) {
             override fun view() {
 
-                backgroundColor(ContextCompat.getColor(context, R.color.black))
+                backgroundColor(ContextCompat.getColor(context, R.color.theme_color_5))
 
                 linearLayout {
                     size(MATCH, MATCH)
@@ -32,64 +26,79 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
 
                     frameLayout {
                         size(MATCH, 0)
-                        weight(0.6f) // 60% of the screen height
+                        weight(0.3f) // 30% of the screen height
 
                         RemoteImageComponent(
                                 context,
                                 MATCH,
                                 MATCH,
-                                screen.store.state.gif.images.original.webp,
+                                screen.store.state.item.images.original.webp,
                                 ScalingUtils.ScaleType.FIT_CENTER)
                     }
 
-                    v(CardView::class.java) {
+                    linearLayout {
                         size(MATCH, 0)
-                        weight(0.4f) // 40% of the screen height
-                        margin(dip(16), dip(4), dip(16), dip(64))
+                        orientation(LinearLayout.VERTICAL)
+                        weight(0.7f) // 70% of the screen height
 
-                        init {
-                            Anvil.currentView<CardView>().radius = 16f
+                        textView {
+                            size(MATCH, WRAP)
+                            text("Juan Perez")
+                            gravity(CENTER_HORIZONTAL)
+                            textSize(sip(32f))
+                            margin(0, dip(16))
+                            textColor(ContextCompat.getColor(context, R.color.theme_color_3))
                         }
 
-                        imageView {
-                            size(MATCH, MATCH)
-                            imageResource(R.drawable.drawable_primary_gradient)
-                            scaleType(ImageView.ScaleType.FIT_XY)
-                        }
+                        linearLayout {
+                            size(MATCH, 0)
+                            weight(1f)
+                            orientation(LinearLayout.HORIZONTAL)
+                            padding(dip(8))
 
-                        scrollView {
+                            imageView {
+                                size(0, MATCH)
+                                weight(0.5f) // 50% of the screen width
+                                backgroundColor(Color.BLACK)
+                            }
+
                             linearLayout {
-                                size(MATCH, MATCH)
+                                size(0, MATCH)
+                                weight(0.5f) // 50% of the screen width
                                 orientation(LinearLayout.VERTICAL)
-                                padding(dip(20), dip(20), dip(8), dip(20))
+                                gravity(CENTER_VERTICAL)
 
-                                textView {
-                                    size(MATCH, WRAP)
-                                    textSize(sip(24f))
-                                    text(R.string.screen_detail_share)
-                                    margin(0, 0, 0, dip(24))
-                                    textColor(ContextCompat.getColor(context, R.color.white))
-                                    typeface(Typeface.createFromAsset(
-                                            context.assets,
-                                            "fonts/Pacifico-Regular.ttf"))
+                                var x = 5
+                                while (x > 0) {
+                                    x--
+
+                                    textView {
+                                        size(MATCH, WRAP)
+                                        text("Dato a recibir por API")
+                                        gravity(CENTER_HORIZONTAL)
+                                        textSize(sip(16f))
+                                        textColor(Color.BLACK)
+                                        padding(dip(8))
+                                    }
+
                                 }
 
-                                SocialNetwork.values()
-                                        .filter {
-                                            it.packageName == null ||
-                                                    context.isAppInstalled(it.packageName)
-                                        }
-                                        .forEach {
-                                            ShareMethodComponent(
-                                                    context,
-                                                    it,
-                                                    screen.store.state.gif.url
-                                            )
-                                        }
-
                             }
+
                         }
+
+                        button {
+                            size(MATCH, WRAP)
+                            text("Reportar")
+                            margin(dip(8))
+                            textSize(sip(18f))
+                            textColor(Color.WHITE)
+                            backgroundColor(ContextCompat.getColor(context, R.color.button_red))
+
+                        }
+
                     }
+
                 }
             }
         })

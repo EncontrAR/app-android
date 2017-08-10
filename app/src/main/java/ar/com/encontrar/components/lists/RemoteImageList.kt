@@ -69,7 +69,7 @@ class RemoteImageList(
                                 dip(360),
                                 items[viewHolder.adapterPosition].images.scrollItem.webp)
 
-                        // Callback to report a gif being clicked
+                        // Callback to report a item being clicked
                         onClick { view ->
                             onItemSelected(view, items[viewHolder.adapterPosition])
                         }

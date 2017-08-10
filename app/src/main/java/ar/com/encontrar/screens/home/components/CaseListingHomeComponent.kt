@@ -1,13 +1,11 @@
 package ar.com.encontrar.screens.home.components
 
 import android.content.Context
-import android.support.design.widget.FloatingActionButton
-import ar.com.encontrar.R
 import ar.com.encontrar.components.lists.RemoteImageGrid
 import ar.com.encontrar.screens.detail.DetailScreen
 import ar.com.encontrar.screens.home.HomeScreen
-import ar.com.encontrar.screens.search.SearchScreen
-import trikita.anvil.DSL.*
+import trikita.anvil.DSL.MATCH
+import trikita.anvil.DSL.WRAP
 import trikita.anvil.RenderableView
 
 /**
@@ -46,17 +44,6 @@ class CaseListingHomeComponent(context: Context,
     override fun view() {
         RemoteImageGrid(context, homeScreen.store.state.gifs) { _, gif ->
             homeScreen.navigator.goTo(DetailScreen(gif))
-        }
-
-        v(FloatingActionButton::class.java) {
-            size(WRAP, WRAP)
-            margin(0, 0, dip(16), dip(64))
-            layoutGravity(BOTTOM or END)
-            imageResource(R.drawable.ic_search)
-
-            onClick {
-                homeScreen.navigator.goTo(SearchScreen())
-            }
         }
     }
 

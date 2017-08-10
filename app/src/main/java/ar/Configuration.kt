@@ -1,13 +1,9 @@
-package ar.com.encontrar.components.search
-
-import android.text.Editable
-import android.text.TextWatcher
-import java.util.*
+package ar
 
 /**
  * MIT License
  *
- * Copyright (c) 2017 Proyecto Encontrar
+ * Copyright (c) 2017 Wolox S.A
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -26,27 +22,9 @@ import java.util.*
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class DelayedTextWatcher(val delay: Long = 600, val callback: (string: String) -> Unit) : TextWatcher {
+class Configuration {
 
-    private var timer: Timer? = null
-
-    override fun afterTextChanged(text: Editable?) {
-        // user typed: start the timer
-        timer = Timer()
-        timer!!.schedule(object : TimerTask() {
-            override fun run() {
-                callback(text.toString()) // Let the caller handle the text changed after the delay
-            }
-        }, delay)
+    companion object {
+        val KEY_GOOGLE_MAPS = "AIzaSyCaaOlV9CFanlBviZseN128_4E0d6ITm0c"
     }
-
-    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-    }
-
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        // user is typing: reset already started timer (if existing)
-        timer?.cancel()
-    }
-
 }

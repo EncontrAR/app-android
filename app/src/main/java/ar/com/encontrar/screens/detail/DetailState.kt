@@ -25,5 +25,5 @@ import ar.com.encontrar.models.Metadata
  *
  */
 data class DetailState(
-        val gif: Metadata
+        val item: Metadata
 )
