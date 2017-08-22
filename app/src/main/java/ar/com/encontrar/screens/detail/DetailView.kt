@@ -5,9 +5,9 @@ import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
 import ar.com.encontrar.R
-import ar.com.encontrar.components.lists.RemoteImageComponent
-import com.facebook.drawee.drawable.ScalingUtils
+import com.google.android.gms.maps.MapView
 import com.wealthfront.magellan.BaseScreenView
+import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView
 
@@ -28,12 +28,13 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                         size(MATCH, 0)
                         weight(0.3f) // 30% of the screen height
 
-                        RemoteImageComponent(
-                                context,
-                                MATCH,
-                                MATCH,
-                                screen.store.state.item.images.original.webp,
-                                ScalingUtils.ScaleType.FIT_CENTER)
+                        v(MapView::class.java) {
+                            size(MATCH, MATCH)
+
+                            init {
+                                screen.mapView = Anvil.currentView()
+                            }
+                        }
                     }
 
                     linearLayout {
