@@ -48,10 +48,11 @@ class MainActivity : SingleActivity(), NavigationListener {
 
     override fun onNavigate(actionBarConfig: ActionBarConfig) {
         // Do something with the toolbar if the screen changes
+        supportActionBar?.setShowHideAnimationEnabled(actionBarConfig.animated())
         if (actionBarConfig.visible()) {
-            actionBar?.show()
+            supportActionBar?.show()
         } else {
-            actionBar?.hide()
+            supportActionBar?.hide()
         }
     }
 

@@ -19,7 +19,7 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
         addView(object : RenderableView(context) {
             override fun view() {
 
-                backgroundColor(ContextCompat.getColor(context, R.color.theme_color_1))
+                backgroundColor(ContextCompat.getColor(context, R.color.theme_color_2))
 
                 linearLayout {
                     size(MATCH, MATCH)
@@ -57,7 +57,7 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                             gravity(CENTER_HORIZONTAL)
                             textSize(sip(32f))
                             margin(0, dip(16))
-                            textColor(ContextCompat.getColor(context, R.color.text_primary))
+                            textColor(ContextCompat.getColor(context, R.color.theme_color_6))
                         }
 
                         linearLayout {
@@ -87,7 +87,7 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                         text("Dato a recibir por API")
                                         gravity(CENTER_HORIZONTAL)
                                         textSize(sip(16f))
-                                        textColor(ContextCompat.getColor(context, R.color.text_primary))
+                                        textColor(ContextCompat.getColor(context, R.color.text_secondary))
                                         padding(dip(8))
                                     }
 
