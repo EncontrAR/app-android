@@ -9,20 +9,20 @@ import com.brianegan.bansa.BaseStore
 import trikita.anvil.Anvil
 
 
-class DetailScreen(item: Metadata) : AbstractMapScreen<DetailScreen>() {
+class FullMapScreen(item: Metadata) : AbstractMapScreen<FullMapScreen>() {
 
     //Store
-    val store = BaseStore(DetailState(item), DetailReducer().reducer)
-    val presenter = DetailPresenter(store)
+    val store = BaseStore(FullMapState(item), FullMapReducer().reducer)
+    val presenter = FullMapPresenter(store)
 
     // View layer
-    override fun createView(context: Context): DetailView {
+    override fun createView(context: Context): FullMapView {
         store.subscribe { Anvil.render() }
-        return DetailView(context)
+        return FullMapView(context)
     }
 
     override fun getTitle(context: Context?): String {
-        return App.sInstance.getString(R.string.screen_detail_title)
+        return App.sInstance.getString(R.string.screen_map_title)
     }
 
 }

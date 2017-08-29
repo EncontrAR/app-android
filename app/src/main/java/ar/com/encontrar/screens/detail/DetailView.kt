@@ -32,7 +32,15 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                             size(MATCH, MATCH)
 
                             init {
+                                // Must save the map somewhere accessible by the screen,
+                                // since the screen has to delegate its lifecycle to the map view
                                 screen.mapView = Anvil.currentView()
+                            }
+
+                            screen.mapView?.getMapAsync { googleMap ->
+                                googleMap.setOnMapClickListener {
+                                    screen.navigator.goTo(FullMapScreen(screen.store.state.item))
+                                }
                             }
                         }
                     }

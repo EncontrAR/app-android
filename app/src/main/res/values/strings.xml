@@ -14,6 +14,9 @@
     <string name="screen_detail_title">Detalles del caso</string>
     <string name="screen_detail_share">Compartir</string>
 
+    <!-- Screen: Map -->
+    <string name="screen_map_title">Mapa</string>
+
     <!-- Component: ShareMethod -->
     <string name="component_sharemethod_other">Otras apps…</string>
     <string name="component_sharemethod_app_message">Por favor, estamos buscando a esta persona: </string>

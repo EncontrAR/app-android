@@ -4,7 +4,7 @@ apply from: '../scripts/warp/warp_task.gradle'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "26.0.1"
 
     defaultConfig {
         applicationId "ar.com.encontrar"
@@ -26,12 +26,12 @@ android {
 
 buildscript {
     ext.anko_version = '0.10.0'
-    ext.support_version = '26.0.0'
+    ext.support_version = '26.0.1'
     ext.okhttp3_version = '3.8.0'
     ext.retrofit2_version = '2.3.0'
     ext.chuck_version = '1.0.4'
     ext.fresco_version = '1.4.0'
-    ext.play_services_version = '11.0.4'
+    ext.play_services_version = '11.2.0'
 }
 
 dependencies {
