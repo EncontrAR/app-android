@@ -18,7 +18,6 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
     init {
         addView(object : RenderableView(context) {
             override fun view() {
-
                 backgroundColor(ContextCompat.getColor(context, R.color.theme_color_2))
 
                 linearLayout {

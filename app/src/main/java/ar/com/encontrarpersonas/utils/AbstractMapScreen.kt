@@ -1,7 +1,9 @@
 package ar.com.encontrarpersonas.utils
 
 import android.content.Context
+import ar.com.encontrarpersonas.R
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.wealthfront.magellan.BaseScreenView
 import com.wealthfront.magellan.Screen
 
@@ -30,11 +32,14 @@ import com.wealthfront.magellan.Screen
 @Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA")
 abstract class AbstractMapScreen<S : Screen<*>?> : Screen<BaseScreenView<S>>() {
 
-    var mapView : MapView? = null
+    var mapView: MapView? = null
 
     override fun onShow(context: Context?) {
         super.onShow(context)
         mapView?.onCreate(null)
+        mapView?.getMapAsync { googleMap ->
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.google_map_encontrar_style))
+        }
     }
 
     override fun onHide(context: Context?) {

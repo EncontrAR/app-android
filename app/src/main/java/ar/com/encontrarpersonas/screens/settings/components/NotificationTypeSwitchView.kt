@@ -42,6 +42,7 @@ class NotificationTypeSwitchView(context: Context,
         linearLayout {
             size(w, h)
             orientation(LinearLayout.HORIZONTAL)
+            margin(dip(0), dip(8))
 
             textView {
                 size(dip(0), WRAP)

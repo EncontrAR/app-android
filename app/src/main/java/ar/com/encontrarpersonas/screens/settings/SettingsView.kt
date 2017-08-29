@@ -20,6 +20,7 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                     size(MATCH, MATCH)
                     orientation(LinearLayout.VERTICAL)
                     padding(dip(24), dip(8))
+                    backgroundColor(ContextCompat.getColor(context, R.color.theme_color_1))
 
                     textView {
                         size(WRAP, WRAP)
@@ -31,19 +32,19 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                     editText {
                         size(MATCH, WRAP)
                         hint(R.string.screen_settings_firstname)
-                        margin(0, dip(16))
+                        margin(0, dip(8))
                     }
 
                     editText {
                         size(MATCH, WRAP)
                         hint(R.string.screen_settings_lastname)
-                        margin(0, dip(16))
+                        margin(0, dip(8))
                     }
 
                     editText {
                         size(MATCH, WRAP)
                         hint(R.string.screen_settings_national_id_number)
-                        margin(0, dip(16))
+                        margin(0, dip(8))
                     }
 
                     button {
