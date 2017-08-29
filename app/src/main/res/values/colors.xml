@@ -7,11 +7,16 @@
     <color name="black_60">#99000000</color>
 
     <!-- Theme colors -->
-    <color name="theme_color_1">#F2F7FF</color>
-    <color name="theme_color_2">#0B409C</color>
-    <color name="theme_color_3">#10316B</color>
-    <color name="theme_color_4">#FDBE34</color>
-    <color name="theme_color_5">#F5F5F5</color>
+    <color name="theme_color_1">#FFFFFF</color>
+    <color name="theme_color_2">#0A252F</color>
+    <color name="theme_color_3">#08B8F6</color>
+    <color name="theme_color_4">#20D8D6</color>
+    <color name="theme_color_5">#17CBB8</color>
+    <color name="theme_color_6">#02EBCD</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">#0A252F</color>
+    <color name="text_secondary">#FFFFFF</color>
 
     <!-- Other colors -->
     <color name="button_red">#C62828</color>

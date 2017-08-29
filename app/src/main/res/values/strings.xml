@@ -10,16 +10,26 @@
     <string name="screen_home_title">EncontrAR</string>
     <string name="screen_home_loading">Actualizando casos…</string>
 
+    <!-- Screen: Settings -->
+    <string name="screen_settings_title">Ajustes</string>
+    <string name="screen_settings_personal_data">Datos personales</string>
+    <string name="screen_settings_firstname">Nombre</string>
+    <string name="screen_settings_lastname">Apellido</string>
+    <string name="screen_settings_national_id_number">Nº Documento (ej: DNI)</string>
+    <string name="screen_settings_save">Guardar</string>
+    <string name="screen_settings_notification_conventional">Notificaciones convencionales</string>
+    <string name="screen_settings_notification_wallpaper">Fondo de pantalla</string>
+    <string name="screen_settings_notification_lockscreen">Pantalla de bloqueo</string>
+
     <!-- Screen: Detail -->
     <string name="screen_detail_title">Detalles del caso</string>
     <string name="screen_detail_share">Compartir</string>
-
-    <!-- Screen: Map -->
-    <string name="screen_map_title">Mapa</string>
 
     <!-- Component: ShareMethod -->
     <string name="component_sharemethod_other">Otras apps…</string>
     <string name="component_sharemethod_app_message">Por favor, estamos buscando a esta persona: </string>
 
+    <!-- Menu: Main -->
+    <string name="menu_item_settings">Ajustes</string>
 
 </resources>

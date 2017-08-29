@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="ar.com.encontrar">
+          package="ar.com.encontrarpersonas">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name="ar.com.encontrar.App">
+        android:name="ar.com.encontrarpersonas.App">
 
         <!-- Google Maps metadata -->
         <meta-data
@@ -19,7 +19,7 @@
 
         <!-- Activity: Splash -->
         <activity
-            android:name="ar.com.encontrar.activities.SplashActivity"
+            android:name="ar.com.encontrarpersonas.activities.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
 
         <!-- Activity: Main -->
         <activity
-            android:name="ar.com.encontrar.activities.MainActivity"
+            android:name="ar.com.encontrarpersonas.activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
         </activity>
