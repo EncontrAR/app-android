@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.screens.legal.LegalScreen
 import ar.com.encontrarpersonas.screens.settings.components.NotificationTypeSwitchView
 import com.wealthfront.magellan.BaseScreenView
 import trikita.anvil.DSL.*
@@ -52,6 +53,12 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                         text(R.string.screen_settings_save)
                         layoutGravity(END)
                         margin(0, dip(16))
+
+                        onClick {
+                            // TODO Only send the user to the legal screen if they haven't
+                            // accepted the ToS before
+                            screen.navigator.goTo(LegalScreen())
+                        }
                     }
 
                     NotificationTypeSwitchView(context,
@@ -62,6 +69,25 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
 
                     NotificationTypeSwitchView(context,
                             description = resources.getString(R.string.screen_settings_notification_lockscreen))
+
+                    // Dummy view to make an empty space before the ToS button
+                    view {
+                        size(MATCH, 0)
+                        weight(1f)
+                    }
+
+                    textView {
+                        size(MATCH, WRAP)
+                        gravity(BOTTOM or CENTER)
+                        text(R.string.screen_settings_tos)
+                        textSize(sip(16f))
+                        textColor(ContextCompat.getColor(context, R.color.text_primary))
+                        padding(dip(16))
+
+                        onClick {
+                            screen.navigator.goTo(LegalScreen())
+                        }
+                    }
 
                 }
 
