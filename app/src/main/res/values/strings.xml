@@ -21,6 +21,10 @@
     <string name="screen_settings_notification_wallpaper">Fondo de pantalla</string>
     <string name="screen_settings_notification_lockscreen">Pantalla de bloqueo</string>
 
+    <!-- Screen: Chat -->
+    <string name="screen_chat_title">Contacto</string>
+    <string name="screen_chat_message_input_hint">Escribe algo…</string>
+
     <!-- Screen: Detail -->
     <string name="screen_detail_title">Detalles del caso</string>
     <string name="screen_detail_share">Compartir</string>

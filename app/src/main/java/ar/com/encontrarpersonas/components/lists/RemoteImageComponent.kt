@@ -57,7 +57,7 @@ class RemoteImageComponent(context: Context,
             }
 
             size(w, h)
-            backgroundColor(ContextCompat.getColor(context, R.color.black))
+            backgroundColor(ContextCompat.getColor(context, R.color.theme_color_4))
 
             Anvil.currentView<SimpleDraweeView>().controller =
                     newDraweeControllerBuilder()

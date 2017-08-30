@@ -1,6 +1,8 @@
 package ar.com.encontrarpersonas.activities
 
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import ar.com.encontrarpersonas.R
@@ -43,12 +45,13 @@ class MainActivity : SingleActivity(), NavigationListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(findViewById(R.id.activity_toolbar))
+        val toolbar : Toolbar = findViewById(R.id.activity_toolbar)
+        setSupportActionBar(toolbar)
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.text_primary))
     }
 
     override fun onNavigate(actionBarConfig: ActionBarConfig) {
         // Do something with the toolbar if the screen changes
-        supportActionBar?.setShowHideAnimationEnabled(actionBarConfig.animated())
         if (actionBarConfig.visible()) {
             supportActionBar?.show()
         } else {

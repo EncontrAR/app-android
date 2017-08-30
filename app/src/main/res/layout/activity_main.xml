@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:animateLayoutChanges="true"
     android:background="?attr/colorPrimary"
-    android:animateLayoutChanges="true">
+    android:orientation="vertical">
 
 
     <android.support.v7.widget.Toolbar
@@ -15,11 +15,23 @@
         android:background="?attr/colorPrimary"
         />
 
-
-    <com.wealthfront.magellan.ScreenContainer
-        android:id="@id/magellan_container"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent">
+
+        <com.wealthfront.magellan.ScreenContainer
+            android:id="@id/magellan_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/gradient_dropshadow_90"
+            />
+
+    </FrameLayout>
+
 
 </LinearLayout>

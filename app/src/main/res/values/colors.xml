@@ -5,6 +5,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="black_60">#99000000</color>
+    <color name="status_bar_color">#14b6a5</color>
 
     <!-- Theme colors -->
     <color name="theme_color_1">#FFFFFF</color>
@@ -20,5 +21,6 @@
 
     <!-- Other colors -->
     <color name="button_red">#C62828</color>
+    <color name="primary_background">#ECEFF1</color>
 
 </resources>
