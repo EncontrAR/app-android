@@ -29,7 +29,7 @@ import com.mcxiaoke.koi.ext.startActivity
  */
 class SplashActivity : AppCompatActivity() {
 
-    val SPLASH_DELAY : Long = 1000
+    val SPLASH_DELAY : Long = 800
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

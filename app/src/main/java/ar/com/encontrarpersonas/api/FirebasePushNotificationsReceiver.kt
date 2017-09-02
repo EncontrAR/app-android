@@ -2,10 +2,13 @@ package ar.com.encontrarpersonas.api
 
 import android.app.Notification
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.support.v4.app.NotificationCompat
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.activities.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -35,15 +38,23 @@ class FirebasePushNotificationsReceiver : FirebaseMessagingService() {
                 this.resources,
                 R.drawable.ic_notification_big)
 
-        val notificationBuilder = NotificationCompat
+        return NotificationCompat
                 .Builder(this, DEFAULT_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification_small)
                 .setLargeIcon(largeIconBitmap)
-                .setContentTitle(this.getString(R.string.app_name))
+                .setContentTitle(this.getString(R.string.general_app_name))
                 .setContentText(remoteMessage.notification.body)
+                .setContentIntent(getNotificationOpenIntent())
+                .build()
+    }
 
-        largeIconBitmap.recycle()
+    fun getNotificationOpenIntent(): PendingIntent {
+        return PendingIntent.getActivity(
+                this,
+                0,
+                Intent(this, MainActivity::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        return notificationBuilder.build()
     }
 }
