@@ -1,14 +1,13 @@
-package ar.com.encontrarpersonas.screens.home
+package ar.com.encontrarpersonas.api
 
 import ar.com.encontrarpersonas.App
-import ar.com.encontrarpersonas.R
-import ar.com.encontrarpersonas.api.EncontrarRestApi
-import ar.com.encontrarpersonas.data.models.DataWrapper
-import com.brianegan.bansa.Store
-import com.mcxiaoke.koi.ext.toast
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import ar.com.encontrarpersonas.BuildConfig
+import com.readystatesoftware.chuck.ChuckInterceptor
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
 
 /**
  * MIT License
@@ -32,25 +31,22 @@ import retrofit2.Response
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class HomePresenter(val store: Store<HomeState>) {
+object EncontrarRestApi {
 
-    fun getGifs() {
-        store.dispatch(HomeReducer.FETCHING_GIFS)
+    val httpClient = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().setLevel(
+                    if (BuildConfig.DEBUG)
+                        HttpLoggingInterceptor.Level.BODY
+                    else
+                        HttpLoggingInterceptor.Level.NONE
+            ))
+            .addInterceptor(ChuckInterceptor(App.sInstance))
+            .build()
 
-        EncontrarRestApi.giphy.trending(limit = 100).enqueue(object : Callback<DataWrapper> {
-            override fun onResponse(call: Call<DataWrapper>, response: Response<DataWrapper>) {
-                if (response.isSuccessful) {
-                    store.dispatch(HomeReducer.GIFS_ARRIVED(
-                            response.body()!!.data)
-                    )
-                } else
-                    App.sInstance.toast(R.string.error_network)
-            }
-
-            override fun onFailure(call: Call<DataWrapper>?, t: Throwable?) {
-                App.sInstance.toast(R.string.error_network)
-            }
-
-        })
-    }
+    val giphy = Retrofit.Builder()
+            .client(httpClient)
+            .baseUrl("https://api.giphy.com/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(GiphyService::class.java)
 }

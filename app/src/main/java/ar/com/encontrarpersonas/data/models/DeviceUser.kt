@@ -1,13 +1,8 @@
-package ar.com.encontrarpersonas.api
+package ar.com.encontrarpersonas.data.models
 
-import ar.com.encontrarpersonas.App
-import ar.com.encontrarpersonas.BuildConfig
-import com.readystatesoftware.chuck.ChuckInterceptor
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
+import java.util.*
 
 /**
  * MIT License
@@ -31,22 +26,18 @@ import retrofit2.converter.gson.GsonConverterFactory
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class RestApi {
-
-    val httpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(
-                    if (BuildConfig.DEBUG)
-                        HttpLoggingInterceptor.Level.BODY
-                    else
-                        HttpLoggingInterceptor.Level.NONE
-            ))
-            .addInterceptor(ChuckInterceptor(App.sInstance))
-            .build()
-
-    val giphy = Retrofit.Builder()
-            .client(httpClient)
-            .baseUrl("https://api.giphy.com/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(GiphyService::class.java)
-}
+data class DeviceUser(
+        @SerializedName("id") val id: Int,
+        @SerializedName("email") val email: String,
+        @SerializedName("name") val name: String,
+        @SerializedName("lastname") val lastname: String,
+        @SerializedName("device_id") val deviceId: String,
+        @SerializedName("os") val os: String,
+        @SerializedName("alert_type") val alertType: Int,
+        @SerializedName("latitude") val latitude: String,
+        @SerializedName("longitude") val longitude: String,
+        @SerializedName("created_at") val createdAt: Date,
+        @SerializedName("updated_at") val updatedAt: Date,
+        @SerializedName("device_tokens") val firebaseDeviceTokens: List<String>,
+        @SerializedName("auth_token") val authToken: String
+) : Serializable
