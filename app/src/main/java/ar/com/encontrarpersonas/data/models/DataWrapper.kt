@@ -1,4 +1,4 @@
-package ar.com.encontrarpersonas.models
+package ar.com.encontrarpersonas.data.models
 
 /**
  * MIT License

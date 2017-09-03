@@ -3,7 +3,7 @@ package ar.com.encontrarpersonas.components.lists
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
-import ar.com.encontrarpersonas.models.Metadata
+import ar.com.encontrarpersonas.data.models.Metadata
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView
 

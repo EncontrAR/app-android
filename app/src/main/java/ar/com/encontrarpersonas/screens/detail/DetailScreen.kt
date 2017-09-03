@@ -3,7 +3,7 @@ package ar.com.encontrarpersonas.screens.detail
 import android.content.Context
 import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.R
-import ar.com.encontrarpersonas.models.Metadata
+import ar.com.encontrarpersonas.data.models.Metadata
 import ar.com.encontrarpersonas.utils.AbstractMapScreen
 import com.brianegan.bansa.BaseStore
 import trikita.anvil.Anvil

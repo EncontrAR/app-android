@@ -1,4 +1,4 @@
-package ar.com.encontrarpersonas.models
+package ar.com.encontrarpersonas.data.models
 
 /**
  * MIT License
@@ -22,7 +22,7 @@ package ar.com.encontrarpersonas.models
  * DEALINGS IN THE SOFTWARE.
  *
  */
-data class ChatMessage(
-        val userId: String,
-        val message: String
+data class Gif(
+        val url: String,
+        val webp: String
 )

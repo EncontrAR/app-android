@@ -1,4 +1,6 @@
-package ar.com.encontrarpersonas.models
+package ar.com.encontrarpersonas.notifications
+
+import com.google.firebase.messaging.RemoteMessage
 
 /**
  * MIT License
@@ -22,8 +24,12 @@ package ar.com.encontrarpersonas.models
  * DEALINGS IN THE SOFTWARE.
  *
  */
-data class Metadata(
-        val id: String,
-        val url: String,
-        val images: Images
-)
+interface INotificationHandler {
+
+    /**
+     * Builds a notification based on a provided RemoteMessage and displays it on the system's
+     * notifications tray
+     */
+    fun notify(remoteMessage: RemoteMessage)
+
+}

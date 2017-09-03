@@ -3,7 +3,7 @@ package ar.com.encontrarpersonas.screens.home
 import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.api.RestApi
-import ar.com.encontrarpersonas.models.DataWrapper
+import ar.com.encontrarpersonas.data.models.DataWrapper
 import com.brianegan.bansa.Store
 import com.mcxiaoke.koi.ext.toast
 import retrofit2.Call

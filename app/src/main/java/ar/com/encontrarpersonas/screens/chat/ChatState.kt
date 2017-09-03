@@ -1,7 +1,7 @@
 package ar.com.encontrarpersonas.screens.chat
 
-import ar.com.encontrarpersonas.models.ChatMessage
-import ar.com.encontrarpersonas.models.Metadata
+import ar.com.encontrarpersonas.data.models.ChatMessage
+import ar.com.encontrarpersonas.data.models.Metadata
 
 /**
  * MIT License

@@ -1,8 +1,4 @@
-package ar.com.encontrarpersonas.screens.home
-
-import ar.com.encontrarpersonas.data.models.Metadata
-import com.brianegan.bansa.Action
-import com.brianegan.bansa.Reducer
+package ar.com.encontrarpersonas.data.models
 
 /**
  * MIT License
@@ -26,20 +22,8 @@ import com.brianegan.bansa.Reducer
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class HomeReducer {
-
-    // Actions
-    object RESET : Action
-    object FETCHING_GIFS : Action
-    data class GIFS_ARRIVED(val gifs: List<Metadata>) : Action
-
-    // Reducer
-    val reducer = Reducer<HomeState> { state, action ->
-        when (action) {
-            is RESET -> HomeState()
-            is FETCHING_GIFS -> state.copy(isFetching = true)
-            is GIFS_ARRIVED -> state.copy(gifs = action.gifs, isFetching = false)
-            else -> state
-        }
-    }
-}
+data class Metadata(
+        val id: String,
+        val url: String,
+        val images: Images
+)

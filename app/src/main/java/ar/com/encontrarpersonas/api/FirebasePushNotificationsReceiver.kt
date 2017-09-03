@@ -1,60 +1,55 @@
 package ar.com.encontrarpersonas.api
 
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.graphics.BitmapFactory
-import android.support.v4.app.NotificationCompat
-import ar.com.encontrarpersonas.R
-import ar.com.encontrarpersonas.activities.MainActivity
+/**
+ * MIT License
+ *
+ * Copyright (c) 2017 Proyecto Encontrar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+import ar.com.encontrarpersonas.notifications.TrayNotificationsHandler
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 
 class FirebasePushNotificationsReceiver : FirebaseMessagingService() {
 
-    companion object {
-        val DEFAULT_NOTIFICATION_CHANNEL_ID = "ABC123"
-        val DEFAULT_NOTIFICATION_INDIVIDUAL_ID = 123
-    }
-
+    /**
+     * This callback gets executed when a Firebase issued notification is received.
+     * Bare in mind that notifications sent by Firebase with a "Notification" field won't
+     * call this method if the app is in the background. Instead, they will display a system
+     * tray notification directly.
+     *
+     * To receive notifications on this callback, Firebase issued notifications must be sent with
+     * a "Data" field (instead of a "Notification" one) or either the app must be in foreground.
+     *
+     * More details about Firebase notifications types can be found here:
+     * https://firebase.google.com/docs/cloud-messaging/concept-options
+     */
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
 
         if (remoteMessage != null) {
-            val notificationManager =
-                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-            notificationManager.notify(
-                    DEFAULT_NOTIFICATION_INDIVIDUAL_ID,
-                    buildNotification(remoteMessage))
+            // Display the received notification on the system tray
+            TrayNotificationsHandler(this).notify(remoteMessage)
+
         }
-
-    }
-
-    fun buildNotification(remoteMessage: RemoteMessage): Notification {
-        val largeIconBitmap = BitmapFactory.decodeResource(
-                this.resources,
-                R.drawable.ic_notification_big)
-
-        return NotificationCompat
-                .Builder(this, DEFAULT_NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification_small)
-                .setLargeIcon(largeIconBitmap)
-                .setContentTitle(this.getString(R.string.general_app_name))
-                .setContentText(remoteMessage.notification.body)
-                .setContentIntent(getNotificationOpenIntent())
-                .build()
-    }
-
-    fun getNotificationOpenIntent(): PendingIntent {
-        return PendingIntent.getActivity(
-                this,
-                0,
-                Intent(this, MainActivity::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
 
     }
 }

@@ -1,7 +1,7 @@
 package ar.com.encontrarpersonas.screens.fullScreenMap
 
 import android.content.Context
-import ar.com.encontrarpersonas.models.Metadata
+import ar.com.encontrarpersonas.data.models.Metadata
 import ar.com.encontrarpersonas.utils.AbstractMapScreen
 import com.brianegan.bansa.BaseStore
 import trikita.anvil.Anvil

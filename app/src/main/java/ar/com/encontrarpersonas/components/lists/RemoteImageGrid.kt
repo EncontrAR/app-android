@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import ar.com.encontrarpersonas.models.Metadata
+import ar.com.encontrarpersonas.data.models.Metadata
 import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView

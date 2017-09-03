@@ -1,4 +1,6 @@
-package ar.com.encontrarpersonas.models
+package ar.com.encontrarpersonas.data.models
+
+import com.google.gson.annotations.SerializedName
 
 /**
  * MIT License
@@ -22,7 +24,8 @@ package ar.com.encontrarpersonas.models
  * DEALINGS IN THE SOFTWARE.
  *
  */
-data class Gif(
-        val url: String,
-        val webp: String
+data class Images(
+        @SerializedName("original") val original : Gif,
+        @SerializedName("fixed_height_downsampled") val scrollItem: Gif,
+        @SerializedName("downsized_medium") val reducedSize: Gif
 )

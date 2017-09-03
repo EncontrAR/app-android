@@ -3,7 +3,7 @@ package ar.com.encontrarpersonas.screens.chat
 import android.content.Context
 import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.R
-import ar.com.encontrarpersonas.models.Metadata
+import ar.com.encontrarpersonas.data.models.Metadata
 import com.brianegan.bansa.BaseStore
 import com.wealthfront.magellan.Screen
 import trikita.anvil.Anvil

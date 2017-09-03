@@ -1,6 +1,6 @@
 package ar.com.encontrarpersonas.api
 
-import ar.com.encontrarpersonas.models.DataWrapper
+import ar.com.encontrarpersonas.data.models.DataWrapper
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

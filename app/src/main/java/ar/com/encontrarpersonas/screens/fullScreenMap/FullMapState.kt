@@ -1,6 +1,6 @@
 package ar.com.encontrarpersonas.screens.fullScreenMap
 
-import ar.com.encontrarpersonas.models.Metadata
+import ar.com.encontrarpersonas.data.models.Metadata
 
 /**
  * MIT License
