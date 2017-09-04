@@ -1,13 +1,8 @@
 package ar.com.encontrarpersonas.api
 
-import ar.com.encontrarpersonas.App
-import ar.com.encontrarpersonas.BuildConfig
-import com.readystatesoftware.chuck.ChuckInterceptor
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
+import ar.com.encontrarpersonas.data.UserRepository
+import okhttp3.Interceptor
+import okhttp3.Response
 
 /**
  * MIT License
@@ -31,26 +26,20 @@ import retrofit2.converter.gson.GsonConverterFactory
  * DEALINGS IN THE SOFTWARE.
  *
  */
-object EncontrarRestApi {
+class HeadersInterceptor : Interceptor {
 
-    private val BASE_URL = "api.encontrarpersonas.com"
-    private val API_VERSION = "v1"
+    /**
+     * Adds content type and auth headers required by Encontrar Rest API.
+     */
+    override fun intercept(chain: Interceptor.Chain): Response {
+        var request = chain.request()
 
-    val httpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(
-                    if (BuildConfig.DEBUG)
-                        HttpLoggingInterceptor.Level.BODY
-                    else
-                        HttpLoggingInterceptor.Level.NONE
-            ))
-            .addInterceptor(ChuckInterceptor(App.sInstance))
-            .addInterceptor(HeadersInterceptor())
-            .build()
+        request = request.newBuilder()
+                .addHeader("Content-Type", "application/json")
+                .addHeader("X-Auth-Token", UserRepository.getApiAuthToken())
+                .build()
 
-    val giphy = Retrofit.Builder()
-            .client(httpClient)
-            .baseUrl("$BASE_URL/$API_VERSION/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(GiphyService::class.java)
+        return chain.proceed(request)
+    }
+
 }

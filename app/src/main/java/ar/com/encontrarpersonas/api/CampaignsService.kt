@@ -1,13 +1,11 @@
 package ar.com.encontrarpersonas.api
 
-import ar.com.encontrarpersonas.App
-import ar.com.encontrarpersonas.BuildConfig
-import com.readystatesoftware.chuck.ChuckInterceptor
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
+import ar.com.encontrarpersonas.data.models.Campaign
+import ar.com.encontrarpersonas.data.models.CampaignsPage
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * MIT License
@@ -31,26 +29,25 @@ import retrofit2.converter.gson.GsonConverterFactory
  * DEALINGS IN THE SOFTWARE.
  *
  */
-object EncontrarRestApi {
+interface CampaignsService {
 
-    private val BASE_URL = "api.encontrarpersonas.com"
-    private val API_VERSION = "v1"
+    /**
+     * Retrieves the list of campaigns of the Encontrar Rest API. Use the "page" and "limit"
+     * parameters to modify the response.
+     * By default, the endpoint returns 25 elements per page.
+     *
+     * Authenticated endpoint.
+     */
+    @GET("campaigns/index_all")
+    fun getCampaignsList(@Query("page") page: Int,
+                         @Query("limit") limit: Int): Call<CampaignsPage>
 
-    val httpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(
-                    if (BuildConfig.DEBUG)
-                        HttpLoggingInterceptor.Level.BODY
-                    else
-                        HttpLoggingInterceptor.Level.NONE
-            ))
-            .addInterceptor(ChuckInterceptor(App.sInstance))
-            .addInterceptor(HeadersInterceptor())
-            .build()
+    /**
+     * Gets a specific Campaign data from Encontrar Rest API by providing its ID.
+     *
+     * Authenticated endpoint.
+     */
+    @GET("campaigns/{campaignId}")
+    fun getCampaign(@Path("campaignId") campaignId: Int): Call<Campaign>
 
-    val giphy = Retrofit.Builder()
-            .client(httpClient)
-            .baseUrl("$BASE_URL/$API_VERSION/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(GiphyService::class.java)
 }

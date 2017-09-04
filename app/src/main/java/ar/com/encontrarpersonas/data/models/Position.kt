@@ -1,13 +1,7 @@
-package ar.com.encontrarpersonas.api
+package ar.com.encontrarpersonas.data.models
 
-import ar.com.encontrarpersonas.App
-import ar.com.encontrarpersonas.BuildConfig
-import com.readystatesoftware.chuck.ChuckInterceptor
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  * MIT License
@@ -31,26 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  * DEALINGS IN THE SOFTWARE.
  *
  */
-object EncontrarRestApi {
-
-    private val BASE_URL = "api.encontrarpersonas.com"
-    private val API_VERSION = "v1"
-
-    val httpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(
-                    if (BuildConfig.DEBUG)
-                        HttpLoggingInterceptor.Level.BODY
-                    else
-                        HttpLoggingInterceptor.Level.NONE
-            ))
-            .addInterceptor(ChuckInterceptor(App.sInstance))
-            .addInterceptor(HeadersInterceptor())
-            .build()
-
-    val giphy = Retrofit.Builder()
-            .client(httpClient)
-            .baseUrl("$BASE_URL/$API_VERSION/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(GiphyService::class.java)
-}
+data class Position(
+        @SerializedName("latitude") val latitude: String,
+        @SerializedName("longitude") val longitude: String
+) : Serializable
