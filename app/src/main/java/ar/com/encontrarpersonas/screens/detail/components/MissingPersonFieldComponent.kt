@@ -1,8 +1,10 @@
-package ar.com.encontrarpersonas.data.models
+package ar.com.encontrarpersonas.screens.detail.components
 
-import com.google.gson.annotations.SerializedName
-import java.io.Serializable
-import java.util.*
+import android.content.Context
+import android.support.v4.content.ContextCompat
+import ar.com.encontrarpersonas.R
+import trikita.anvil.DSL.*
+import trikita.anvil.RenderableView
 
 /**
  * MIT License
@@ -26,17 +28,28 @@ import java.util.*
  * DEALINGS IN THE SOFTWARE.
  *
  */
-data class DeviceUser(
-        @SerializedName("id") val id: Int? = null,
-        @SerializedName("email") val email: String? = null,
-        @SerializedName("name") val name: String? = null,
-        @SerializedName("lastname") val lastname: String? = null,
-        @SerializedName("device_id") val deviceId: String? = null,
-        @SerializedName("os") val os: String? = null,
-        @SerializedName("alert_type") val alertType: Int? = null,
-        @SerializedName("latitude") val latitude: String? = null,
-        @SerializedName("longitude") val longitude: String? = null,
-        @SerializedName("created_at") val createdAt: Date? = null,
-        @SerializedName("updated_at") val updatedAt: Date? = null,
-        @SerializedName("auth_token") val authToken: String? = null
-) : Serializable
+class MissingPersonFieldComponent(context: Context,
+                                  val w: Int = MATCH,
+                                  val h: Int = WRAP,
+                                  val description: String,
+                                  val value: String) : RenderableView(context) {
+
+    init {
+        view()
+    }
+
+    override fun view() {
+        textView {
+            size(MATCH, WRAP)
+            text("$description: $value")
+            gravity(CENTER_HORIZONTAL)
+            textSize(sip(18f))
+            textColor(ContextCompat.getColor(
+                    context,
+                    R.color.text_primary
+            ))
+            padding(dip(8))
+        }
+    }
+
+}

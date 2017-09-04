@@ -4,7 +4,9 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.components.lists.RemoteImageComponent
 import ar.com.encontrarpersonas.screens.chat.ChatScreen
+import ar.com.encontrarpersonas.screens.detail.components.MissingPersonFieldComponent
 import ar.com.encontrarpersonas.screens.fullScreenMap.FullMapScreen
 import com.google.android.gms.maps.MapView
 import com.wealthfront.magellan.BaseScreenView
@@ -18,6 +20,10 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
     init {
         addView(object : RenderableView(context) {
             override fun view() {
+
+                val campaign = screen.store.state.item
+                val missingPerson = campaign.missingPerson!!
+
                 backgroundColor(ContextCompat.getColor(context, R.color.theme_color_1))
 
                 frameLayout {
@@ -31,6 +37,7 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                             size(MATCH, MATCH)
                             orientation(LinearLayout.VERTICAL)
 
+                            // MapView with the latest known location of the Missing Person
                             frameLayout {
                                 size(MATCH, dip(260))
                                 backgroundColor(ContextCompat.getColor(context, R.color.theme_color_2))
@@ -46,7 +53,7 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
 
                                     screen.mapView?.getMapAsync { googleMap ->
                                         googleMap.setOnMapClickListener {
-                                            screen.navigator.goTo(FullMapScreen(screen.store.state.item))
+                                            screen.navigator.goTo(FullMapScreen(campaign))
                                         }
                                     }
                                 }
@@ -56,9 +63,10 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                 size(MATCH, WRAP)
                                 orientation(LinearLayout.VERTICAL)
 
+                                // Missing person big name
                                 textView {
                                     size(MATCH, WRAP)
-                                    text("Juan Perez")
+                                    text("${missingPerson?.name} ${missingPerson?.lastname}")
                                     gravity(CENTER_HORIZONTAL)
                                     textSize(sip(32f))
                                     margin(0, dip(16))
@@ -71,48 +79,64 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                     orientation(LinearLayout.HORIZONTAL)
                                     padding(dip(8))
 
-                                    imageView {
+                                    // Missing person maing picture
+                                    frameLayout {
                                         size(0, dip(300))
                                         weight(0.5f) // 50% of the screen width
-                                        backgroundColor(ContextCompat.getColor(context, R.color.theme_color_2))
+
+                                        RemoteImageComponent(
+                                                context,
+                                                MATCH,
+                                                MATCH,
+                                                missingPerson?.photoUrl
+                                        )
+
                                     }
 
+                                    // Missing Person fields (age, gender, etc.)
                                     linearLayout {
                                         size(0, MATCH)
                                         weight(0.5f) // 50% of the screen width
                                         orientation(LinearLayout.VERTICAL)
                                         gravity(CENTER_VERTICAL)
 
-                                        var x = 5
-                                        while (x > 0) {
-                                            x--
+                                        MissingPersonFieldComponent(
+                                                context,
+                                                description = context.getString(R.string.screen_home_person_field_gender),
+                                                value = if (missingPerson.gender == "female")
+                                                    context.getString(R.string.screen_home_person_gender_female)
+                                                else
+                                                    context.getString(R.string.screen_home_person_gender_male)
+                                        )
 
-                                            textView {
-                                                size(MATCH, WRAP)
-                                                text("Dato a recibir por API")
-                                                gravity(CENTER_HORIZONTAL)
-                                                textSize(sip(16f))
-                                                textColor(ContextCompat.getColor(context, R.color.text_primary))
-                                                padding(dip(8))
-                                            }
+                                        MissingPersonFieldComponent(
+                                                context,
+                                                description = context.getString(R.string.screen_home_person_field_age),
+                                                value = missingPerson.age.toString()
+                                        )
 
-                                        }
+                                        MissingPersonFieldComponent(
+                                                context,
+                                                description = context.getString(R.string.screen_home_person_field_national_id),
+                                                value = missingPerson.nationalId.toString()
+                                        )
 
                                     }
 
                                 }
 
-                                // TODO Replace dummy views generation
-                                var x = 5
-                                while (x > 0) {
-                                    x--
-
-                                    imageView {
-                                        size(MATCH, dip(300))
-                                        backgroundColor(ContextCompat.getColor(context, R.color.theme_color_2))
-                                        margin(0, dip(4))
+                                // Campaign images
+                                campaign.imagesUrls?.forEach {
+                                    view {
+                                        size(MATCH, dip(8))
                                     }
 
+                                    RemoteImageComponent(
+                                            context,
+                                            MATCH,
+                                            dip(300),
+                                            it
+                                    )
                                 }
 
                             }
@@ -141,7 +165,7 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                             backgroundColor(ContextCompat.getColor(context, R.color.button_red))
 
                             onClick {
-                                screen.navigator.goTo(ChatScreen(screen.store.state.item))
+                                screen.navigator.goTo(ChatScreen(campaign))
                             }
 
                         }
