@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import ar.com.encontrarpersonas.data.models.Metadata
+import ar.com.encontrarpersonas.data.models.Campaign
 import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView
@@ -34,8 +34,8 @@ import trikita.anvil.recyclerview.Recycler
  */
 class RemoteImageGrid(
         context: Context,
-        val items: List<Metadata>,
-        val onItemSelected: (view: View, gif: Metadata) -> Unit) : RenderableView(context) {
+        val items: List<Campaign>,
+        val onItemSelected: (view: View, gif: Campaign) -> Unit) : RenderableView(context) {
 
     val GRID_COLUMNS = 2
 

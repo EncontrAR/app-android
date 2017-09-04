@@ -27,16 +27,16 @@ import java.util.*
  *
  */
 data class MissingPerson(
-        @SerializedName("id") val id: Int,
-        @SerializedName("name") val name: String,
-        @SerializedName("lastname") val lastname: String,
-        @SerializedName("dni") val nationalId: String,
-        @SerializedName("age") val age: Int,
-        @SerializedName("photo") val photoUrl: String,
-        @SerializedName("created_at") val createdAt: Date,
-        @SerializedName("updated_at") val updatedAt: Date,
-        @SerializedName("gender") val gender: String,
-        @SerializedName("last_known_loc_lat") val lastKnownLocationLat: String,
-        @SerializedName("last_known_loc_long") val lastKnownLocationLong: String
+        @SerializedName("id") val id: Int? = null,
+        @SerializedName("name") val name: String? = null,
+        @SerializedName("lastname") val lastname: String? = null,
+        @SerializedName("dni") val nationalId: String? = null,
+        @SerializedName("age") val age: Int? = null,
+        @SerializedName("photo") val photoUrl: String? = null,
+        @SerializedName("created_at") val createdAt: Date? = null,
+        @SerializedName("updated_at") val updatedAt: Date? = null,
+        @SerializedName("gender") val gender: String? = null,
+        @SerializedName("last_known_loc_lat") val lastKnownLocationLat: String? = null,
+        @SerializedName("last_known_loc_long") val lastKnownLocationLong: String? = null
 
 ) : Serializable

@@ -36,7 +36,7 @@ import trikita.anvil.RenderableView
 class RemoteImageComponent(context: Context,
                            val w: Int = MATCH,
                            val h: Int = WRAP,
-                           val gifUri: String,
+                           val imageUri: String?,
                            val scaleType: ScalingUtils.ScaleType = ScalingUtils.ScaleType.CENTER_CROP)
     : RenderableView(context) {
 
@@ -45,7 +45,7 @@ class RemoteImageComponent(context: Context,
     }
 
     override fun view() {
-        // Fresco Image to display the selected Gif
+        // Fresco Image to display the selected image
         v(SimpleDraweeView::class.java) {
             init {
                 Anvil.currentView<SimpleDraweeView>().hierarchy =
@@ -61,7 +61,7 @@ class RemoteImageComponent(context: Context,
 
             Anvil.currentView<SimpleDraweeView>().controller =
                     newDraweeControllerBuilder()
-                            .setUri(gifUri)
+                            .setUri(imageUri)
                             .setAutoPlayAnimations(true)
                             .build()
         }

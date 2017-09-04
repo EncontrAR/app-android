@@ -33,10 +33,10 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 object EncontrarRestApi {
 
-    private val BASE_URL = "api.encontrarpersonas.com"
+    private val BASE_URL = "http://api.encontrarpersonas.com"
     private val API_VERSION = "v1"
 
-    val httpClient = OkHttpClient.Builder()
+    private val httpClient = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(
                     if (BuildConfig.DEBUG)
                         HttpLoggingInterceptor.Level.BODY
@@ -47,10 +47,15 @@ object EncontrarRestApi {
             .addInterceptor(HeadersInterceptor())
             .build()
 
-    val giphy = Retrofit.Builder()
+    private val retrofitClient = Retrofit.Builder()
             .client(httpClient)
             .baseUrl("$BASE_URL/$API_VERSION/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(GiphyService::class.java)
+
+    val giphy = retrofitClient.create(GiphyService::class.java)
+
+    val deviceUser = retrofitClient.create(DeviceUserService::class.java)
+
+    val campaigns = retrofitClient.create(CampaignsService::class.java)
 }

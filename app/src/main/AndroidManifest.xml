@@ -38,11 +38,19 @@
 
         <!-- Service: Firebase Push Notifications Receiver -->
         <service
-            android:name=".api.FirebasePushNotificationsReceiver"
+            android:name=".api.FirebasePushNotificationsService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <!-- Service: Firebase Access Token Receiver -->
+        <service
+            android:name=".api.FirebaseAccessTokenService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
 

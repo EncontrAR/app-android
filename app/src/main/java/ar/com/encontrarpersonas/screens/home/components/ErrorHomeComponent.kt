@@ -1,6 +1,13 @@
-package ar.com.encontrarpersonas.screens.home
+package ar.com.encontrarpersonas.screens.home.components
 
-import ar.com.encontrarpersonas.data.models.Campaign
+import android.content.Context
+import android.support.annotation.StringRes
+import android.support.v4.content.ContextCompat
+import android.widget.LinearLayout
+import ar.com.encontrarpersonas.R
+import trikita.anvil.DSL
+import trikita.anvil.DSL.*
+import trikita.anvil.RenderableView
 
 /**
  * MIT License
@@ -24,9 +31,32 @@ import ar.com.encontrarpersonas.data.models.Campaign
  * DEALINGS IN THE SOFTWARE.
  *
  */
-data class HomeState(
-        val campaigns: List<Campaign> = ArrayList(),
-        val isFetching: Boolean = false,
-        val isRegisteringDevice: Boolean = false,
-        val isOnError: Boolean = false
-)
+class ErrorHomeComponent(context: Context,
+                         @StringRes val stringRes: Int,
+                         val w: Int = MATCH,
+                         val h: Int = WRAP)
+    : RenderableView(context) {
+
+
+    init {
+        view()
+    }
+
+    override fun view() {
+        frameLayout {
+            DSL.orientation(LinearLayout.VERTICAL)
+            size(w, h)
+            layoutGravity(CENTER)
+            gravity(CENTER_HORIZONTAL)
+
+            textView {
+                size(WRAP, WRAP)
+                margin(0, dip(32))
+                textSize(sip(24f))
+                text(stringRes)
+                textColor(ContextCompat.getColor(context, R.color.text_secondary))
+            }
+        }
+    }
+
+}

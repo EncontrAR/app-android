@@ -1,5 +1,6 @@
 package ar.com.encontrarpersonas.screens.fullScreenMap
 
+import ar.com.encontrarpersonas.data.models.Campaign
 import ar.com.encontrarpersonas.data.models.Metadata
 
 /**
@@ -25,5 +26,5 @@ import ar.com.encontrarpersonas.data.models.Metadata
  *
  */
 data class FullMapState(
-        val item: Metadata
+        val item: Campaign
 )

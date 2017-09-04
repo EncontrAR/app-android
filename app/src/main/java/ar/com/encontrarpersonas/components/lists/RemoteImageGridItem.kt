@@ -3,7 +3,7 @@ package ar.com.encontrarpersonas.components.lists
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
-import ar.com.encontrarpersonas.data.models.Metadata
+import ar.com.encontrarpersonas.data.models.Campaign
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView
 
@@ -31,7 +31,7 @@ import trikita.anvil.RenderableView
  */
 class RemoteImageGridItem(
         context: Context,
-        val item: Metadata) : RenderableView(context) {
+        val item: Campaign) : RenderableView(context) {
 
     init {
         view()
@@ -46,7 +46,7 @@ class RemoteImageGridItem(
                     context,
                     MATCH,
                     MATCH,
-                    item.images.scrollItem.webp)
+                    item.imagesUrls?.first())
 
             linearLayout {
                 size(MATCH, WRAP)
@@ -57,14 +57,14 @@ class RemoteImageGridItem(
 
                 textView {
                     size(MATCH, WRAP)
-                    text("Juan Perez")
+                    text(item.title)
                     textSize(sip(18f))
                     textColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.white))
                 }
 
                 textView {
                     size(MATCH, WRAP)
-                    text("Caballito, Buenos Aires")
+                    text(item.description)
                     textSize(sip(12f))
                     textColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.white))
                 }

@@ -28,7 +28,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 
-class FirebasePushNotificationsReceiver : FirebaseMessagingService() {
+class FirebasePushNotificationsService : FirebaseMessagingService() {
 
     /**
      * This callback gets executed when a Firebase issued notification is received.

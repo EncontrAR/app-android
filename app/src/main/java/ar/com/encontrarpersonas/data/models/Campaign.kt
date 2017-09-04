@@ -27,11 +27,11 @@ import java.util.*
  *
  */
 data class Campaign(
-        @SerializedName("id") val id: Int,
-        @SerializedName("title") val title: String,
-        @SerializedName("description") val description: String,
-        @SerializedName("created_at") val createdAt: Date,
-        @SerializedName("images") val imagesUrls: List<String>,
-        @SerializedName("missing_person") val missingPerson: MissingPerson
+        @SerializedName("id") val id: Int? = null,
+        @SerializedName("title") val title: String? = null,
+        @SerializedName("description") val description: String? = null,
+        @SerializedName("created_at") val createdAt: Date? = null,
+        @SerializedName("images") val imagesUrls: List<String>? = null,
+        @SerializedName("missing_person") val missingPerson: MissingPerson? = null
 
 ) : Serializable

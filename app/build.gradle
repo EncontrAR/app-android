@@ -32,6 +32,7 @@ buildscript {
     ext.chuck_version = '1.0.4'
     ext.fresco_version = '1.4.0'
     ext.play_services_version = '11.2.0'
+    ext.koi_version = '0.5.4'
 }
 
 dependencies {
@@ -56,7 +57,8 @@ dependencies {
     compile 'com.wealthfront:magellan:1.0.0'
     compile 'com.wealthfront:magellan-support:1.0.0'
     compile 'com.github.brianegan.bansa:bansaKotlin:1.0.0-beta'
-    compile 'com.mcxiaoke.koi:core:0.5.4'
+    compile "com.mcxiaoke.koi:core:$koi_version"
+    compile "com.mcxiaoke.koi:async:$koi_version"
 
     // Third party
     compile "com.squareup.okhttp3:okhttp:$okhttp3_version"

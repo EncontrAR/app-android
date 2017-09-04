@@ -28,8 +28,12 @@ import ar.com.encontrarpersonas.App
 object UserRepository {
 
     private val SHARED_PREFERENCES_USER = "UserPreferences"
-    private val FIELD_API_AUTH_TOKEN = "ApiAuthToken"
-    private val FIELD_FIREBASE_NOTIFICATIONS_TOKEN = "FirebaseNotificationsToken"
+    private val FIELD_API_AUTH_TOKEN = "apiAuthToken"
+    private val FIELD_FIREBASE_NOTIFICATIONS_TOKEN = "firebaseNotificationsToken"
+
+    // Since tokens are used frequently, store them in memory for faster access
+    private var apiAuthToken: String? = null
+    private var firebaseNotificationsToken: String? = null
 
     // Using lazy initialization to obtain shared preferences in case it is not necessary
     private val sharedPreferences by lazy {
@@ -42,13 +46,17 @@ object UserRepository {
      * Returns the token required for the authenticated endpoints of Encontrar API.
      */
     fun getApiAuthToken(): String? {
-        return sharedPreferences.getString(FIELD_API_AUTH_TOKEN, null)
+        return if (apiAuthToken != null)
+            apiAuthToken
+        else
+            sharedPreferences.getString(FIELD_API_AUTH_TOKEN, null)
     }
 
     /**
      * Sets asynchronously the token required for the authenticated endpoints of Encontrar API.
      */
     fun setApiAuthToken(token: String) {
+        apiAuthToken = token
         sharedPreferences.edit().putString(FIELD_API_AUTH_TOKEN, token).apply()
     }
 
@@ -56,7 +64,10 @@ object UserRepository {
      * Returns Firebase's device token for sending push notifications to the running device.
      */
     fun getFirebaseNotificationsToken(): String? {
-        return sharedPreferences.getString(FIELD_FIREBASE_NOTIFICATIONS_TOKEN, null)
+        return if (firebaseNotificationsToken != null)
+            firebaseNotificationsToken
+        else
+            sharedPreferences.getString(FIELD_FIREBASE_NOTIFICATIONS_TOKEN, null)
     }
 
     /**
@@ -67,6 +78,7 @@ object UserRepository {
      *  any other custom token here.
      */
     fun setFirebaseNotificationsToken(token: String) {
+        firebaseNotificationsToken = token
         sharedPreferences.edit().putString(FIELD_FIREBASE_NOTIFICATIONS_TOKEN, token).apply()
     }
 }

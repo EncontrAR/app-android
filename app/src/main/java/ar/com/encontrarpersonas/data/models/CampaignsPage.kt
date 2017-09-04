@@ -26,11 +26,11 @@ import java.io.Serializable
  *
  */
 data class CampaignsPage(
-        @SerializedName("page") val campaigns: List<Campaign>,
-        @SerializedName("count") val count: Int,
-        @SerializedName("total_pages") val totalPages: Int,
-        @SerializedName("total_count") val totalCount: Int,
-        @SerializedName("current_page") val currentPage: Int,
-        @SerializedName("next_page") val nextPageNumber: Int
+        @SerializedName("page") val campaigns: List<Campaign>? = null,
+        @SerializedName("count") val count: Int? = null,
+        @SerializedName("total_pages") val totalPages: Int? = null,
+        @SerializedName("total_count") val totalCount: Int? = null,
+        @SerializedName("current_page") val currentPage: Int? = null,
+        @SerializedName("next_page") val nextPageNumber: Int? = null
 
 ) : Serializable

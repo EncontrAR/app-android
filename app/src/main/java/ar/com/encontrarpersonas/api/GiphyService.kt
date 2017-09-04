@@ -34,12 +34,12 @@ interface GiphyService {
         val API_KEY = "dc6zaTOxFJmzC"
     }
 
-    @GET("gifs/search")
+    @GET("campaigns/search")
     fun search(@Query("q") phrase: String,
                @Query("api_key") apiKey: String = API_KEY)
             : Call<DataWrapper>
 
-    @GET("gifs/trending")
+    @GET("campaigns/trending")
     fun trending(@Query("api_key") apiKey: String = API_KEY,
                  @Query("limit") limit : Int = 25)
             : Call<DataWrapper>

@@ -26,6 +26,6 @@ import java.io.Serializable
  *
  */
 data class Position(
-        @SerializedName("latitude") val latitude: String,
-        @SerializedName("longitude") val longitude: String
+        @SerializedName("latitude") val latitude: String?,
+        @SerializedName("longitude") val longitude: String?
 ) : Serializable

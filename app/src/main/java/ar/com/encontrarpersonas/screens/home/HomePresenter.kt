@@ -1,10 +1,16 @@
 package ar.com.encontrarpersonas.screens.home
 
+import android.text.TextUtils
+import android.util.Log
 import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.api.EncontrarRestApi
-import ar.com.encontrarpersonas.data.models.DataWrapper
+import ar.com.encontrarpersonas.data.UserRepository
+import ar.com.encontrarpersonas.data.models.CampaignsPage
 import com.brianegan.bansa.Store
+import com.mcxiaoke.koi.async.asyncDelay
+import com.mcxiaoke.koi.async.mainThread
+import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.toast
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,23 +40,74 @@ import retrofit2.Response
  */
 class HomePresenter(val store: Store<HomeState>) {
 
-    fun getGifs() {
-        store.dispatch(HomeReducer.FETCHING_GIFS)
+    private val REGISTERING_DEVICE_MAX_ATTEMPTS = 10
 
-        EncontrarRestApi.giphy.trending(limit = 100).enqueue(object : Callback<DataWrapper> {
-            override fun onResponse(call: Call<DataWrapper>, response: Response<DataWrapper>) {
-                if (response.isSuccessful) {
-                    store.dispatch(HomeReducer.GIFS_ARRIVED(
-                            response.body()!!.data)
-                    )
-                } else
-                    App.sInstance.toast(R.string.error_network)
-            }
+    fun startCampaignsRetrievalProcess() {
 
-            override fun onFailure(call: Call<DataWrapper>?, t: Throwable?) {
+        if (TextUtils.isEmpty(UserRepository.getApiAuthToken())) {
+            waitForDeviceRegistered()
+        } else {
+            fetchCampaigns()
+        }
+    }
+
+    private fun waitForDeviceRegistered(timesChecked: Int = 1) {
+
+        Log.i("Registering",
+                "Registering device. Attempt $timesChecked / $REGISTERING_DEVICE_MAX_ATTEMPTS")
+
+        if (timesChecked == 1)
+            store.dispatch(HomeReducer.REGISTERING_DEVICE)
+
+        // Check if we have already checked too many times, if so, abort and go to an error state
+        if (timesChecked >= REGISTERING_DEVICE_MAX_ATTEMPTS) {
+            mainThread {
                 App.sInstance.toast(R.string.error_network)
+                store.dispatch(HomeReducer.ERROR)
+                return@mainThread
             }
+        }
 
-        })
+        // Wait and check if the device has been registered with the API. This must be done at
+        // least once by FirebaseAccessTokenService.
+        asyncDelay((5000 * timesChecked).toLong()) {
+            if (TextUtils.isEmpty(UserRepository.getApiAuthToken())) {
+                waitForDeviceRegistered(timesChecked + 1)
+            } else {
+                mainThreadSafe {
+                    fetchCampaigns()
+                }
+            }
+        }
+    }
+
+    private fun fetchCampaigns() {
+        store.dispatch(HomeReducer.FETCHING_CAMPAIGNS)
+
+        EncontrarRestApi
+                .campaigns
+                .getCampaignsList()
+                .enqueue(object : Callback<CampaignsPage> {
+                    override fun onFailure(call: Call<CampaignsPage>?, t: Throwable?) {
+                        App.sInstance.toast(R.string.error_network)
+                        store.dispatch(HomeReducer.ERROR)
+                    }
+
+                    override fun onResponse(call: Call<CampaignsPage>?,
+                                            response: Response<CampaignsPage>?) {
+                        if (response?.isSuccessful!!) {
+                            if (response.body()?.campaigns != null) {
+                                store.dispatch(HomeReducer.CAMPAIGNS_PAGE_ARRIVED(
+                                        response.body()!!.campaigns!!))
+                            } else {
+                                App.sInstance.toast(R.string.error_network)
+                                store.dispatch(HomeReducer.ERROR)
+                            }
+                        } else {
+                            App.sInstance.toast(R.string.error_network)
+                            store.dispatch(HomeReducer.ERROR)
+                        }
+                    }
+                })
     }
 }

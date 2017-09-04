@@ -42,7 +42,7 @@ class CaseListingHomeComponent(context: Context,
     }
 
     override fun view() {
-        RemoteImageGrid(context, homeScreen.store.state.gifs) { _, gif ->
+        RemoteImageGrid(context, homeScreen.store.state.campaigns) { _, gif ->
             homeScreen.navigator.goTo(DetailScreen(gif))
         }
     }

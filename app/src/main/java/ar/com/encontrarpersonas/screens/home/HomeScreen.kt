@@ -24,7 +24,7 @@ class HomeScreen : Screen<HomeView>() {
     override fun onShow(context: Context?) {
         super.onShow(context)
 
-        if (store.state.gifs.isEmpty()) presenter.getGifs()
+        if (store.state.campaigns.isEmpty()) presenter.startCampaignsRetrievalProcess()
     }
 
     override fun getTitle(context: Context?): String {

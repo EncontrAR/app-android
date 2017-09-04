@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.screens.home.components.CaseListingHomeComponent
+import ar.com.encontrarpersonas.screens.home.components.ErrorHomeComponent
 import ar.com.encontrarpersonas.screens.home.components.LoadingHomeComponent
 import com.wealthfront.magellan.BaseScreenView
 import trikita.anvil.Anvil
@@ -21,11 +22,26 @@ class HomeView(context: Context) : BaseScreenView<HomeScreen>(context) {
                     backgroundColor(ContextCompat.getColor(context, R.color.theme_color_2))
                     size(MATCH, MATCH)
 
-                    if (screen.store.state.isFetching) {
-                        LoadingHomeComponent(context)
-                    } else {
-                        CaseListingHomeComponent(context, screen)
+                    // Error state
+                    if (screen.store.state.isOnError) {
+                        ErrorHomeComponent(context, R.string.screen_home_error)
+                        return@frameLayout
                     }
+
+                    // Registering device state
+                    if (screen.store.state.isRegisteringDevice) {
+                        LoadingHomeComponent(context, R.string.screen_home_registering_device)
+                        return@frameLayout
+                    }
+
+                    // Retrieving campaigns state
+                    if (screen.store.state.isFetching) {
+                        LoadingHomeComponent(context, R.string.screen_home_retrieving_campaigns)
+                        return@frameLayout
+                    }
+
+                    // Displaying campaigns state
+                    CaseListingHomeComponent(context, screen)
 
                 }
 

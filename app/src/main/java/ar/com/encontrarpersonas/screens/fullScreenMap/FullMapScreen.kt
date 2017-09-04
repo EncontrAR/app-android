@@ -1,13 +1,13 @@
 package ar.com.encontrarpersonas.screens.fullScreenMap
 
 import android.content.Context
-import ar.com.encontrarpersonas.data.models.Metadata
+import ar.com.encontrarpersonas.data.models.Campaign
 import ar.com.encontrarpersonas.utils.AbstractMapScreen
 import com.brianegan.bansa.BaseStore
 import trikita.anvil.Anvil
 
 
-class FullMapScreen(item: Metadata) : AbstractMapScreen<FullMapScreen>() {
+class FullMapScreen(item: Campaign) : AbstractMapScreen<FullMapScreen>() {
 
     //Store
     val store = BaseStore(FullMapState(item), FullMapReducer().reducer)

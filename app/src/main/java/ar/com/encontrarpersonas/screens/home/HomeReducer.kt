@@ -1,6 +1,6 @@
 package ar.com.encontrarpersonas.screens.home
 
-import ar.com.encontrarpersonas.data.models.Metadata
+import ar.com.encontrarpersonas.data.models.Campaign
 import com.brianegan.bansa.Action
 import com.brianegan.bansa.Reducer
 
@@ -30,16 +30,29 @@ class HomeReducer {
 
     // Actions
     object RESET : Action
-    object FETCHING_GIFS : Action
-    data class GIFS_ARRIVED(val gifs: List<Metadata>) : Action
+
+    object REGISTERING_DEVICE : Action
+    object FETCHING_CAMPAIGNS : Action
+    object ERROR : Action
+    data class CAMPAIGNS_PAGE_ARRIVED(val campaigns: List<Campaign>) : Action
 
     // Reducer
-    val reducer = Reducer<HomeState> { state, action ->
+    val reducer = Reducer<HomeState> { oldState, action ->
         when (action) {
             is RESET -> HomeState()
-            is FETCHING_GIFS -> state.copy(isFetching = true)
-            is GIFS_ARRIVED -> state.copy(gifs = action.gifs, isFetching = false)
-            else -> state
+            is FETCHING_CAMPAIGNS -> HomeState(isFetching = true)
+            is REGISTERING_DEVICE -> HomeState(isRegisteringDevice = true)
+            is ERROR -> HomeState(isOnError = true)
+            is CAMPAIGNS_PAGE_ARRIVED -> {
+                var combinedCampaigns = action.campaigns
+                combinedCampaigns += oldState.campaigns
+                oldState.copy(
+                        campaigns = combinedCampaigns,
+                        isFetching = false,
+                        isRegisteringDevice = false,
+                        isOnError = false)
+            }
+            else -> oldState
         }
     }
 }

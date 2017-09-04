@@ -1,6 +1,7 @@
 package ar.com.encontrarpersonas.screens.home.components
 
 import android.content.Context
+import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -33,6 +34,7 @@ import trikita.anvil.RenderableView
  *
  */
 class LoadingHomeComponent(context: Context,
+                           @StringRes val stringRes : Int,
                            val w: Int = MATCH,
                            val h: Int = WRAP)
     : RenderableView(context) {
@@ -60,7 +62,7 @@ class LoadingHomeComponent(context: Context,
                 size(WRAP, WRAP)
                 margin(0, dip(32))
                 textSize(sip(24f))
-                text(R.string.screen_home_loading)
+                text(stringRes)
                 textColor(ContextCompat.getColor(context, R.color.text_secondary))
             }
         }

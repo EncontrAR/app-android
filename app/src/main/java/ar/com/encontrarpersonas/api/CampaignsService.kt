@@ -39,8 +39,8 @@ interface CampaignsService {
      * Authenticated endpoint.
      */
     @GET("campaigns/index_all")
-    fun getCampaignsList(@Query("page") page: Int,
-                         @Query("limit") limit: Int): Call<CampaignsPage>
+    fun getCampaignsList(@Query("page") page: Int? = null,
+                         @Query("limit") limit: Int? = null): Call<CampaignsPage>
 
     /**
      * Gets a specific Campaign data from Encontrar Rest API by providing its ID.

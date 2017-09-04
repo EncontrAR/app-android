@@ -1,7 +1,7 @@
 package ar.com.encontrarpersonas.screens.chat
 
+import ar.com.encontrarpersonas.data.models.Campaign
 import ar.com.encontrarpersonas.data.models.ChatMessage
-import ar.com.encontrarpersonas.data.models.Metadata
 
 /**
  * MIT License
@@ -26,7 +26,7 @@ import ar.com.encontrarpersonas.data.models.Metadata
  *
  */
 data class ChatState(
-        val item: Metadata,
+        val item: Campaign,
         val messagesList: List<ChatMessage> = listOf(ChatMessage(
                 "999", "Hola!"),
                 ChatMessage("999", "Bienvenido a Encontrar"),

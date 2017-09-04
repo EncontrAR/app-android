@@ -8,7 +8,11 @@
 
     <!-- Screen: Home -->
     <string name="screen_home_title">EncontrAR</string>
-    <string name="screen_home_loading">Actualizando casos…</string>
+    <string name="screen_home_retrieving_campaigns">Actualizando casos…</string>
+    <string name="screen_home_registering_device">Registrando el dispositivo…</string>
+    <string name="screen_home_error">
+        Se produjo un error al intentar conectarse con Encontrar. Por favor intentelo más tarde.
+    </string>
 
     <!-- Screen: Settings -->
     <string name="screen_settings_title">Ajustes</string>

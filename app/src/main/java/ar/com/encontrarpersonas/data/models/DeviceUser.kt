@@ -27,17 +27,18 @@ import java.util.*
  *
  */
 data class DeviceUser(
-        @SerializedName("id") val id: Int,
-        @SerializedName("email") val email: String,
-        @SerializedName("name") val name: String,
-        @SerializedName("lastname") val lastname: String,
-        @SerializedName("device_id") val deviceId: String,
-        @SerializedName("os") val os: String,
-        @SerializedName("alert_type") val alertType: Int,
-        @SerializedName("latitude") val latitude: String,
-        @SerializedName("longitude") val longitude: String,
-        @SerializedName("created_at") val createdAt: Date,
-        @SerializedName("updated_at") val updatedAt: Date,
-        @SerializedName("device_tokens") val firebaseDeviceTokens: List<String>,
-        @SerializedName("auth_token") val authToken: String
+        @SerializedName("id") val id: Int? = null,
+        @SerializedName("email") val email: String? = null,
+        @SerializedName("name") val name: String? = null,
+        @SerializedName("lastname") val lastname: String? = null,
+        @SerializedName("device_id") val deviceId: String? = null,
+        @SerializedName("os") val os: String? = null,
+        @SerializedName("alert_type") val alertType: Int? = null,
+        @SerializedName("latitude") val latitude: String? = null,
+        @SerializedName("longitude") val longitude: String? = null,
+        @SerializedName("created_at") val createdAt: Date? = null,
+        @SerializedName("updated_at") val updatedAt: Date? = null,
+        // Check with API this object. It should be an array, but it is retrieving an object.
+        //@SerializedName("device_tokens") val firebaseDeviceTokens: List<String>? = null,
+        @SerializedName("auth_token") val authToken: String? = null
 ) : Serializable

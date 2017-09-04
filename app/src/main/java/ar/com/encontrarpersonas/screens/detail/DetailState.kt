@@ -1,6 +1,6 @@
 package ar.com.encontrarpersonas.screens.detail
 
-import ar.com.encontrarpersonas.data.models.Metadata
+import ar.com.encontrarpersonas.data.models.Campaign
 
 /**
  * MIT License
@@ -25,5 +25,5 @@ import ar.com.encontrarpersonas.data.models.Metadata
  *
  */
 data class DetailState(
-        val item: Metadata
+        val item: Campaign
 )

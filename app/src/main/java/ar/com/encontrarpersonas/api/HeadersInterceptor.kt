@@ -1,5 +1,6 @@
 package ar.com.encontrarpersonas.api
 
+import android.text.TextUtils
 import ar.com.encontrarpersonas.data.UserRepository
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -32,14 +33,15 @@ class HeadersInterceptor : Interceptor {
      * Adds content type and auth headers required by Encontrar Rest API.
      */
     override fun intercept(chain: Interceptor.Chain): Response {
-        var request = chain.request()
+        val request = chain.request()
 
-        request = request.newBuilder()
+        val requestBuilder = request.newBuilder()
                 .addHeader("Content-Type", "application/json")
-                .addHeader("X-Auth-Token", UserRepository.getApiAuthToken())
-                .build()
 
-        return chain.proceed(request)
+        if (!TextUtils.isEmpty(UserRepository.getApiAuthToken()))
+            requestBuilder.addHeader("X-Auth-Token", UserRepository.getApiAuthToken())
+
+        return chain.proceed(requestBuilder.build())
     }
 
 }
