@@ -169,24 +169,29 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                     linearLayout {
                         size(MATCH, WRAP)
                         orientation(LinearLayout.VERTICAL)
-                        backgroundColor(ContextCompat.getColor(context, R.color.primary_background))
                         layoutGravity(BOTTOM)
 
                         view {
-                            size(MATCH, dip(5))
+                            size(MATCH, dip(8))
                             background(ContextCompat.getDrawable(context, R.drawable.gradient_dropshadow_270))
                         }
 
-                        button {
+                        frameLayout {
+                            backgroundColor(ContextCompat.getColor(context, R.color.primary_background))
                             size(MATCH, WRAP)
-                            text(R.string.screen_detail_report_button)
-                            margin(dip(8))
-                            textSize(sip(18f))
-                            textColor(ContextCompat.getColor(context, R.color.text_secondary))
-                            backgroundColor(ContextCompat.getColor(context, R.color.button_red))
 
-                            onClick {
-                                screen.navigator.goTo(ChatScreen(campaign))
+                            button {
+                                size(MATCH, WRAP)
+                                text(R.string.screen_detail_report_button)
+                                margin(dip(8))
+                                textSize(sip(18f))
+                                textColor(ContextCompat.getColor(context, R.color.text_secondary))
+                                backgroundColor(ContextCompat.getColor(context, R.color.button_red))
+
+                                onClick {
+                                    screen.navigator.goTo(ChatScreen(campaign))
+                                }
+
                             }
 
                         }
