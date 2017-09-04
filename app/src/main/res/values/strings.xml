@@ -13,11 +13,6 @@
     <string name="screen_home_error">
         Se produjo un error al intentar conectarse con Encontrar. Por favor intentelo más tarde.
     </string>
-    <string name="screen_home_person_field_national_id">DNI</string>
-    <string name="screen_home_person_field_age">Edad</string>
-    <string name="screen_home_person_field_gender">Sexo</string>
-    <string name="screen_home_person_gender_female">Femenino</string>
-    <string name="screen_home_person_gender_male">Masculino</string>
 
     <!-- Screen: Settings -->
     <string name="screen_settings_title">Ajustes</string>
@@ -42,6 +37,12 @@
     <!-- Screen: Detail -->
     <string name="screen_detail_title">Detalles del caso</string>
     <string name="screen_detail_share">Compartir</string>
+    <string name="screen_detail_person_field_national_id">DNI</string>
+    <string name="screen_detail_person_field_age">Edad</string>
+    <string name="screen_detail_person_field_gender">Sexo</string>
+    <string name="screen_detail_person_gender_female">Femenino</string>
+    <string name="screen_detail_person_gender_male">Masculino</string>
+    <string name="screen_detail_report_button">Reportar</string>
 
     <!-- Component: ShareMethod -->
     <string name="component_sharemethod_other">Otras apps…</string>

@@ -8,7 +8,9 @@ import ar.com.encontrarpersonas.components.lists.RemoteImageComponent
 import ar.com.encontrarpersonas.screens.chat.ChatScreen
 import ar.com.encontrarpersonas.screens.detail.components.MissingPersonFieldComponent
 import ar.com.encontrarpersonas.screens.fullScreenMap.FullMapScreen
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.LatLng
 import com.wealthfront.magellan.BaseScreenView
 import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
@@ -55,6 +57,15 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                         googleMap.setOnMapClickListener {
                                             screen.navigator.goTo(FullMapScreen(campaign))
                                         }
+
+                                        val cameraPosition = CameraUpdateFactory.newLatLng(
+                                                LatLng(-34.5986068,
+                                                        -58.4223893))
+
+                                        val cameraZoom = CameraUpdateFactory.zoomTo(15f)
+
+                                        googleMap.moveCamera(cameraPosition)
+                                        googleMap.animateCamera(cameraZoom)
                                     }
                                 }
                             }
@@ -69,6 +80,16 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                     text("${missingPerson?.name} ${missingPerson?.lastname}")
                                     gravity(CENTER_HORIZONTAL)
                                     textSize(sip(32f))
+                                    margin(0, dip(16))
+                                    textColor(ContextCompat.getColor(context, R.color.text_primary))
+                                }
+
+                                // Campaign description
+                                textView {
+                                    size(MATCH, WRAP)
+                                    text(campaign.description)
+                                    gravity(CENTER_HORIZONTAL)
+                                    textSize(sip(24f))
                                     margin(0, dip(16))
                                     textColor(ContextCompat.getColor(context, R.color.text_primary))
                                 }
@@ -102,22 +123,22 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
 
                                         MissingPersonFieldComponent(
                                                 context,
-                                                description = context.getString(R.string.screen_home_person_field_gender),
+                                                description = context.getString(R.string.screen_detail_person_field_gender),
                                                 value = if (missingPerson.gender == "female")
-                                                    context.getString(R.string.screen_home_person_gender_female)
+                                                    context.getString(R.string.screen_detail_person_gender_female)
                                                 else
-                                                    context.getString(R.string.screen_home_person_gender_male)
+                                                    context.getString(R.string.screen_detail_person_gender_male)
                                         )
 
                                         MissingPersonFieldComponent(
                                                 context,
-                                                description = context.getString(R.string.screen_home_person_field_age),
+                                                description = context.getString(R.string.screen_detail_person_field_age),
                                                 value = missingPerson.age.toString()
                                         )
 
                                         MissingPersonFieldComponent(
                                                 context,
-                                                description = context.getString(R.string.screen_home_person_field_national_id),
+                                                description = context.getString(R.string.screen_detail_person_field_national_id),
                                                 value = missingPerson.nationalId.toString()
                                         )
 
@@ -158,7 +179,7 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
 
                         button {
                             size(MATCH, WRAP)
-                            text("Reportar")
+                            text(R.string.screen_detail_report_button)
                             margin(dip(8))
                             textSize(sip(18f))
                             textColor(ContextCompat.getColor(context, R.color.text_secondary))

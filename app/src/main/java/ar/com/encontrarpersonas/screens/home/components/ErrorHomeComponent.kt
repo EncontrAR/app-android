@@ -5,7 +5,6 @@ import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
 import ar.com.encontrarpersonas.R
-import trikita.anvil.DSL
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView
 
@@ -44,15 +43,15 @@ class ErrorHomeComponent(context: Context,
 
     override fun view() {
         frameLayout {
-            DSL.orientation(LinearLayout.VERTICAL)
+            orientation(LinearLayout.VERTICAL)
             size(w, h)
             layoutGravity(CENTER)
-            gravity(CENTER_HORIZONTAL)
 
             textView {
-                size(WRAP, WRAP)
+                size(MATCH, WRAP)
                 margin(0, dip(32))
                 textSize(sip(24f))
+                gravity(CENTER)
                 text(stringRes)
                 textColor(ContextCompat.getColor(context, R.color.text_secondary))
             }
