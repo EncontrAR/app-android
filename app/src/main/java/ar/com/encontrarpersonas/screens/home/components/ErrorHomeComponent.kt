@@ -3,6 +3,7 @@ package ar.com.encontrarpersonas.screens.home.components
 import android.content.Context
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
+import android.view.View
 import android.widget.LinearLayout
 import ar.com.encontrarpersonas.R
 import trikita.anvil.DSL.*
@@ -33,7 +34,8 @@ import trikita.anvil.RenderableView
 class ErrorHomeComponent(context: Context,
                          @StringRes val stringRes: Int,
                          val w: Int = MATCH,
-                         val h: Int = WRAP)
+                         val h: Int = WRAP,
+                         val onRetryClick: (view: View) -> Unit)
     : RenderableView(context) {
 
 
@@ -42,10 +44,15 @@ class ErrorHomeComponent(context: Context,
     }
 
     override fun view() {
-        frameLayout {
+        linearLayout {
             orientation(LinearLayout.VERTICAL)
             size(w, h)
             layoutGravity(CENTER)
+
+            imageView {
+                size(dip(128), dip(128))
+                imageResource(R.drawable.ic_warning)
+            }
 
             textView {
                 size(MATCH, WRAP)
@@ -54,6 +61,19 @@ class ErrorHomeComponent(context: Context,
                 gravity(CENTER)
                 text(stringRes)
                 textColor(ContextCompat.getColor(context, R.color.text_secondary))
+            }
+
+            button {
+                size(WRAP, WRAP)
+                margin(0, dip(32))
+                padding(dip(16), 0)
+                text(R.string.screen_home_retry)
+                textColor(ContextCompat.getColor(context, R.color.text_primary))
+                backgroundColor(ContextCompat.getColor(context, R.color.theme_color_1))
+
+                onClick { view ->
+                    onRetryClick(view)
+                }
             }
         }
     }

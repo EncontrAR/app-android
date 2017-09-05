@@ -24,7 +24,9 @@ class HomeView(context: Context) : BaseScreenView<HomeScreen>(context) {
 
                     // Error state
                     if (screen.store.state.isOnError) {
-                        ErrorHomeComponent(context, R.string.screen_home_error)
+                        ErrorHomeComponent(context, R.string.screen_home_error) {
+                            screen.presenter.startCampaignsRetrievalProcess()
+                        }
                         return@frameLayout
                     }
 

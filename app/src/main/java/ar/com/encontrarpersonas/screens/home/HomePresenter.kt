@@ -100,11 +100,9 @@ class HomePresenter(val store: Store<HomeState>) {
                                 store.dispatch(HomeReducer.CAMPAIGNS_PAGE_ARRIVED(
                                         response.body()!!.campaigns!!))
                             } else {
-                                App.sInstance.toast(R.string.error_network)
                                 store.dispatch(HomeReducer.ERROR)
                             }
                         } else {
-                            App.sInstance.toast(R.string.error_network)
                             store.dispatch(HomeReducer.ERROR)
                         }
                     }
