@@ -6,6 +6,7 @@ import ar.com.encontrarpersonas.R
 import com.facebook.drawee.backends.pipeline.Fresco.newDraweeControllerBuilder
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
+import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
 import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
@@ -37,7 +38,8 @@ class RemoteImageComponent(context: Context,
                            val w: Int = MATCH,
                            val h: Int = WRAP,
                            val imageUri: String?,
-                           val scaleType: ScalingUtils.ScaleType = ScalingUtils.ScaleType.CENTER_CROP)
+                           val scaleType: ScalingUtils.ScaleType = ScalingUtils.ScaleType.CENTER_CROP,
+                           val rounded: Boolean = false)
     : RenderableView(context) {
 
     init {
@@ -53,11 +55,14 @@ class RemoteImageComponent(context: Context,
                                 .setPlaceholderImage(R.drawable.ic_loading)
                                 .setProgressBarImage(com.facebook.drawee.drawable.ProgressBarDrawable())
                                 .setActualImageScaleType(scaleType)
+                                .setRoundingParams(if (rounded) getRoundingParams() else null)
                                 .build()
             }
 
             size(w, h)
-            backgroundColor(ContextCompat.getColor(context, R.color.theme_color_4))
+
+            if (!rounded)
+                backgroundColor(ContextCompat.getColor(context, R.color.theme_color_4))
 
             Anvil.currentView<SimpleDraweeView>().controller =
                     newDraweeControllerBuilder()
@@ -65,6 +70,12 @@ class RemoteImageComponent(context: Context,
                             .setAutoPlayAnimations(true)
                             .build()
         }
+    }
+
+    private fun getRoundingParams(): RoundingParams {
+        return RoundingParams
+                .asCircle()
+                .setBorder(ContextCompat.getColor(context, R.color.theme_color_2), 4F)
     }
 
 }

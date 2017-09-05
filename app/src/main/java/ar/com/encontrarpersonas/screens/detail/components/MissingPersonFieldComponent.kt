@@ -42,13 +42,12 @@ class MissingPersonFieldComponent(context: Context,
         textView {
             size(MATCH, WRAP)
             text("$description: $value")
-            gravity(CENTER_HORIZONTAL)
             textSize(sip(18f))
             textColor(ContextCompat.getColor(
                     context,
                     R.color.text_primary
             ))
-            padding(dip(8))
+            padding(0 , dip(4))
         }
     }
 

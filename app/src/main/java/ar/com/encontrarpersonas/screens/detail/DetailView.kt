@@ -82,7 +82,7 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                 // Missing person big name
                                 textView {
                                     size(MATCH, WRAP)
-                                    text("${missingPerson?.name} ${missingPerson?.lastname}")
+                                    text("${missingPerson.name} ${missingPerson.lastname}")
                                     gravity(CENTER_HORIZONTAL)
                                     textSize(sip(32f))
                                     margin(0, dip(16))
@@ -103,28 +103,29 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                     size(MATCH, 0)
                                     weight(1f)
                                     orientation(LinearLayout.HORIZONTAL)
-                                    padding(dip(8))
+                                    background(ContextCompat.getDrawable(
+                                            context,
+                                            R.drawable.shape_missin_person_detail_wrapper
+                                    ))
+                                    margin(dip(16), dip(24))
 
-                                    // Missing person maing picture
-                                    frameLayout {
-                                        size(0, dip(300))
-                                        weight(0.5f) // 50% of the screen width
-
-                                        RemoteImageComponent(
-                                                context,
-                                                MATCH,
-                                                MATCH,
-                                                missingPerson?.photoUrl
-                                        )
-
-                                    }
+                                    // Missing person main picture
+                                    RemoteImageComponent(
+                                            context,
+                                            dip(128),
+                                            dip(128),
+                                            missingPerson.photoUrl,
+                                            rounded = true
+                                    )
 
                                     // Missing Person fields (age, gender, etc.)
                                     linearLayout {
                                         size(0, MATCH)
-                                        weight(0.5f) // 50% of the screen width
+                                        weight(1f)
                                         orientation(LinearLayout.VERTICAL)
-                                        gravity(CENTER_VERTICAL)
+                                        gravity(LEFT or CENTER_VERTICAL)
+                                        padding(dip(8))
+                                        margin(dip(8), 0, 0, 0)
 
                                         MissingPersonFieldComponent(
                                                 context,
