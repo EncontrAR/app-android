@@ -40,3 +40,4 @@ data class DeviceUser(
         @SerializedName("updated_at") val updatedAt: Date? = null,
         @SerializedName("auth_token") val authToken: String? = null
 ) : Serializable
+

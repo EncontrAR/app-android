@@ -3,6 +3,7 @@ package ar.com.encontrarpersonas.screens.fullScreenMap
 import android.content.Context
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.wealthfront.magellan.BaseScreenView
 import trikita.anvil.Anvil
@@ -16,6 +17,9 @@ class FullMapView(context: Context) : BaseScreenView<FullMapScreen>(context) {
         addView(object : RenderableView(context) {
             override fun view() {
 
+                val DEFAULT_ZOOM = 15f
+                val DEFAULT_TILT = 55f
+
                 v(MapView::class.java) {
                     size(MATCH, MATCH)
 
@@ -24,14 +28,16 @@ class FullMapView(context: Context) : BaseScreenView<FullMapScreen>(context) {
                     }
 
                     screen.mapView?.getMapAsync { googleMap ->
-                        val cameraPosition = CameraUpdateFactory.newLatLng(
-                                LatLng(-34.5986068,
-                                        -58.4223893))
+                        val cameraPosition = CameraPosition.Builder()
+                                .target(LatLng(-34.5986068, -58.4223893))
+                                .zoom(DEFAULT_ZOOM)
+                                .tilt(DEFAULT_TILT)
+                                .build()
 
-                        val cameraZoom = CameraUpdateFactory.zoomTo(15f)
-
-                        googleMap.moveCamera(cameraPosition)
-                        googleMap.animateCamera(cameraZoom)
+                        googleMap.animateCamera(
+                                CameraUpdateFactory
+                                        .newCameraPosition(cameraPosition)
+                        )
                     }
                 }
 

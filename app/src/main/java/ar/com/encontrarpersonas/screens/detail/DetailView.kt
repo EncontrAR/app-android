@@ -10,6 +10,7 @@ import ar.com.encontrarpersonas.screens.detail.components.MissingPersonFieldComp
 import ar.com.encontrarpersonas.screens.fullScreenMap.FullMapScreen
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.wealthfront.magellan.BaseScreenView
 import trikita.anvil.Anvil
@@ -54,18 +55,22 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                     }
 
                                     screen.mapView?.getMapAsync { googleMap ->
+                                        googleMap.uiSettings.isScrollGesturesEnabled = false
+
                                         googleMap.setOnMapClickListener {
                                             screen.navigator.goTo(FullMapScreen(campaign))
                                         }
 
-                                        val cameraPosition = CameraUpdateFactory.newLatLng(
-                                                LatLng(-34.5986068,
-                                                        -58.4223893))
+                                        val cameraPosition = CameraPosition.Builder()
+                                                .target(LatLng(-34.5986068, -58.4223893))
+                                                .zoom(14f)
+                                                .tilt(0f)
+                                                .build()
 
-                                        val cameraZoom = CameraUpdateFactory.zoomTo(15f)
-
-                                        googleMap.moveCamera(cameraPosition)
-                                        googleMap.animateCamera(cameraZoom)
+                                        googleMap.animateCamera(
+                                                CameraUpdateFactory
+                                                        .newCameraPosition(cameraPosition)
+                                        )
                                     }
                                 }
                             }
