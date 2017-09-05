@@ -51,8 +51,14 @@
 
     <!-- Menu: Main -->
     <string name="menu_item_settings">Ajustes</string>
+    <string name="menu_item_share">Compartir</string>
 
     <!-- Notifications -->
     <string name="notification_missing_person_nearby">Alguien se perdió cerca tuyo</string>
+
+    <!-- Share -->
+    <string name="share_title">Estamos buscando a %s</string>
+    <string name="share_description">Estamos buscando a %s, ayudanos a reunirlo con su familia.\nAportá información
+    o seguí este caso en www.encontrarpersonas.com.\nTu ayuda hace la diferencia.</string>
 
 </resources>

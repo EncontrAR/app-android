@@ -1,6 +1,7 @@
 package ar.com.encontrarpersonas.screens.detail
 
-import com.brianegan.bansa.Store
+import android.content.Intent
+import ar.com.encontrarpersonas.R
 
 /**
  * MIT License
@@ -24,8 +25,23 @@ import com.brianegan.bansa.Store
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class DetailPresenter(val store: Store<DetailState>) {
+class DetailPresenter(val screen: DetailScreen) {
 
-    // Implement presenter methods if necessary...
+    fun shareCampaign() {
+        val shareIntent = Intent()
+        val campaign = screen.store.state.item
+
+        shareIntent.action = Intent.ACTION_SEND
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, screen.activity.getString(
+                R.string.share_title,
+                campaign.missingPerson?.name
+        ))
+        shareIntent.putExtra(Intent.EXTRA_TEXT, screen.activity.getString(
+                R.string.share_description,
+                "${campaign.missingPerson?.name} ${campaign.missingPerson?.lastname}"
+        ))
+        screen.activity.startActivity(shareIntent)
+    }
 
 }

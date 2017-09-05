@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.screens.detail.DetailScreen
 import ar.com.encontrarpersonas.screens.home.HomeScreen
 import ar.com.encontrarpersonas.screens.settings.SettingsScreen
 import com.wealthfront.magellan.ActionBarConfig
@@ -45,7 +46,7 @@ class MainActivity : SingleActivity(), NavigationListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar : Toolbar = findViewById(R.id.activity_toolbar)
+        val toolbar: Toolbar = findViewById(R.id.activity_toolbar)
         setSupportActionBar(toolbar)
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.text_primary))
     }
@@ -69,6 +70,12 @@ class MainActivity : SingleActivity(), NavigationListener {
         return when (item.itemId) {
             R.id.main_menu_settings -> {
                 getNavigator().goTo(SettingsScreen())
+                return true
+            }
+
+            R.id.main_menu_share -> {
+                val screen = getNavigator().currentScreen()
+                if (screen is DetailScreen) screen.presenter.shareCampaign()
                 return true
             }
 

@@ -31,7 +31,7 @@ object UserRepository {
     private val FIELD_API_AUTH_TOKEN = "apiAuthToken"
     private val FIELD_FIREBASE_NOTIFICATIONS_TOKEN = "firebaseNotificationsToken"
 
-    // Since tokens are used frequently, store them in memory for faster access
+    // Since tokens are used frequently, screen them in memory for faster access
     private var apiAuthToken: String? = null
     private var firebaseNotificationsToken: String? = null
 
