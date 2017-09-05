@@ -1,6 +1,7 @@
-package ar.com.encontrarpersonas.api
+package ar.com.encontrarpersonas.notifications
 
 import android.util.Log
+import ar.com.encontrarpersonas.api.EncontrarRestApi
 import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.data.models.DeviceUser
 import com.google.firebase.iid.FirebaseInstanceId
@@ -48,8 +49,7 @@ class FirebaseAccessTokenService : FirebaseInstanceIdService() {
         if (firebaseAuthToken != null) {
             val deviceUser = DeviceUser(os = "android", deviceId = firebaseAuthToken)
 
-            EncontrarRestApi
-                    .deviceUser
+            EncontrarRestApi.deviceUser
                     .registerCurrentDevice(deviceUser)
                     .enqueue(object : Callback<DeviceUser> {
                         override fun onFailure(call: Call<DeviceUser>?, t: Throwable?) {

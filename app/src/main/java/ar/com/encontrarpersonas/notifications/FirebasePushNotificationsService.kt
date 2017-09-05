@@ -1,4 +1,4 @@
-package ar.com.encontrarpersonas.api
+package ar.com.encontrarpersonas.notifications
 
 /**
  * MIT License
@@ -23,7 +23,6 @@ package ar.com.encontrarpersonas.api
  *
  */
 
-import ar.com.encontrarpersonas.notifications.TrayNotificationsHandler
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -49,6 +48,8 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
             // Display the received notification on the system tray
             TrayNotificationsHandler(this).notify(remoteMessage)
 
+            // Display the received notification in the desktop wallpaper
+            WallpaperNotificationsHandler(this).notify(remoteMessage)
         }
 
     }
