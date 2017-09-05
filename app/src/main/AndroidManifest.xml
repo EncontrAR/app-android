@@ -39,9 +39,7 @@
 
         <!-- Service: Firebase Push Notifications Receiver -->
         <service
-            android:name=".notifications.FirebasePushNotificationsService"
-            android:enabled="true"
-            android:exported="true">
+            android:name=".notifications.FirebasePushNotificationsService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -54,6 +52,10 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
+
+        <!-- Service: Wallpaper Recovery -->
+        <service
+            android:name=".notifications.WallpaperRecoveryService"/>
 
     </application>
 

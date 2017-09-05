@@ -1,9 +1,8 @@
-package ar.com.encontrarpersonas
+package ar.com.encontrarpersonas.notifications
 
-import android.content.Context
-import android.support.multidex.MultiDexApplication
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.mcxiaoke.koi.KoiConfig
+import android.app.IntentService
+import android.app.WallpaperManager
+import android.content.Intent
 
 /**
  * MIT License
@@ -27,28 +26,29 @@ import com.mcxiaoke.koi.KoiConfig
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class App : MultiDexApplication() {
+class WallpaperRecoveryService : IntentService("WallpaperRecovery") {
+
+    val WALLPAPER_DURATION = 5000L
 
     companion object {
-        lateinit var sInstance: App
-            private set
+        val EXTRA_WALLPAPER_BITMAP = "wallpaperPath"
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        sInstance = this
+    override fun onHandleIntent(intent: Intent) {
 
-        startUpDependencies(this)
-        configureLogging()
+        // Wait a fixed amount of time before recovering the user's original wallpaper
+        Thread.sleep(WALLPAPER_DURATION)
+
+        // Get the wallpaer sent to the service as a File reference
+        val wallpaperPath = intent.getStringExtra(EXTRA_WALLPAPER_BITMAP)
+        val wallpaperFile = getFileStreamPath(wallpaperPath)
+
+        // Set back the user's original wallpaper
+        WallpaperManager
+                .getInstance(this)
+                .setStream(wallpaperFile.inputStream())
+
+        // Free resources
+        wallpaperFile.delete()
     }
-
-    private fun startUpDependencies(context: Context) {
-        Fresco.initialize(context)
-    }
-
-    fun configureLogging() {
-        // Log only on debug builds
-        KoiConfig.logEnabled = BuildConfig.DEBUG
-    }
-
 }

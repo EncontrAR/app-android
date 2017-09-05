@@ -2,12 +2,14 @@ package ar.com.encontrarpersonas.notifications
 
 import android.app.WallpaperManager
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.support.annotation.RequiresApi
 import ar.com.encontrarpersonas.R
 import com.google.firebase.messaging.RemoteMessage
-import com.mcxiaoke.koi.async.asyncDelay
+import com.mcxiaoke.koi.ext.Bundle
+import com.mcxiaoke.koi.ext.startService
 
 /**
  * MIT License
@@ -33,7 +35,7 @@ import com.mcxiaoke.koi.async.asyncDelay
  */
 class WallpaperNotificationsHandler(val context: Context) : INotificationHandler {
 
-    val WALLPAPER_DURATION = 5000L
+    val USER_WALLPAPER_NAME = "userWallpaper.png"
 
     override fun notify(remoteMessage: RemoteMessage) {
         useWallpaperManagerMethod()
@@ -45,14 +47,26 @@ class WallpaperNotificationsHandler(val context: Context) : INotificationHandler
     @RequiresApi(Build.VERSION_CODES.ECLAIR)
     private fun useWallpaperManagerMethod() {
         val wallpaperManager = WallpaperManager.getInstance(context)
+        val userWallpaper = (wallpaperManager.drawable as BitmapDrawable).bitmap
 
-        val userWallpaper = wallpaperManager.drawable
-
+        // Sets the temporal wallpaper
         wallpaperManager.setResource(R.raw.test_wallpaper)
 
-        asyncDelay(WALLPAPER_DURATION) {
-            wallpaperManager.setBitmap((userWallpaper as BitmapDrawable).bitmap)
-        }
+
+        // Save the user's origin wallpaper to a temporary file and free resources
+        val fileOutputStream = context.openFileOutput(USER_WALLPAPER_NAME, Context.MODE_PRIVATE)
+        userWallpaper.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+        fileOutputStream.close()
+        userWallpaper.recycle()
+
+        // Start a service to recover the original user's wallpaper after a while
+        // Its important to do this in a service, since the app may get killed before it
+        // recovers the original wallpaper.
+        context.startService<WallpaperRecoveryService>(
+                Bundle {
+                    putString(WallpaperRecoveryService.EXTRA_WALLPAPER_BITMAP, USER_WALLPAPER_NAME)
+                }
+        )
     }
 
 }

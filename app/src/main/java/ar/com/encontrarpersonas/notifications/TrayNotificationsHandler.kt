@@ -6,7 +6,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.media.RingtoneManager
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.activities.MainActivity
 import com.google.firebase.messaging.RemoteMessage
@@ -54,9 +56,15 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
 
         return NotificationCompat
                 .Builder(context, DEFAULT_NOTIFICATION_CHANNEL_ID)
+                .setAutoCancel(true)
+                .setColor(ContextCompat.getColor(context, R.color.theme_color_2))
+                .setLights(ContextCompat.getColor(context, R.color.theme_color_4), 500, 500)
+                .setVibrate(longArrayOf(0, 500, 250, 500, 250, 500))
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSmallIcon(R.drawable.ic_notification_small)
                 .setLargeIcon(largeIconBitmap)
                 .setContentTitle(context.getString(R.string.general_app_name))
+                .setSubText(context.getString(R.string.notification_missing_person_nearby))
                 .setContentText(remoteMessage.notification.body)
                 .setContentIntent(getNotificationOpenIntent())
                 .build()
