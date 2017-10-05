@@ -1,8 +1,5 @@
 <resources>
 
-    <!-- General -->
-    <string name="general_app_name">EncontrAR</string>
-
     <!-- Error -->
     <string name="error_network">No hay conexión a internet, inténtalo nuevamente más tarde.</string>
 

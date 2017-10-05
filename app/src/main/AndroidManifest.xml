@@ -19,6 +19,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
 
+        <!-- Fabric metadata -->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="17fbbc45aac703e587bb266114b5b1120510fd7c"/>
+
         <!-- Activity: Splash -->
         <activity
             android:name=".activities.SplashActivity"

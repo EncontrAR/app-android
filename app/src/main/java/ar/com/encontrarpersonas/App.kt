@@ -2,8 +2,10 @@ package ar.com.encontrarpersonas
 
 import android.content.Context
 import android.support.multidex.MultiDexApplication
+import com.crashlytics.android.Crashlytics
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.mcxiaoke.koi.KoiConfig
+import io.fabric.sdk.android.Fabric
 
 /**
  * MIT License
@@ -44,6 +46,7 @@ class App : MultiDexApplication() {
 
     private fun startUpDependencies(context: Context) {
         Fresco.initialize(context)
+        Fabric.with(this, Crashlytics())
     }
 
     fun configureLogging() {

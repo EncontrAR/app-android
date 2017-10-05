@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: '../scripts/warp/warp_task.gradle'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
@@ -12,27 +13,57 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        setProperty("archivesBaseName", "EncontrAR-$versionName") // Generated APK file name
     }
 
     buildTypes {
+
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+    }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        stage {
+            dimension "default"
+            versionName defaultConfig.versionName + "-stage"
+            resValue "string", "general_app_name", "[Stage] EncontrAR"
+        }
+
+        production {
+            dimension "default"
+            resValue "string", "general_app_name", "EncontrAR"
         }
     }
 }
 
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 buildscript {
     ext.anko_version = '0.10.0'
-    ext.support_version = '26.0.1'
+    ext.support_version = '26.1.0'
     ext.okhttp3_version = '3.8.0'
     ext.retrofit2_version = '2.3.0'
     ext.chuck_version = '1.0.4'
     ext.fresco_version = '1.4.0'
     ext.play_services_version = '11.2.0'
     ext.koi_version = '0.5.4'
+
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.24.2'
+    }
 }
 
 dependencies {
@@ -78,6 +109,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'
