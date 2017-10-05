@@ -30,10 +30,10 @@ class HomeReducer {
 
     // Actions
     object RESET : Action
-
     object REGISTERING_DEVICE : Action
     object FETCHING_CAMPAIGNS : Action
     object ERROR : Action
+    object NO_INTERNET : Action
     data class CAMPAIGNS_PAGE_ARRIVED(val campaigns: List<Campaign>) : Action
 
     // Reducer
@@ -43,6 +43,7 @@ class HomeReducer {
             is FETCHING_CAMPAIGNS -> HomeState(isFetching = true)
             is REGISTERING_DEVICE -> HomeState(isRegisteringDevice = true)
             is ERROR -> HomeState(isOnError = true)
+            is NO_INTERNET -> HomeState(isNoInternetConnection = true)
             is CAMPAIGNS_PAGE_ARRIVED -> {
                 var combinedCampaigns = action.campaigns
                 combinedCampaigns += oldState.campaigns
@@ -50,7 +51,8 @@ class HomeReducer {
                         campaigns = combinedCampaigns,
                         isFetching = false,
                         isRegisteringDevice = false,
-                        isOnError = false)
+                        isOnError = false,
+                        isNoInternetConnection = false)
             }
             else -> oldState
         }

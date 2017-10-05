@@ -2,8 +2,6 @@ package ar.com.encontrarpersonas.screens.home
 
 import android.text.TextUtils
 import android.util.Log
-import ar.com.encontrarpersonas.App
-import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.api.EncontrarRestApi
 import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.data.models.CampaignsPage
@@ -11,7 +9,6 @@ import com.brianegan.bansa.Store
 import com.mcxiaoke.koi.async.asyncDelay
 import com.mcxiaoke.koi.async.mainThread
 import com.mcxiaoke.koi.async.mainThreadSafe
-import com.mcxiaoke.koi.ext.toast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -62,7 +59,6 @@ class HomePresenter(val store: Store<HomeState>) {
         // Check if we have already checked too many times, if so, abort and go to an error state
         if (timesChecked >= REGISTERING_DEVICE_MAX_ATTEMPTS) {
             mainThread {
-                App.sInstance.toast(R.string.error_network)
                 store.dispatch(HomeReducer.ERROR)
                 return@mainThread
             }
@@ -89,21 +85,31 @@ class HomePresenter(val store: Store<HomeState>) {
                 .getCampaignsList()
                 .enqueue(object : Callback<CampaignsPage> {
                     override fun onFailure(call: Call<CampaignsPage>?, t: Throwable?) {
-                        App.sInstance.toast(R.string.error_network)
-                        store.dispatch(HomeReducer.ERROR)
+                        store.dispatch(HomeReducer.NO_INTERNET)
                     }
 
                     override fun onResponse(call: Call<CampaignsPage>?,
                                             response: Response<CampaignsPage>?) {
                         if (response?.isSuccessful!!) {
+
                             if (response.body()?.campaigns != null) {
                                 store.dispatch(HomeReducer.CAMPAIGNS_PAGE_ARRIVED(
                                         response.body()!!.campaigns!!))
                             } else {
                                 store.dispatch(HomeReducer.ERROR)
                             }
+
                         } else {
-                            store.dispatch(HomeReducer.ERROR)
+
+                            // Check if the current access token has been unauthorized by the API
+                            if (response.code() == 401) {
+                                UserRepository.setApiAuthToken("") // Clean dirty token
+                                startCampaignsRetrievalProcess() // Restart campaigns retrieval
+                            } else {
+                                // If the code reached this point, something unusual happened
+                                store.dispatch(HomeReducer.ERROR)
+                            }
+
                         }
                     }
                 })

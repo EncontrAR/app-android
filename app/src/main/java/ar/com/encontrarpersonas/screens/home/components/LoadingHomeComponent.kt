@@ -60,7 +60,7 @@ class LoadingHomeComponent(context: Context,
 
             textView {
                 size(WRAP, WRAP)
-                margin(0, dip(32))
+                margin(dip(16), dip(32))
                 textSize(sip(24f))
                 text(stringRes)
                 textColor(ContextCompat.getColor(context, R.color.text_secondary))

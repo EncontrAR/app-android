@@ -31,11 +31,11 @@ import trikita.anvil.RenderableView
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class ErrorHomeComponent(context: Context,
-                         @StringRes val stringRes: Int,
-                         val w: Int = MATCH,
-                         val h: Int = WRAP,
-                         val onRetryClick: (view: View) -> Unit)
+class NoInternetHomeComponent(context: Context,
+                              @StringRes val stringRes: Int,
+                              val w: Int = MATCH,
+                              val h: Int = WRAP,
+                              val onRetryClick: (view: View) -> Unit)
     : RenderableView(context) {
 
 
@@ -51,7 +51,7 @@ class ErrorHomeComponent(context: Context,
 
             imageView {
                 size(dip(128), dip(128))
-                imageResource(R.drawable.ic_warning)
+                imageResource(R.drawable.ic_no_internet)
             }
 
             textView {

@@ -6,6 +6,7 @@ import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.screens.home.components.CaseListingHomeComponent
 import ar.com.encontrarpersonas.screens.home.components.ErrorHomeComponent
 import ar.com.encontrarpersonas.screens.home.components.LoadingHomeComponent
+import ar.com.encontrarpersonas.screens.home.components.NoInternetHomeComponent
 import com.wealthfront.magellan.BaseScreenView
 import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
@@ -21,6 +22,14 @@ class HomeView(context: Context) : BaseScreenView<HomeScreen>(context) {
                 frameLayout {
                     backgroundColor(ContextCompat.getColor(context, R.color.theme_color_2))
                     size(MATCH, MATCH)
+
+                    // No internet connection state
+                    if (screen.store.state.isNoInternetConnection) {
+                        NoInternetHomeComponent(context, R.string.error_network) {
+                            screen.presenter.startCampaignsRetrievalProcess()
+                        }
+                        return@frameLayout
+                    }
 
                     // Error state
                     if (screen.store.state.isOnError) {

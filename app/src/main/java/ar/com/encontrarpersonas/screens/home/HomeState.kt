@@ -28,5 +28,6 @@ data class HomeState(
         val campaigns: List<Campaign> = ArrayList(),
         val isFetching: Boolean = false,
         val isRegisteringDevice: Boolean = false,
-        val isOnError: Boolean = false
+        val isOnError: Boolean = false,
+        val isNoInternetConnection: Boolean = false
 )
