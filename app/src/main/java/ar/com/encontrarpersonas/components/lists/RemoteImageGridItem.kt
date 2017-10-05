@@ -2,6 +2,7 @@ package ar.com.encontrarpersonas.components.lists
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.text.TextUtils
 import android.widget.LinearLayout
 import ar.com.encontrarpersonas.data.models.Campaign
 import trikita.anvil.DSL.*
@@ -46,7 +47,7 @@ class RemoteImageGridItem(
                     context,
                     MATCH,
                     MATCH,
-                    item.imagesUrls?.first())
+                    item.missingPerson?.photoUrl)
 
             linearLayout {
                 size(MATCH, WRAP)
@@ -57,9 +58,10 @@ class RemoteImageGridItem(
 
                 textView {
                     size(MATCH, WRAP)
-                    text(item.title)
+                    text(item.missingPerson?.name + " " + item.missingPerson?.lastname)
                     textSize(sip(18f))
                     textColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.white))
+                    singleLine(true)
                 }
 
                 textView {
@@ -67,6 +69,8 @@ class RemoteImageGridItem(
                     text(item.description)
                     textSize(sip(12f))
                     textColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.white))
+                    maxLines(3)
+                    ellipsize(TextUtils.TruncateAt.END)
                 }
             }
         }

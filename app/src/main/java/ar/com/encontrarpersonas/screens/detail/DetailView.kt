@@ -89,16 +89,27 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                     textColor(ContextCompat.getColor(context, R.color.text_primary))
                                 }
 
+                                // Campaign title
+                                textView {
+                                    size(MATCH, WRAP)
+                                    text(campaign.title)
+                                    gravity(CENTER_HORIZONTAL)
+                                    textSize(sip(24f))
+                                    margin(dip(16), dip(16), dip(16), dip(4))
+                                    textColor(ContextCompat.getColor(context, R.color.text_primary))
+                                }
+
                                 // Campaign description
                                 textView {
                                     size(MATCH, WRAP)
                                     text(campaign.description)
                                     gravity(CENTER_HORIZONTAL)
-                                    textSize(sip(24f))
-                                    margin(0, dip(16))
+                                    textSize(sip(18f))
+                                    margin(dip(16), dip(4), dip(16), dip(16))
                                     textColor(ContextCompat.getColor(context, R.color.text_primary))
                                 }
 
+                                // Missing person details
                                 linearLayout {
                                     size(MATCH, 0)
                                     weight(1f)
@@ -150,6 +161,11 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
 
                                     }
 
+                                }
+
+                                // Artificial space between details and campaign images
+                                view {
+                                    size(MATCH, dip(16))
                                 }
 
                                 // Campaign images
