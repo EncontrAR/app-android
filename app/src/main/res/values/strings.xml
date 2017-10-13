@@ -58,4 +58,12 @@
     <string name="share_description">Estamos buscando a %s, ayudanos a reunirlo con su familia.\nAportá información
     o seguí este caso en www.encontrarpersonas.com.\nTu ayuda hace la diferencia.</string>
 
+    <!-- Permissions -->
+    <string name="permission_message_ok">Entendido</string>
+    <string name="permission_location_name">Ubicación</string>
+    <string name="permission_location_rationale">
+        Con tu permiso, EncontrAR utilizará la ubicación de tu dispositivo de manera anónima para
+        enviarte alertas de personas que desaparecieron cerca tuyo y necesitan de tu ayuda.
+    </string>
+
 </resources>

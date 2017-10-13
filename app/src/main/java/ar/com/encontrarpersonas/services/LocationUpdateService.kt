@@ -6,11 +6,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.IBinder
+import android.support.v4.content.ContextCompat
 import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.api.EncontrarRestApi
+import ar.com.encontrarpersonas.data.models.Campaign
 import ar.com.encontrarpersonas.data.models.Position
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.location.*
-import com.mcxiaoke.koi.ext.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 /**
@@ -88,7 +93,6 @@ class LocationUpdateService : Service() {
         return object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 if (locationResult != null && locationResult.lastLocation != null) {
-                    toast("SENDING LOCATION")
                     sendPositionToApi(locationResult.lastLocation)
                 }
             }
@@ -103,12 +107,26 @@ class LocationUpdateService : Service() {
                                 lastLocation.latitude.toString(),
                                 lastLocation.longitude.toString())
                 )
-                .enqueue(null)
+                .enqueue(object : Callback<List<Campaign>> {
+                    override fun onFailure(call: Call<List<Campaign>>?, t: Throwable?) {
+                        Crashlytics.log("Couldn't send the latest position to the " +
+                                "server: $lastLocation")
+                    }
+
+                    override fun onResponse(call: Call<List<Campaign>>?,
+                                            response: Response<List<Campaign>>?) {
+                        if (response == null || !response.isSuccessful) {
+                            Crashlytics.log("The server rejected the latest position " +
+                                    "update: $lastLocation")
+                        }
+                    }
+
+                })
     }
 
     private fun isLocationPermissionGranted(): Boolean {
-        return checkCallingOrSelfPermission(
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 }

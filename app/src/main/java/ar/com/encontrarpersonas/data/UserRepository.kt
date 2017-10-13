@@ -30,6 +30,12 @@ object UserRepository {
     private val SHARED_PREFERENCES_USER = "UserPreferences"
     private val FIELD_API_AUTH_TOKEN = "apiAuthToken"
     private val FIELD_FIREBASE_NOTIFICATIONS_TOKEN = "firebaseNotificationsToken"
+    private val FIELD_USER_FIRST_NAME = "userFirstName"
+    private val FIELD_USER_LAST_NAME = "userLastName"
+    private val FIELD_USER_NATIONAL_ID = "userNationalId"
+    private val FIELD_SETTINGS_NOTIFICATIONS_TRAY = "settingsNotificationsTray"
+    private val FIELD_SETTINGS_NOTIFICATIONS_WALLPAPER = "settingsNotificationsWallpaper"
+    private val FIELD_SETTINGS_NOTIFICATIONS_LOCKSCREEN = "settingsNotificationsLockscreen"
 
     // Since tokens are used frequently, screen them in memory for faster access
     private var apiAuthToken: String? = null
@@ -80,5 +86,19 @@ object UserRepository {
     fun setFirebaseNotificationsToken(token: String) {
         firebaseNotificationsToken = token
         sharedPreferences.edit().putString(FIELD_FIREBASE_NOTIFICATIONS_TOKEN, token).apply()
+    }
+
+    /**
+     * Returns the user's first name
+     */
+    fun getUserFirstName() : String? {
+        return sharedPreferences.getString(FIELD_USER_FIRST_NAME, null)
+    }
+
+    /**
+     * Sets asynchronously the user's first name
+     */
+    fun setUserFirstName(firstName : String) {
+        sharedPreferences.edit().putString(FIELD_USER_FIRST_NAME, firstName).apply()
     }
 }

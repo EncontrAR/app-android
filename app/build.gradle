@@ -97,8 +97,6 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
     compile "com.squareup.retrofit2:retrofit:$retrofit2_version"
     compile "com.squareup.retrofit2:converter-gson:$retrofit2_version"
-    debugCompile "com.readystatesoftware.chuck:library:$chuck_version"
-    releaseCompile "com.readystatesoftware.chuck:library-no-op:$chuck_version"
     compile "com.facebook.fresco:fresco:$fresco_version"
     compile "com.facebook.fresco:animated-webp:$fresco_version"
     compile "com.facebook.fresco:webpsupport:$fresco_version"

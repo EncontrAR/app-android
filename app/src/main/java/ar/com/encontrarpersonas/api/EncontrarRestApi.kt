@@ -1,8 +1,6 @@
 package ar.com.encontrarpersonas.api
 
-import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.BuildConfig
-import com.readystatesoftware.chuck.ChuckInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -44,7 +42,6 @@ object EncontrarRestApi {
                     else
                         HttpLoggingInterceptor.Level.NONE
             ))
-            .addInterceptor(ChuckInterceptor(App.sInstance))
             .addInterceptor(HeadersInterceptor())
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)

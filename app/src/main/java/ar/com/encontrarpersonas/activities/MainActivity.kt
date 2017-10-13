@@ -1,14 +1,22 @@
 package ar.com.encontrarpersonas.activities
 
+import android.Manifest
+import android.content.DialogInterface
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.screens.detail.DetailScreen
 import ar.com.encontrarpersonas.screens.home.HomeScreen
 import ar.com.encontrarpersonas.screens.settings.SettingsScreen
+import ar.com.encontrarpersonas.services.LocationUpdateService
+import com.mcxiaoke.koi.ext.startService
 import com.wealthfront.magellan.ActionBarConfig
 import com.wealthfront.magellan.NavigationListener
 import com.wealthfront.magellan.Navigator
@@ -38,6 +46,12 @@ import com.wealthfront.magellan.support.SingleActivity
  */
 class MainActivity : SingleActivity(), NavigationListener {
 
+    // Constants
+    val REQUEST_LOCATION = 1
+
+    /*
+        Set up a Magellan Navigator with the root Screen
+     */
     override fun createNavigator(): Navigator {
         return Navigator.withRoot(HomeScreen()).build()
     }
@@ -51,6 +65,9 @@ class MainActivity : SingleActivity(), NavigationListener {
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.text_primary))
     }
 
+    /*
+        Hide or show the Toolbar depending on each Screen configuration
+     */
     override fun onNavigate(actionBarConfig: ActionBarConfig) {
         // Do something with the toolbar if the screen changes
         if (actionBarConfig.visible()) {
@@ -60,12 +77,18 @@ class MainActivity : SingleActivity(), NavigationListener {
         }
     }
 
+    /*
+        Inflate custom menu on the Toolbar
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         getNavigator().onCreateOptionsMenu(menu) // Important, let Magellan deal with the Menu
         return true
     }
 
+    /*
+        Handle Toolbar actions
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.main_menu_settings -> {
@@ -82,4 +105,72 @@ class MainActivity : SingleActivity(), NavigationListener {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    /*
+        Handle runtime permissions
+     */
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_LOCATION -> {
+                if (grantResults.isNotEmpty()
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // Location permission granted, start the location update service.
+                    App.sInstance.startService<LocationUpdateService>()
+
+                } else {
+                    // Location permission denied, do nothing...
+                }
+            }
+        }
+    }
+
+    /**
+     * Requests the location permission to the user.
+     */
+    fun requestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
+                // Show rationale and request the permission again.
+                showRationaleDialog(
+                        getString(R.string.permission_location_name),
+                        getString(R.string.permission_location_rationale),
+                        DialogInterface.OnClickListener { _, _ ->
+                            ActivityCompat.requestPermissions(this,
+                                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                                    REQUEST_LOCATION)
+                        }
+                )
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                        REQUEST_LOCATION)
+            }
+        }
+    }
+
+    /**
+     * Displays a dialog with the provided title and message.
+     */
+    private fun showRationaleDialog(title: String,
+                            message: String,
+                            onOkClick: DialogInterface.OnClickListener) {
+        AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.permission_message_ok), onOkClick)
+                .create()
+                .show()
+    }
+
 }

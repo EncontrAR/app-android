@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.Menu
 import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.activities.MainActivity
 import com.brianegan.bansa.BaseStore
 import com.wealthfront.magellan.Screen
 import trikita.anvil.Anvil
@@ -24,7 +25,11 @@ class HomeScreen : Screen<HomeView>() {
     override fun onShow(context: Context?) {
         super.onShow(context)
 
+        // Retrieve campaigns
         if (store.state.campaigns.isEmpty()) presenter.startCampaignsRetrievalProcess()
+
+        // Request location permissions
+        (activity as MainActivity).requestLocationPermission()
     }
 
     override fun getTitle(context: Context?): String {
