@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="ar.com.encontrarpersonas">
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:name=".App"
@@ -44,7 +46,7 @@
 
         <!-- Service: Firebase Push Notifications Receiver -->
         <service
-            android:name=".notifications.FirebasePushNotificationsService">
+            android:name=".services.FirebasePushNotificationsService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -52,7 +54,7 @@
 
         <!-- Service: Firebase Access Token Receiver -->
         <service
-            android:name=".notifications.FirebaseAccessTokenService">
+            android:name=".services.FirebaseAccessTokenService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
@@ -60,7 +62,16 @@
 
         <!-- Service: Wallpaper Recovery -->
         <service
-            android:name=".notifications.WallpaperRecoveryService"/>
+            android:name=".services.WallpaperRecoveryService"/>
+
+        <!-- Service: Location Update -->
+        <!--
+            IMPORTANT: Make sure this service runs on a different process to avoid
+            having it stopped whenever the app gets killed or is closed by the user
+        -->
+        <service
+            android:name=".services.LocationUpdateService"
+            android:process=":LocationUpdateService"/>
 
     </application>
 

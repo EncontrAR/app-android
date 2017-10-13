@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import ar.com.encontrarpersonas.data.models.Metadata
+import ar.com.encontrarpersonas.data.models.Campaign
 import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView
@@ -35,8 +35,8 @@ import trikita.anvil.recyclerview.Recycler
  */
 class RemoteImageList(
         context: Context,
-        val items: List<Metadata>,
-        val onItemSelected: (view: View, gif: Metadata) -> Unit) : RenderableView(context) {
+        val items: List<Campaign>,
+        val onItemSelected: (view: View, campaign: Campaign) -> Unit) : RenderableView(context) {
 
     init {
         view()
@@ -67,7 +67,7 @@ class RemoteImageList(
                                 context,
                                 MATCH,
                                 dip(360),
-                                items[viewHolder.adapterPosition].images.scrollItem.webp)
+                                items[viewHolder.adapterPosition].missingPerson?.photoUrl)
 
                         // Callback to report a item being clicked
                         onClick { view ->

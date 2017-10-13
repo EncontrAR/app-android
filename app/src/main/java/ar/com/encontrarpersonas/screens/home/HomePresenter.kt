@@ -2,13 +2,16 @@ package ar.com.encontrarpersonas.screens.home
 
 import android.text.TextUtils
 import android.util.Log
+import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.api.EncontrarRestApi
 import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.data.models.CampaignsPage
+import ar.com.encontrarpersonas.services.LocationUpdateService
 import com.brianegan.bansa.Store
 import com.mcxiaoke.koi.async.asyncDelay
 import com.mcxiaoke.koi.async.mainThread
 import com.mcxiaoke.koi.async.mainThreadSafe
+import com.mcxiaoke.koi.ext.startService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,6 +48,7 @@ class HomePresenter(val store: Store<HomeState>) {
             waitForDeviceRegistered()
         } else {
             fetchCampaigns()
+            startLocationUpdateService()
         }
     }
 
@@ -113,5 +117,9 @@ class HomePresenter(val store: Store<HomeState>) {
                         }
                     }
                 })
+    }
+
+    private fun startLocationUpdateService() {
+        App.sInstance.startService<LocationUpdateService>()
     }
 }

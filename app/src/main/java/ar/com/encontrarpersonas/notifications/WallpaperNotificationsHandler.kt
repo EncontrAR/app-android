@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.support.annotation.RequiresApi
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.services.WallpaperRecoveryService
 import com.google.firebase.messaging.RemoteMessage
 import com.mcxiaoke.koi.ext.Bundle
 import com.mcxiaoke.koi.ext.startService

@@ -1,4 +1,8 @@
-package ar.com.encontrarpersonas.data.models
+package ar.com.encontrarpersonas.services
+
+import android.app.IntentService
+import android.app.WallpaperManager
+import android.content.Intent
 
 /**
  * MIT License
@@ -22,7 +26,29 @@ package ar.com.encontrarpersonas.data.models
  * DEALINGS IN THE SOFTWARE.
  *
  */
-data class Gif(
-        val url: String,
-        val webp: String
-)
+class WallpaperRecoveryService : IntentService("WallpaperRecovery") {
+
+    val WALLPAPER_DURATION = 5000L
+
+    companion object {
+        val EXTRA_WALLPAPER_BITMAP = "wallpaperPath"
+    }
+
+    override fun onHandleIntent(intent: Intent) {
+
+        // Wait a fixed amount of time before recovering the user's original wallpaper
+        Thread.sleep(WALLPAPER_DURATION)
+
+        // Get the wallpaer sent to the service as a File reference
+        val wallpaperPath = intent.getStringExtra(EXTRA_WALLPAPER_BITMAP)
+        val wallpaperFile = getFileStreamPath(wallpaperPath)
+
+        // Set back the user's original wallpaper
+        WallpaperManager
+                .getInstance(this)
+                .setStream(wallpaperFile.inputStream())
+
+        // Free resources
+        wallpaperFile.delete()
+    }
+}

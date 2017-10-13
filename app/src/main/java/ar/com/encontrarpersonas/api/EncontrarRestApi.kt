@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -45,6 +46,8 @@ object EncontrarRestApi {
             ))
             .addInterceptor(ChuckInterceptor(App.sInstance))
             .addInterceptor(HeadersInterceptor())
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
             .build()
 
     private val retrofitClient = Retrofit.Builder()
@@ -52,8 +55,6 @@ object EncontrarRestApi {
             .baseUrl("$BASE_URL/$API_VERSION/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
-    val giphy = retrofitClient.create(GiphyService::class.java)
 
     val deviceUser = retrofitClient.create(DeviceUserService::class.java)
 

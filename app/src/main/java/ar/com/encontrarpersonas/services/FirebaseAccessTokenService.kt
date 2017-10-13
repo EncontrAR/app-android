@@ -1,4 +1,4 @@
-package ar.com.encontrarpersonas.notifications
+package ar.com.encontrarpersonas.services
 
 import android.util.Log
 import ar.com.encontrarpersonas.api.EncontrarRestApi

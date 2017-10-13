@@ -1,4 +1,4 @@
-package ar.com.encontrarpersonas.notifications
+package ar.com.encontrarpersonas.services
 
 /**
  * MIT License
@@ -23,6 +23,8 @@ package ar.com.encontrarpersonas.notifications
  *
  */
 
+import ar.com.encontrarpersonas.notifications.TrayNotificationsHandler
+import ar.com.encontrarpersonas.notifications.WallpaperNotificationsHandler
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
