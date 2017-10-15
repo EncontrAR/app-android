@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.activities.MainActivity
+import ar.com.encontrarpersonas.data.UserRepository
 import com.google.firebase.messaging.RemoteMessage
 
 /**
@@ -41,12 +42,16 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
     private val DEFAULT_NOTIFICATION_INDIVIDUAL_ID = 123
 
     override fun notify(remoteMessage: RemoteMessage) {
-        val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        notificationManager.notify(
-                DEFAULT_NOTIFICATION_INDIVIDUAL_ID,
-                buildNotification(remoteMessage))
+        // Check if the user has tray notifications enabled
+        if (UserRepository.getSettingTrayNotifications()) {
+            val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            notificationManager.notify(
+                    DEFAULT_NOTIFICATION_INDIVIDUAL_ID,
+                    buildNotification(remoteMessage))
+        }
     }
 
     private fun buildNotification(remoteMessage: RemoteMessage): Notification {

@@ -1,5 +1,7 @@
 package ar.com.encontrarpersonas.screens.settings
 
+import ar.com.encontrarpersonas.data.UserRepository
+
 /**
  * MIT License
  *
@@ -23,10 +25,11 @@ package ar.com.encontrarpersonas.screens.settings
  *
  */
 data class SettingsState(
-        val firstname: String = "",
-        val lastname: String = "",
-        val nationalIdNumber: String = "",
-        val conventionalNotificationsEnabled: Boolean = false,
-        val lockScreenNotificationsEnabled: Boolean = false,
-        val wallpaperNotificationsEnabled: Boolean = false
+        val firstName: String = UserRepository.getUserFirstname(),
+        val lastName: String = UserRepository.getUserLastName(),
+        val nationalIdNumber: String = UserRepository.getUserNationalId(),
+        val trayNotificationsEnabled: Boolean = UserRepository.getSettingTrayNotifications(),
+        val lockScreenNotificationsEnabled: Boolean = UserRepository.getSettingLockscreenNotifications(),
+        val wallpaperNotificationsEnabled: Boolean = UserRepository.getSettingWallpaperNotifications(),
+        val isSynchronising: Boolean = false
 )

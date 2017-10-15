@@ -19,10 +19,22 @@
     <string name="screen_settings_lastname">Apellido</string>
     <string name="screen_settings_national_id_number">Nº Documento (ej: DNI)</string>
     <string name="screen_settings_save">Guardar</string>
-    <string name="screen_settings_notification_conventional">Notificaciones convencionales</string>
+    <string name="screen_settings_notification_tray">Notificaciones convencionales</string>
     <string name="screen_settings_notification_wallpaper">Fondo de pantalla</string>
     <string name="screen_settings_notification_lockscreen">Pantalla de bloqueo</string>
     <string name="screen_settings_tos">Ver Términos y Condiciones del servicio</string>
+    <string name="screen_settings_saved_ok">Tus datos han sido actualizados</string>
+    <string name="screen_settings_saved_failed">No podemos guardar tus datos en este momento</string>
+    <string name="screen_settings_dialog_tos_title">Términos y condiciones</string>
+    <string name="screen_settings_dialog_tos_message">
+        Recuerda que al utilizar EncontrAR, estas aceptando los términos y condiciones de uso.
+    </string>
+    <string name="screen_settings_dialog_tos_continue">Continuar</string>
+    <string name="screen_settings_dialog_tos_see">Ver</string>
+    <string name="screen_settings_toast_tos_reminder">
+        Puedes volver a intentar guardar tus datos luego de leer los términos y condiciones
+    </string>
+    <string name="screen_settings_dialog_loading">Actualizando datos…</string>
 
     <!-- Screen: Chat -->
     <string name="screen_chat_title">Contacto</string>
@@ -41,6 +53,13 @@
     <string name="screen_detail_person_gender_female">Femenino</string>
     <string name="screen_detail_person_gender_male">Masculino</string>
     <string name="screen_detail_report_button">Reportar</string>
+    <string name="screen_detail_dialog_personal_details_title">Datos personales</string>
+    <string name="screen_detail_dialog_personal_details_message">
+        Antes de reportar tu hallazgo, deberás completar tus datos personales.
+        Esto nos permitirá contactarte si necesitamos más información.
+        Tu ayuda hace la diferencia.
+    </string>
+    <string name="screen_detail_dialog_personal_details_complete">Completar</string>
 
     <!-- Component: ShareMethod -->
     <string name="component_sharemethod_other">Otras apps…</string>

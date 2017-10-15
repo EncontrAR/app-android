@@ -2,6 +2,7 @@ package ar.com.encontrarpersonas.screens.settings.components
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.widget.CompoundButton
 import android.widget.LinearLayout
 import ar.com.encontrarpersonas.R
 import trikita.anvil.DSL.*
@@ -32,7 +33,10 @@ import trikita.anvil.RenderableView
 class NotificationTypeSwitchView(context: Context,
                                  val w: Int = MATCH,
                                  val h: Int = WRAP,
-                                 val description: String) : RenderableView(context) {
+                                 val description: String,
+                                 val isChecked: Boolean,
+                                 val onChangeListener: CompoundButton.OnCheckedChangeListener)
+    : RenderableView(context) {
 
     init {
         view()
@@ -54,6 +58,8 @@ class NotificationTypeSwitchView(context: Context,
 
             switchView {
                 size(WRAP, WRAP)
+                checked(isChecked)
+                onCheckedChange(onChangeListener)
             }
         }
     }

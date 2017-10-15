@@ -1,13 +1,16 @@
 package ar.com.encontrarpersonas.screens.detail
 
+import android.app.AlertDialog
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.components.lists.RemoteImageComponent
+import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.screens.chat.ChatScreen
 import ar.com.encontrarpersonas.screens.detail.components.MissingPersonFieldComponent
 import ar.com.encontrarpersonas.screens.fullScreenMap.FullMapScreen
+import ar.com.encontrarpersonas.screens.settings.SettingsScreen
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
@@ -211,7 +214,24 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                 backgroundColor(ContextCompat.getColor(context, R.color.button_red))
 
                                 onClick {
-                                    screen.navigator.goTo(ChatScreen(campaign))
+
+                                    // The user needs to have completed his personal details
+                                    // before reporting any finding.
+                                    if (UserRepository.userHasCompletePersonalDetails()) {
+                                        screen.navigator.goTo(ChatScreen(campaign))
+                                    } else {
+                                        AlertDialog.Builder(context)
+                                                .setTitle(context.getString(R.string.screen_detail_dialog_personal_details_title))
+                                                .setMessage(context.getString(R.string.screen_detail_dialog_personal_details_message))
+                                                .setPositiveButton(
+                                                        context.getString(R.string.screen_detail_dialog_personal_details_complete),
+                                                        { _, _ ->
+                                                            screen.navigator.goTo(SettingsScreen())
+                                                        })
+                                                .create()
+                                                .show()
+                                    }
+
                                 }
 
                             }

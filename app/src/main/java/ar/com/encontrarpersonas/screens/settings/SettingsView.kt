@@ -1,74 +1,148 @@
 package ar.com.encontrarpersonas.screens.settings
 
+import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.text.InputFilter
+import android.text.InputType
+import android.widget.CompoundButton
 import android.widget.LinearLayout
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.screens.legal.LegalScreen
 import ar.com.encontrarpersonas.screens.settings.components.NotificationTypeSwitchView
+import com.mcxiaoke.koi.ext.longToast
 import com.wealthfront.magellan.BaseScreenView
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView
 
-
 class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
+
+    //Constants
+    private val MAX_FIRST_NAME_LENGTH = 32
+    private val MAX_LAST_NAME_LENGTH = 32
+    private val MAX_NATIONAL_ID_LENGTH = 9
+
+    private var progressDialog: ProgressDialog? = null
 
     init {
         addView(object : RenderableView(context) {
             override fun view() {
 
+                if (!screen.store.state.isSynchronising) {
+                    if (progressDialog != null && progressDialog!!.isShowing) {
+                        progressDialog!!.dismiss()
+                    }
+                }
+
                 linearLayout {
                     size(MATCH, MATCH)
                     orientation(LinearLayout.VERTICAL)
                     padding(dip(24), dip(8))
-                    backgroundColor(ContextCompat.getColor(context, R.color.theme_color_1))
+                    backgroundColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.theme_color_1))
 
                     textView {
                         size(WRAP, WRAP)
-                        text(R.string.screen_settings_personal_data)
+                        text(ar.com.encontrarpersonas.R.string.screen_settings_personal_data)
                         textSize(sip(24f))
-                        textColor(ContextCompat.getColor(context, R.color.text_primary))
+                        textColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.text_primary))
                     }
 
                     editText {
                         size(MATCH, WRAP)
-                        hint(R.string.screen_settings_firstname)
+                        hint(ar.com.encontrarpersonas.R.string.screen_settings_firstname)
+                        text(screen.store.state.firstName)
+                        inputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS)
+                        filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_FIRST_NAME_LENGTH)))
                         margin(0, dip(8))
+                        onTextChanged { text ->
+                            screen.store.dispatch(SettingsReducer.SET_FIRST_NAME(text.toString()))
+                        }
                     }
 
                     editText {
                         size(MATCH, WRAP)
-                        hint(R.string.screen_settings_lastname)
+                        hint(ar.com.encontrarpersonas.R.string.screen_settings_lastname)
+                        text(screen.store.state.lastName)
+                        inputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS)
+                        filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_LAST_NAME_LENGTH)))
                         margin(0, dip(8))
+                        onTextChanged { text ->
+                            screen.store.dispatch(SettingsReducer.SET_LAST_NAME(text.toString()))
+                        }
                     }
 
                     editText {
                         size(MATCH, WRAP)
-                        hint(R.string.screen_settings_national_id_number)
+                        hint(ar.com.encontrarpersonas.R.string.screen_settings_national_id_number)
+                        text(screen.store.state.nationalIdNumber)
+                        inputType(InputType.TYPE_CLASS_NUMBER)
+                        filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_NATIONAL_ID_LENGTH)))
                         margin(0, dip(8))
+                        onTextChanged { text ->
+                            screen.store.dispatch(SettingsReducer.SET_NATIONAL_ID(text.toString()))
+                        }
                     }
 
                     button {
                         size(WRAP, WRAP)
-                        text(R.string.screen_settings_save)
+                        text(ar.com.encontrarpersonas.R.string.screen_settings_save)
                         layoutGravity(END)
                         margin(0, dip(16))
 
+                        enabled(!screen.store.state.isSynchronising)
+
                         onClick {
-                            // TODO Only send the user to the legal screen if they haven't
-                            // accepted the ToS before
-                            screen.navigator.goTo(LegalScreen())
+                            // If the user hasn't been advised of the existence of the ToS,
+                            // they should be advised with a dialog before sending the data to the
+                            // server.
+                            if (!UserRepository.hasUserSeenToS()) {
+                                AlertDialog.Builder(context)
+                                        .setTitle(context.getString(ar.com.encontrarpersonas.R.string.screen_settings_dialog_tos_title))
+                                        .setMessage(context.getString(ar.com.encontrarpersonas.R.string.screen_settings_dialog_tos_message))
+                                        .setPositiveButton(
+                                                context.getString(ar.com.encontrarpersonas.R.string.screen_settings_dialog_tos_continue),
+                                                { _, _ ->
+                                                    UserRepository.setUserSawToS(true)
+                                                    showProgressDialog()
+                                                    screen.presenter.saveUserPersonalData()
+                                                })
+                                        .setNegativeButton(
+                                                context.getString(ar.com.encontrarpersonas.R.string.screen_settings_dialog_tos_see),
+                                                { _, _ ->
+                                                    context.longToast(context.getString(ar.com.encontrarpersonas.R.string.screen_settings_toast_tos_reminder))
+                                                    screen.navigator.goTo(LegalScreen())
+                                                })
+                                        .create()
+                                        .show()
+                            } else {
+                                showProgressDialog()
+                                screen.presenter.saveUserPersonalData()
+                            }
                         }
                     }
 
                     NotificationTypeSwitchView(context,
-                            description = resources.getString(R.string.screen_settings_notification_conventional))
+                            description = resources.getString(ar.com.encontrarpersonas.R.string.screen_settings_notification_tray),
+                            isChecked = screen.store.state.trayNotificationsEnabled,
+                            onChangeListener = CompoundButton.OnCheckedChangeListener { _, checked ->
+                                screen.presenter.saveUserTrayNotificationsSetting(checked)
+                            })
 
                     NotificationTypeSwitchView(context,
-                            description = resources.getString(R.string.screen_settings_notification_wallpaper))
+                            description = resources.getString(ar.com.encontrarpersonas.R.string.screen_settings_notification_wallpaper),
+                            isChecked = screen.store.state.wallpaperNotificationsEnabled,
+                            onChangeListener = CompoundButton.OnCheckedChangeListener { _, checked ->
+                                screen.presenter.saveUserWallpaperNotificationsSetting(checked)
+                            })
 
                     NotificationTypeSwitchView(context,
-                            description = resources.getString(R.string.screen_settings_notification_lockscreen))
+                            description = resources.getString(ar.com.encontrarpersonas.R.string.screen_settings_notification_lockscreen),
+                            isChecked = screen.store.state.lockScreenNotificationsEnabled,
+                            onChangeListener = CompoundButton.OnCheckedChangeListener { _, checked ->
+                                screen.presenter.saveUserLockscreenNotificatonsSetting(checked)
+                            })
 
                     // Dummy view to make an empty space before the ToS button
                     view {
@@ -79,9 +153,9 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                     textView {
                         size(MATCH, WRAP)
                         gravity(BOTTOM or CENTER)
-                        text(R.string.screen_settings_tos)
+                        text(ar.com.encontrarpersonas.R.string.screen_settings_tos)
                         textSize(sip(16f))
-                        textColor(ContextCompat.getColor(context, R.color.text_primary))
+                        textColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.text_primary))
                         padding(dip(16))
 
                         onClick {
@@ -94,5 +168,11 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
             }
 
         })
+    }
+
+    private fun showProgressDialog() {
+        progressDialog = ProgressDialog(context)
+        progressDialog!!.setMessage(context.getString(R.string.screen_settings_dialog_loading))
+        progressDialog!!.show()
     }
 }

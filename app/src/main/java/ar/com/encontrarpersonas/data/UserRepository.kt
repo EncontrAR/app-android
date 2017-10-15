@@ -2,6 +2,9 @@ package ar.com.encontrarpersonas.data
 
 import android.content.Context
 import ar.com.encontrarpersonas.App
+import ar.com.encontrarpersonas.api.EncontrarRestApi
+import ar.com.encontrarpersonas.data.models.DeviceUser
+import retrofit2.Callback
 
 /**
  * MIT License
@@ -36,6 +39,7 @@ object UserRepository {
     private val FIELD_SETTINGS_NOTIFICATIONS_TRAY = "settingsNotificationsTray"
     private val FIELD_SETTINGS_NOTIFICATIONS_WALLPAPER = "settingsNotificationsWallpaper"
     private val FIELD_SETTINGS_NOTIFICATIONS_LOCKSCREEN = "settingsNotificationsLockscreen"
+    private val FIELD_USER_SAW_TOS = "userSawToS"
 
     // Since tokens are used frequently, screen them in memory for faster access
     private var apiAuthToken: String? = null
@@ -91,14 +95,124 @@ object UserRepository {
     /**
      * Returns the user's first name
      */
-    fun getUserFirstName() : String? {
-        return sharedPreferences.getString(FIELD_USER_FIRST_NAME, null)
+    fun getUserFirstname(): String {
+        return sharedPreferences.getString(FIELD_USER_FIRST_NAME, "")
     }
 
     /**
      * Sets asynchronously the user's first name
      */
-    fun setUserFirstName(firstName : String) {
-        sharedPreferences.edit().putString(FIELD_USER_FIRST_NAME, firstName).apply()
+    fun setUserFirstname(firstname: String) {
+        sharedPreferences.edit().putString(FIELD_USER_FIRST_NAME, firstname.trim()).apply()
     }
+
+    /**
+     * Returns the user's first name
+     */
+    fun getUserLastName(): String {
+        return sharedPreferences.getString(FIELD_USER_LAST_NAME, "")
+    }
+
+    /**
+     * Sets asynchronously the user's last name
+     */
+    fun setUserLastName(lastName: String) {
+        sharedPreferences.edit().putString(FIELD_USER_LAST_NAME, lastName.trim()).apply()
+    }
+
+    /**
+     * Returns the user's national ID
+     */
+    fun getUserNationalId(): String {
+        return sharedPreferences.getString(FIELD_USER_NATIONAL_ID, "")
+    }
+
+    /**
+     * Sets asynchronously the user's national ID
+     */
+    fun setUserNationalId(nationalId: String) {
+        sharedPreferences.edit().putString(FIELD_USER_NATIONAL_ID, nationalId.trim()).apply()
+    }
+
+    /**
+     * Returns true if the user has tray notifications enabled
+     */
+    fun getSettingTrayNotifications(): Boolean {
+        return sharedPreferences.getBoolean(FIELD_SETTINGS_NOTIFICATIONS_TRAY, true)
+    }
+
+    /**
+     * Sets asynchronously the user's setting for tray notifications
+     */
+    fun setSettingTrayNotifications(enabled: Boolean) {
+        sharedPreferences.edit().putBoolean(FIELD_SETTINGS_NOTIFICATIONS_TRAY, enabled).apply()
+    }
+
+    /**
+     * Returns true if the user has wallpaper notifications enabled
+     */
+    fun getSettingWallpaperNotifications(): Boolean {
+        return sharedPreferences.getBoolean(FIELD_SETTINGS_NOTIFICATIONS_WALLPAPER, true)
+    }
+
+    /**
+     * Sets asynchronously the user's setting for wallpaper notifications
+     */
+    fun setSettingWallpaperNotifications(enabled: Boolean) {
+        sharedPreferences.edit().putBoolean(FIELD_SETTINGS_NOTIFICATIONS_WALLPAPER, enabled).apply()
+    }
+
+    /**
+     * Returns true if the user has lockscreen notifications enabled
+     */
+    fun getSettingLockscreenNotifications(): Boolean {
+        return sharedPreferences.getBoolean(FIELD_SETTINGS_NOTIFICATIONS_LOCKSCREEN, true)
+    }
+
+    /**
+     * Sets asynchronously the user's setting for lockscreen notifications
+     */
+    fun setSettingLockscreenNotifications(enabled: Boolean) {
+        sharedPreferences.edit().putBoolean(FIELD_SETTINGS_NOTIFICATIONS_LOCKSCREEN, enabled).apply()
+    }
+
+    /**
+     * Returns true if the user has already been advised about the existence of the
+     * Terms of Service, returns false otherwise.
+     */
+    fun hasUserSeenToS(): Boolean {
+        return sharedPreferences.getBoolean(FIELD_USER_SAW_TOS, false)
+    }
+
+    /**
+     * Stores asynchronously a boolean that represents if the user has already been advised about
+     * the existence of the Terms of Service, returns false otherwise.
+     */
+    fun setUserSawToS(seen: Boolean) {
+        sharedPreferences.edit().putBoolean(FIELD_USER_SAW_TOS, seen).apply()
+    }
+
+    /**
+     * Returns true if the user has complete personal details stored in the app.
+     */
+    fun userHasCompletePersonalDetails(): Boolean {
+        return (getUserFirstname().isNotEmpty()
+                && getUserLastName().isNotEmpty()
+                && getUserNationalId().isNotEmpty())
+    }
+
+    /**
+     * Forces an update of the user's data on the server
+     */
+    fun syncWithServer(callback: Callback<Void>) {
+        EncontrarRestApi
+                .deviceUser
+                .editLoggedDevice(DeviceUser(
+                        name = getUserFirstname(),
+                        lastname = getUserLastName(),
+                        nationalId = getUserNationalId()
+                ))
+                .enqueue(callback)
+    }
+
 }

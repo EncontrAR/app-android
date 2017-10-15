@@ -1,6 +1,14 @@
 package ar.com.encontrarpersonas.screens.settings
 
+import ar.com.encontrarpersonas.App
+import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.data.UserRepository
 import com.brianegan.bansa.Store
+import com.crashlytics.android.Crashlytics
+import com.mcxiaoke.koi.ext.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * MIT License
@@ -26,6 +34,61 @@ import com.brianegan.bansa.Store
  */
 class SettingsPresenter(val store: Store<SettingsState>) {
 
-    // Implement presenter methods if necessary...
+    /**
+     * Stores the user preferences for tray notifications locally.
+     */
+    fun saveUserTrayNotificationsSetting(enabled: Boolean) {
+        UserRepository.setSettingTrayNotifications(enabled)
+        store.dispatch(SettingsReducer.SET_SETTINGS_TRAY_NOTIFICATIONS(enabled))
+    }
+
+    /**
+     * Stores the user preferences for wallpaper notifications locally.
+     */
+    fun saveUserWallpaperNotificationsSetting(enabled: Boolean) {
+        UserRepository.setSettingWallpaperNotifications(enabled)
+        store.dispatch(SettingsReducer.SET_SETTINGS_WALLPAPER_NOTIFICATIONS(enabled))
+    }
+
+    /**
+     * Stores the user preferences for lockscreen notifications locally.
+     */
+    fun saveUserLockscreenNotificatonsSetting(enabled: Boolean) {
+        UserRepository.setSettingLockscreenNotifications(enabled)
+        store.dispatch(SettingsReducer.SET_SETTINGS_LOCKSCREEN_NOTIFICATIONS(enabled))
+    }
+
+    /**
+     * Stores the user's personal data (first name, last name, national id, etc.) and sends
+     * the data to the server.
+     */
+    fun saveUserPersonalData() {
+        store.dispatch(SettingsReducer.IS_SYNCHRONISING(true))
+
+        with(UserRepository) {
+            setUserFirstname(store.state.firstName)
+            setUserLastName(store.state.lastName)
+            setUserNationalId(store.state.nationalIdNumber)
+
+            syncWithServer(object : Callback<Void> {
+                override fun onFailure(call: Call<Void>?, t: Throwable?) {
+                    App.sInstance.toast(R.string.error_network)
+                    store.dispatch(SettingsReducer.IS_SYNCHRONISING(false))
+                }
+
+                override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
+                    if (response != null && response.isSuccessful) {
+                        App.sInstance.toast(R.string.screen_settings_saved_ok)
+                    } else {
+                        Crashlytics.log("Couldn't save user's preferences: $response")
+                        App.sInstance.toast(R.string.screen_settings_saved_failed)
+                    }
+
+                    store.dispatch(SettingsReducer.IS_SYNCHRONISING(false))
+                }
+
+            })
+        }
+    }
 
 }
