@@ -10,13 +10,12 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.extensions.userHasGrantedLocationPermission
 import ar.com.encontrarpersonas.screens.detail.DetailScreen
 import ar.com.encontrarpersonas.screens.home.HomeScreen
 import ar.com.encontrarpersonas.screens.settings.SettingsScreen
-import ar.com.encontrarpersonas.services.LocationUpdateService
-import com.mcxiaoke.koi.ext.startService
+import ar.com.encontrarpersonas.services.JobDispatcher
 import com.wealthfront.magellan.ActionBarConfig
 import com.wealthfront.magellan.NavigationListener
 import com.wealthfront.magellan.Navigator
@@ -117,8 +116,8 @@ class MainActivity : SingleActivity(), NavigationListener {
                 if (grantResults.isNotEmpty()
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // Location permission granted, start the location update service.
-                    App.sInstance.startService<LocationUpdateService>()
+                    // Location permission granted, start the location update job.
+                    JobDispatcher.startRecurrentLocationUpdateJob()
 
                 } else {
                     // Location permission denied, do nothing...
@@ -131,7 +130,7 @@ class MainActivity : SingleActivity(), NavigationListener {
      * Requests the location permission to the user.
      */
     fun requestLocationPermission() {
-        if (!userHasLocationPermissionAcepted()) {
+        if (!userHasGrantedLocationPermission()) {
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -169,15 +168,6 @@ class MainActivity : SingleActivity(), NavigationListener {
                 .setPositiveButton(getString(R.string.permission_message_ok), onOkClick)
                 .create()
                 .show()
-    }
-
-    /**
-     * Returns true if the user has the location permission enabled
-     */
-    fun userHasLocationPermissionAcepted(): Boolean {
-        return ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
 }

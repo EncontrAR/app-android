@@ -2,7 +2,7 @@ package ar.com.encontrarpersonas.screens.fullScreenMap
 
 import android.annotation.SuppressLint
 import android.content.Context
-import ar.com.encontrarpersonas.activities.MainActivity
+import ar.com.encontrarpersonas.extensions.userHasGrantedLocationPermission
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
@@ -42,8 +42,10 @@ class FullMapView(context: Context) : BaseScreenView<FullMapScreen>(context) {
                                         .newCameraPosition(cameraPosition)
                         )
 
-                        if ((screen.activity as MainActivity).userHasLocationPermissionAcepted())
+                        if (context.userHasGrantedLocationPermission()) {
                             googleMap.isMyLocationEnabled = true
+                        }
+
                     }
                 }
 

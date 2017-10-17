@@ -1,23 +1,18 @@
 package ar.com.encontrarpersonas.services
 
-import android.Manifest
-import android.app.Service
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
-import android.os.IBinder
-import android.support.v4.content.ContextCompat
 import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.api.EncontrarRestApi
 import ar.com.encontrarpersonas.data.models.Campaign
 import ar.com.encontrarpersonas.data.models.Position
+import ar.com.encontrarpersonas.extensions.userHasGrantedLocationPermission
 import com.crashlytics.android.Crashlytics
-import com.google.android.gms.location.*
+import com.firebase.jobdispatcher.JobParameters
+import com.firebase.jobdispatcher.JobService
+import com.google.android.gms.location.LocationServices
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.concurrent.TimeUnit
-
 
 /**
  * MIT License
@@ -41,66 +36,41 @@ import java.util.concurrent.TimeUnit
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class LocationUpdateService : Service() {
+class LocationUpdateJobService : JobService() {
 
-    private val fusedLocationClient = getFusedLocationClient()
-    private val locationRequest = getLocationRequest()
-    private val locationCallback = getLocationCallback()
-
-    override fun onBind(intent: Intent?): IBinder? {
-        // Used only in case of bound services.
-        return null
+    private val fusedLocationClient by lazy {
+        LocationServices.getFusedLocationProviderClient(App.sInstance)
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
-        return START_STICKY
-    }
+    override fun onStartJob(jobParameters: JobParameters): Boolean {
 
-    override fun onCreate() {
-        super.onCreate()
+        if (userHasGrantedLocationPermission()) {
+            fusedLocationClient
+                    .lastLocation
+                    .addOnSuccessListener { lastKnownLocation ->
+                        if (lastKnownLocation != null) {
+                            sendPositionToApi(jobParameters, lastKnownLocation)
+                        } else {
+                            Crashlytics.log("Last known location was null, most probably" +
+                                    " the device has the location setting disabled by the user.")
+                            jobFinished(jobParameters, false)
+                        }
+                    }
 
-        if (isLocationPermissionGranted()) {
-            fusedLocationClient.requestLocationUpdates(
-                    locationRequest,
-                    locationCallback,
-                    null)
+            return true // Sets the job as "ongoing", must call jobFinished(..) later
         } else {
-            stopSelf()
+            Crashlytics.log("Aborted location update job, the user hasn't granted location" +
+                    " permissions")
+            return false // Sets the job as "finished"
         }
 
     }
 
-    override fun onDestroy() {
-        fusedLocationClient.removeLocationUpdates(locationCallback)
-
-        super.onDestroy()
+    override fun onStopJob(job: JobParameters): Boolean {
+        return false // Answers the question: "Should this job be retried?"
     }
 
-    private fun getFusedLocationClient(): FusedLocationProviderClient {
-        return LocationServices.getFusedLocationProviderClient(App.sInstance)
-    }
-
-    private fun getLocationRequest(): LocationRequest {
-        val locationRequest = LocationRequest()
-        locationRequest.interval = TimeUnit.HOURS.toMillis(4)// Max refresh time: 4 hours
-        locationRequest.fastestInterval = TimeUnit.HOURS.toMillis(1) // Min refresh time: 1 hour
-        // Mid accuracy and mid power consumption
-        locationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        return locationRequest
-    }
-
-    private fun getLocationCallback(): LocationCallback {
-        return object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                if (locationResult != null && locationResult.lastLocation != null) {
-                    sendPositionToApi(locationResult.lastLocation)
-                }
-            }
-        }
-    }
-
-    private fun sendPositionToApi(lastLocation: Location) {
+    private fun sendPositionToApi(jobParameters: JobParameters, lastLocation: Location) {
         EncontrarRestApi
                 .deviceUser
                 .updateLoggedDevicePosition(
@@ -112,6 +82,9 @@ class LocationUpdateService : Service() {
                     override fun onFailure(call: Call<List<Campaign>>?, t: Throwable?) {
                         Crashlytics.log("Couldn't send the latest position to the " +
                                 "server: $lastLocation")
+
+                        // Network error: finish job and flag for rescheduling ASAP
+                        jobFinished(jobParameters, true)
                     }
 
                     override fun onResponse(call: Call<List<Campaign>>?,
@@ -120,14 +93,13 @@ class LocationUpdateService : Service() {
                             Crashlytics.log("The server rejected the latest position " +
                                     "update: $lastLocation")
                         }
+
+                        // The API request was made, so no need for requesting and immediate
+                        // job reschedule
+                        jobFinished(jobParameters, false)
                     }
 
                 })
     }
 
-    private fun isLocationPermissionGranted(): Boolean {
-        return ContextCompat.checkSelfPermission(
-                applicationContext,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-    }
 }

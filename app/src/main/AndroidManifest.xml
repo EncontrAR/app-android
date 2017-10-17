@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.SET_WALLPAPER"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name=".App"
@@ -64,14 +65,14 @@
         <service
             android:name=".services.WallpaperRecoveryService"/>
 
-        <!-- Service: Location Update -->
-        <!--
-            IMPORTANT: Make sure this service runs on a different process to avoid
-            having it stopped whenever the app gets killed or is closed by the user
-        -->
+        <!-- Service (Firebase Job): Location Update -->
         <service
-            android:name=".services.LocationUpdateService"
-            android:process=":LocationUpdateService"/>
+            android:exported="false"
+            android:name=".services.LocationUpdateJobService">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
 
     </application>
 
