@@ -16,6 +16,7 @@ import com.google.android.gms.location.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -82,8 +83,8 @@ class LocationUpdateService : Service() {
 
     private fun getLocationRequest(): LocationRequest {
         val locationRequest = LocationRequest()
-        locationRequest.interval = 1000 * 60 * 60 * 4 // Max refresh time: 4 hours
-        locationRequest.fastestInterval = 1000 * 60 * 60 * 1 // Min refresh time: 1 hour
+        locationRequest.interval = TimeUnit.HOURS.toMillis(4)// Max refresh time: 4 hours
+        locationRequest.fastestInterval = TimeUnit.HOURS.toMillis(1) // Min refresh time: 1 hour
         // Mid accuracy (100 mts approx, coarse location) and mid power consumption
         locationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         return locationRequest

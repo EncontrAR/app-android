@@ -41,7 +41,7 @@ object UserRepository {
     private val FIELD_SETTINGS_NOTIFICATIONS_LOCKSCREEN = "settingsNotificationsLockscreen"
     private val FIELD_USER_SAW_TOS = "userSawToS"
 
-    // Since tokens are used frequently, screen them in memory for faster access
+    // Since tokens are used frequently, store them in memory for faster access
     private var apiAuthToken: String? = null
     private var firebaseNotificationsToken: String? = null
 
