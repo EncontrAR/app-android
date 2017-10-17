@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.support.annotation.RequiresApi
-import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.data.models.MissingPerson
 import ar.com.encontrarpersonas.services.WallpaperRecoveryService
@@ -39,25 +38,28 @@ class WallpaperNotificationsHandler(val context: Context) : INotificationHandler
 
     val USER_WALLPAPER_NAME = "userWallpaper.png"
 
-    override fun notify(missingPerson: MissingPerson) {
+    override fun notify(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
 
         // Check if the user has wallpaper notifications enabled
         if (UserRepository.getSettingWallpaperNotifications()) {
-            useWallpaperManagerMethod()
+
+            // Ensure that there is an image to set as a wallpaper
+            if (photoBitmap != null) {
+                useOnlyWallpaperMethod(photoBitmap)
+            }
         }
     }
 
     /**
-     * This method uses the system's WallpaperManager to modify the desktop wallpaper.
+     * This method uses the system's WallpaperManager to modify the desktop general wallpaper.
      */
     @RequiresApi(Build.VERSION_CODES.ECLAIR)
-    private fun useWallpaperManagerMethod() {
+    private fun useOnlyWallpaperMethod(photoBitmap: Bitmap) {
         val wallpaperManager = WallpaperManager.getInstance(context)
         val userWallpaper = (wallpaperManager.drawable as BitmapDrawable).bitmap
 
         // Sets the temporal wallpaper
-        wallpaperManager.setResource(R.raw.test_wallpaper)
-
+        wallpaperManager.setBitmap(photoBitmap)
 
         // Save the user's origin wallpaper to a temporary file and free resources
         val fileOutputStream = context.openFileOutput(USER_WALLPAPER_NAME, Context.MODE_PRIVATE)

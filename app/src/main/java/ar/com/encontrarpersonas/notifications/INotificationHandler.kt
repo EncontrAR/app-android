@@ -1,5 +1,6 @@
 package ar.com.encontrarpersonas.notifications
 
+import android.graphics.Bitmap
 import ar.com.encontrarpersonas.data.models.MissingPerson
 
 /**
@@ -30,6 +31,6 @@ interface INotificationHandler {
      * Builds a notification based on a provided RemoteMessage and displays it on the system's
      * notifications tray
      */
-    fun notify(missingPerson: MissingPerson)
+    fun notify(missingPerson: MissingPerson, photoBitmap: Bitmap?)
 
 }

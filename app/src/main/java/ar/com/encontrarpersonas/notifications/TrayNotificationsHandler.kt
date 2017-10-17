@@ -12,15 +12,6 @@ import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.activities.MainActivity
 import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.data.models.MissingPerson
-import com.crashlytics.android.Crashlytics
-import com.facebook.common.executors.UiThreadImmediateExecutorService
-import com.facebook.common.references.CloseableReference
-import com.facebook.datasource.DataSource
-import com.facebook.datasource.DataSubscriber
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
-import com.facebook.imagepipeline.image.CloseableImage
-import com.facebook.imagepipeline.request.ImageRequest
 
 
 /**
@@ -50,38 +41,19 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
     private val DEFAULT_NOTIFICATION_CHANNEL_ID = "ABC123"
     private val DEFAULT_NOTIFICATION_INDIVIDUAL_ID = 123
 
-    override fun notify(missingPerson: MissingPerson) {
+    override fun notify(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
 
         // Check if the user has tray notifications enabled
         if (UserRepository.getSettingTrayNotifications()) {
-            processMessage(missingPerson)
+            buildNotification(missingPerson, photoBitmap)
         }
-    }
-
-    /**
-     * Starts the notification building process.
-     */
-    private fun processMessage(missingPerson: MissingPerson) {
-
-        fetchImageFromNetwork(missingPerson.photoUrl,
-                object : BaseBitmapDataSubscriber() {
-                    override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
-                        Crashlytics.log("Couldn't retrieve image for notification from the " +
-                                "network")
-                        buildNotification(missingPerson, null)
-                    }
-
-                    override fun onNewResultImpl(bitmap: Bitmap?) {
-                        buildNotification(missingPerson, bitmap)
-                    }
-                })
     }
 
     /**
      * Builds a system (tray) notification with the data received on the push notification
      * and displays it.
      */
-    private fun buildNotification(missingPerson: MissingPerson, personBitmap: Bitmap?) {
+    private fun buildNotification(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
         val notification = NotificationCompat
                 .Builder(context, DEFAULT_NOTIFICATION_CHANNEL_ID)
                 .setAutoCancel(true)
@@ -90,12 +62,12 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
                 .setVibrate(longArrayOf(0, 500, 250, 500, 250, 500))
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSmallIcon(R.drawable.ic_notification_small)
-                .setLargeIcon(personBitmap)
+                .setLargeIcon(photoBitmap)
                 .setContentTitle(context.getString(R.string.notification_missing_person_nearby))
                 .setSubText("${missingPerson.name} ${missingPerson.lastname}")
                 .setContentIntent(getNotificationOpenIntent())
                 .setStyle(NotificationCompat.BigPictureStyle()
-                        .bigPicture(personBitmap))
+                        .bigPicture(photoBitmap))
                 .build()
 
         val notificationManager =
@@ -104,17 +76,6 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
         notificationManager.notify(
                 DEFAULT_NOTIFICATION_INDIVIDUAL_ID,
                 notification)
-    }
-
-    /**
-     * Retrieve the image for the notification from the network using Fresco
-     */
-    private fun fetchImageFromNetwork(
-            url: String?,
-            callback: DataSubscriber<CloseableReference<CloseableImage>>) {
-        Fresco.getImagePipeline()
-                .fetchDecodedImage(ImageRequest.fromUri(url), null)
-                .subscribe(callback, UiThreadImmediateExecutorService.getInstance())
     }
 
     /**

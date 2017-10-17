@@ -23,9 +23,19 @@ package ar.com.encontrarpersonas.services
  *
  */
 
+import android.graphics.Bitmap
 import ar.com.encontrarpersonas.data.models.MissingPerson
 import ar.com.encontrarpersonas.notifications.TrayNotificationsHandler
 import ar.com.encontrarpersonas.notifications.WallpaperNotificationsHandler
+import com.crashlytics.android.Crashlytics
+import com.facebook.common.executors.UiThreadImmediateExecutorService
+import com.facebook.common.references.CloseableReference
+import com.facebook.datasource.DataSource
+import com.facebook.datasource.DataSubscriber
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
+import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.imagepipeline.request.ImageRequest
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
@@ -54,12 +64,43 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
                     remoteMessage.data["missing_person"], MissingPerson::class.java
             )
 
-            // Display the received notification on the system tray
-            TrayNotificationsHandler(this).notify(missingPerson)
+            // Fetch the image for the notification from the network
+            fetchImageFromNetwork(missingPerson.photoUrl,
+                    object : BaseBitmapDataSubscriber() {
+                        override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
+                            Crashlytics.log("Couldn't retrieve image for notification from the " +
+                                    "network")
+                            sendNotificationDataToHandlers(missingPerson, null)
+                        }
 
-            // Display the received notification in the desktop wallpaper
-            WallpaperNotificationsHandler(this).notify(missingPerson)
+                        override fun onNewResultImpl(bitmap: Bitmap?) {
+                            sendNotificationDataToHandlers(missingPerson, bitmap)
+                            bitmap?.recycle()
+                        }
+                    })
+
         }
+    }
 
+    /**
+     * Retrieve the image for the notification from the network using Fresco
+     */
+    private fun fetchImageFromNetwork(
+            url: String?,
+            callback: DataSubscriber<CloseableReference<CloseableImage>>) {
+        Fresco.getImagePipeline()
+                .fetchDecodedImage(ImageRequest.fromUri(url), null)
+                .subscribe(callback, UiThreadImmediateExecutorService.getInstance())
+    }
+
+    /**
+     * Delegate notification display to specific handlers for each type of notification
+     */
+    private fun sendNotificationDataToHandlers(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
+        // Display the received notification on the system tray
+        TrayNotificationsHandler(this).notify(missingPerson, photoBitmap)
+
+        // Display the received notification in the desktop wallpaper
+        WallpaperNotificationsHandler(this).notify(missingPerson, photoBitmap)
     }
 }
