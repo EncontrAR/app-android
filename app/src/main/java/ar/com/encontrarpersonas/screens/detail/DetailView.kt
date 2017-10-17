@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.widget.LinearLayout
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.activities.MainActivity
 import ar.com.encontrarpersonas.components.lists.RemoteImageComponent
 import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.screens.chat.ChatScreen
@@ -74,6 +75,9 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                                 CameraUpdateFactory
                                                         .newCameraPosition(cameraPosition)
                                         )
+
+                                        if ((screen.activity as MainActivity).userHasLocationPermissionAcepted())
+                                            googleMap.isMyLocationEnabled = true
                                     }
                                 }
                             }

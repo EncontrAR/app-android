@@ -1,6 +1,8 @@
 package ar.com.encontrarpersonas.screens.fullScreenMap
 
+import android.annotation.SuppressLint
 import android.content.Context
+import ar.com.encontrarpersonas.activities.MainActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
@@ -15,6 +17,7 @@ class FullMapView(context: Context) : BaseScreenView<FullMapScreen>(context) {
 
     init {
         addView(object : RenderableView(context) {
+            @SuppressLint("MissingPermission")
             override fun view() {
 
                 val DEFAULT_ZOOM = 15f
@@ -38,6 +41,9 @@ class FullMapView(context: Context) : BaseScreenView<FullMapScreen>(context) {
                                 CameraUpdateFactory
                                         .newCameraPosition(cameraPosition)
                         )
+
+                        if ((screen.activity as MainActivity).userHasLocationPermissionAcepted())
+                            googleMap.isMyLocationEnabled = true
                     }
                 }
 
