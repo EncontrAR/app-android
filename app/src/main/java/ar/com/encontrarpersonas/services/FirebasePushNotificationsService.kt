@@ -75,7 +75,6 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
 
                         override fun onNewResultImpl(bitmap: Bitmap?) {
                             sendNotificationDataToHandlers(missingPerson, bitmap)
-                            bitmap?.recycle()
                         }
                     })
 
