@@ -36,18 +36,43 @@ import com.mcxiaoke.koi.ext.startService
  */
 class WallpaperNotificationsHandler(val context: Context) : INotificationHandler {
 
-    val USER_WALLPAPER_NAME = "userWallpaper.png"
+    // Constants
+    val USER_GENERAL_WALLPAPER = "userGeneralWallpaper.png"
+
+    val wallpaperManager by lazy { WallpaperManager.getInstance(context) }
 
     override fun notify(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
 
-        // Check if the user has wallpaper notifications enabled
-        if (UserRepository.getSettingWallpaperNotifications()) {
+        // Ensure that there is an image to set as a wallpaper
+        if (photoBitmap != null) {
 
-            // Ensure that there is an image to set as a wallpaper
-            if (photoBitmap != null) {
-                useOnlyWallpaperMethod(photoBitmap)
+            // If the device is running android nougat or later, the the lockscreen and the
+            // wallpaper images are different, and must be set independently.
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+
+                // Check if the user has wallpaper notifications enabled
+                if (UserRepository.getSettingWallpaperNotifications()) {
+                    useNougatWallpaperMethod(photoBitmap)
+                }
+
+                // Check if the user has lockscreen notifications enabled
+                if (UserRepository.getSettingLockscreenNotifications()) {
+                    useNougatLockscreenMethod(photoBitmap)
+                }
+
             }
+
+            // Fallback mechanism for pre-nougat devices, where the lockscreen and the wallpaper
+            // images are the same
+            else {
+                // Check if the user has wallpaper notifications enabled
+                if (UserRepository.getSettingWallpaperNotifications()) {
+                    useOnlyWallpaperMethod(photoBitmap)
+                }
+            }
+
         }
+
     }
 
     /**
@@ -55,14 +80,13 @@ class WallpaperNotificationsHandler(val context: Context) : INotificationHandler
      */
     @RequiresApi(Build.VERSION_CODES.ECLAIR)
     private fun useOnlyWallpaperMethod(photoBitmap: Bitmap) {
-        val wallpaperManager = WallpaperManager.getInstance(context)
         val userWallpaper = (wallpaperManager.drawable as BitmapDrawable).bitmap
 
         // Sets the temporal wallpaper
         wallpaperManager.setBitmap(photoBitmap)
 
         // Save the user's origin wallpaper to a temporary file and free resources
-        val fileOutputStream = context.openFileOutput(USER_WALLPAPER_NAME, Context.MODE_PRIVATE)
+        val fileOutputStream = context.openFileOutput(USER_GENERAL_WALLPAPER, Context.MODE_PRIVATE)
         userWallpaper.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
         fileOutputStream.close()
         userWallpaper.recycle()
@@ -72,9 +96,23 @@ class WallpaperNotificationsHandler(val context: Context) : INotificationHandler
         // recovers the original wallpaper.
         context.startService<WallpaperRecoveryService>(
                 Bundle {
-                    putString(WallpaperRecoveryService.EXTRA_WALLPAPER_BITMAP, USER_WALLPAPER_NAME)
+                    putString(WallpaperRecoveryService.EXTRA_WALLPAPER_BITMAP, USER_GENERAL_WALLPAPER)
                 }
         )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun useNougatWallpaperMethod(photoBitmap: Bitmap) {
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun useNougatLockscreenMethod(photoBitmap: Bitmap) {
+
+    }
+
+    fun startRecoveryService(pathToFileToRecover: String) {
+
     }
 
 }

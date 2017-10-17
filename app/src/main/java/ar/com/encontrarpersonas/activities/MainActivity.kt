@@ -131,9 +131,7 @@ class MainActivity : SingleActivity(), NavigationListener {
      * Requests the location permission to the user.
      */
     fun requestLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (!userHasLocationPermissionAcepted()) {
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -163,14 +161,23 @@ class MainActivity : SingleActivity(), NavigationListener {
      * Displays a dialog with the provided title and message.
      */
     private fun showRationaleDialog(title: String,
-                            message: String,
-                            onOkClick: DialogInterface.OnClickListener) {
+                                    message: String,
+                                    onOkClick: DialogInterface.OnClickListener) {
         AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(getString(R.string.permission_message_ok), onOkClick)
                 .create()
                 .show()
+    }
+
+    /**
+     * Returns true if the user has the location permission enabled
+     */
+    fun userHasLocationPermissionAcepted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
 }
