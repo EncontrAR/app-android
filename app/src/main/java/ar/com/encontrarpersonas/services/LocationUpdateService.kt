@@ -85,7 +85,7 @@ class LocationUpdateService : Service() {
         val locationRequest = LocationRequest()
         locationRequest.interval = TimeUnit.HOURS.toMillis(4)// Max refresh time: 4 hours
         locationRequest.fastestInterval = TimeUnit.HOURS.toMillis(1) // Min refresh time: 1 hour
-        // Mid accuracy (100 mts approx, coarse location) and mid power consumption
+        // Mid accuracy and mid power consumption
         locationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         return locationRequest
     }
@@ -128,6 +128,6 @@ class LocationUpdateService : Service() {
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
                 applicationContext,
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 }

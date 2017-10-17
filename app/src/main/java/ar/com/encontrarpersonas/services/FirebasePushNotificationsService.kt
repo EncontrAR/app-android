@@ -23,10 +23,12 @@ package ar.com.encontrarpersonas.services
  *
  */
 
+import ar.com.encontrarpersonas.data.models.MissingPerson
 import ar.com.encontrarpersonas.notifications.TrayNotificationsHandler
 import ar.com.encontrarpersonas.notifications.WallpaperNotificationsHandler
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.gson.Gson
 
 
 class FirebasePushNotificationsService : FirebaseMessagingService() {
@@ -47,11 +49,16 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
 
         if (remoteMessage != null) {
 
+            // Deserialize push notification data
+            val missingPerson = Gson().fromJson(
+                    remoteMessage.data["missing_person"], MissingPerson::class.java
+            )
+
             // Display the received notification on the system tray
-            TrayNotificationsHandler(this).notify(remoteMessage)
+            TrayNotificationsHandler(this).notify(missingPerson)
 
             // Display the received notification in the desktop wallpaper
-            WallpaperNotificationsHandler(this).notify(remoteMessage)
+            WallpaperNotificationsHandler(this).notify(missingPerson)
         }
 
     }

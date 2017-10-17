@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.activities.MainActivity
 import ar.com.encontrarpersonas.data.UserRepository
+import ar.com.encontrarpersonas.data.models.MissingPerson
 import com.crashlytics.android.Crashlytics
 import com.facebook.common.executors.UiThreadImmediateExecutorService
 import com.facebook.common.references.CloseableReference
@@ -20,7 +21,6 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.request.ImageRequest
-import com.google.firebase.messaging.RemoteMessage
 
 
 /**
@@ -50,35 +50,29 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
     private val DEFAULT_NOTIFICATION_CHANNEL_ID = "ABC123"
     private val DEFAULT_NOTIFICATION_INDIVIDUAL_ID = 123
 
-    override fun notify(remoteMessage: RemoteMessage) {
+    override fun notify(missingPerson: MissingPerson) {
 
         // Check if the user has tray notifications enabled
         if (UserRepository.getSettingTrayNotifications()) {
-            processMessage(remoteMessage)
+            processMessage(missingPerson)
         }
     }
 
     /**
      * Starts the notification building process.
      */
-    private fun processMessage(remoteMessage: RemoteMessage) {
+    private fun processMessage(missingPerson: MissingPerson) {
 
-        // TODO probar con lo que paso lucas
-        // remoteMessage.data.get("message")
-        // remoteMessage.data.get("images")
-
-        // TODO unhardcode the image
-        // Retrieve the image for the notification from the network
-        fetchImageFromNetwork("https://i.gyazo.com/851b97f968db4df93a2bfa808c1eb325.png",
+        fetchImageFromNetwork(missingPerson.photoUrl,
                 object : BaseBitmapDataSubscriber() {
                     override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
                         Crashlytics.log("Couldn't retrieve image for notification from the " +
                                 "network")
-                        buildNotification(remoteMessage, null)
+                        buildNotification(missingPerson, null)
                     }
 
                     override fun onNewResultImpl(bitmap: Bitmap?) {
-                        buildNotification(remoteMessage, bitmap)
+                        buildNotification(missingPerson, bitmap)
                     }
                 })
     }
@@ -87,7 +81,7 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
      * Builds a system (tray) notification with the data received on the push notification
      * and displays it.
      */
-    private fun buildNotification(remoteMessage: RemoteMessage, personBitmap: Bitmap?) {
+    private fun buildNotification(missingPerson: MissingPerson, personBitmap: Bitmap?) {
         val notification = NotificationCompat
                 .Builder(context, DEFAULT_NOTIFICATION_CHANNEL_ID)
                 .setAutoCancel(true)
@@ -97,13 +91,11 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSmallIcon(R.drawable.ic_notification_small)
                 .setLargeIcon(personBitmap)
-                .setContentTitle(context.getString(R.string.general_app_name))
-                .setSubText(context.getString(R.string.notification_missing_person_nearby))
-                .setContentText(remoteMessage.notification.body)
+                .setContentTitle(context.getString(R.string.notification_missing_person_nearby))
+                .setSubText("${missingPerson.name} ${missingPerson.lastname}")
                 .setContentIntent(getNotificationOpenIntent())
                 .setStyle(NotificationCompat.BigPictureStyle()
-                        .bigPicture(personBitmap)
-                        .setBigContentTitle(context.getString(R.string.notification_missing_person_nearby)))
+                        .bigPicture(personBitmap))
                 .build()
 
         val notificationManager =
@@ -118,7 +110,7 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
      * Retrieve the image for the notification from the network using Fresco
      */
     private fun fetchImageFromNetwork(
-            url: String,
+            url: String?,
             callback: DataSubscriber<CloseableReference<CloseableImage>>) {
         Fresco.getImagePipeline()
                 .fetchDecodedImage(ImageRequest.fromUri(url), null)

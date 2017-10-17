@@ -132,12 +132,12 @@ class MainActivity : SingleActivity(), NavigationListener {
      */
     fun requestLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
+                Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 // Show rationale and request the permission again.
                 showRationaleDialog(
@@ -145,7 +145,7 @@ class MainActivity : SingleActivity(), NavigationListener {
                         getString(R.string.permission_location_rationale),
                         DialogInterface.OnClickListener { _, _ ->
                             ActivityCompat.requestPermissions(this,
-                                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                                     REQUEST_LOCATION)
                         }
                 )
@@ -153,7 +153,7 @@ class MainActivity : SingleActivity(), NavigationListener {
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                         REQUEST_LOCATION)
             }
         }

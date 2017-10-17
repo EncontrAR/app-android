@@ -1,6 +1,6 @@
 package ar.com.encontrarpersonas.notifications
 
-import com.google.firebase.messaging.RemoteMessage
+import ar.com.encontrarpersonas.data.models.MissingPerson
 
 /**
  * MIT License
@@ -30,6 +30,6 @@ interface INotificationHandler {
      * Builds a notification based on a provided RemoteMessage and displays it on the system's
      * notifications tray
      */
-    fun notify(remoteMessage: RemoteMessage)
+    fun notify(missingPerson: MissingPerson)
 
 }

@@ -8,8 +8,8 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.data.UserRepository
+import ar.com.encontrarpersonas.data.models.MissingPerson
 import ar.com.encontrarpersonas.services.WallpaperRecoveryService
-import com.google.firebase.messaging.RemoteMessage
 import com.mcxiaoke.koi.ext.Bundle
 import com.mcxiaoke.koi.ext.startService
 
@@ -39,7 +39,7 @@ class WallpaperNotificationsHandler(val context: Context) : INotificationHandler
 
     val USER_WALLPAPER_NAME = "userWallpaper.png"
 
-    override fun notify(remoteMessage: RemoteMessage) {
+    override fun notify(missingPerson: MissingPerson) {
 
         // Check if the user has wallpaper notifications enabled
         if (UserRepository.getSettingWallpaperNotifications()) {
