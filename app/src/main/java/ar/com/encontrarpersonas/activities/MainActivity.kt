@@ -2,6 +2,7 @@ package ar.com.encontrarpersonas.activities
 
 import android.Manifest
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.data.models.Campaign
 import ar.com.encontrarpersonas.extensions.userHasGrantedLocationPermission
 import ar.com.encontrarpersonas.screens.detail.DetailScreen
 import ar.com.encontrarpersonas.screens.home.HomeScreen
@@ -45,14 +47,34 @@ import com.wealthfront.magellan.support.SingleActivity
  */
 class MainActivity : SingleActivity(), NavigationListener {
 
-    // Constants
-    val REQUEST_LOCATION = 1
+    // Public constants
+    companion object {
+        val EXTRA_CAMPAIGN = "extraCampaign"
+    }
+
+    // Private constants
+    private val REQUEST_CODE_LOCATION = 9001
 
     /*
         Set up a Magellan Navigator with the root Screen
      */
     override fun createNavigator(): Navigator {
-        return Navigator.withRoot(HomeScreen()).build()
+        if (intent.extras != null && intent.extras.containsKey(EXTRA_CAMPAIGN)) {
+            val campaign = (intent.extras.getSerializable(EXTRA_CAMPAIGN) as Campaign)
+
+            val navigator = Navigator
+                    .withRoot(DetailScreen(campaign))
+                    .build()
+
+            navigator.rewriteHistory(this, {
+                HomeScreen()
+                DetailScreen(campaign)
+            })
+
+            return navigator
+        } else {
+            return Navigator.withRoot(HomeScreen()).build()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,8 +87,22 @@ class MainActivity : SingleActivity(), NavigationListener {
     }
 
     /*
-        Hide or show the Toolbar depending on each Screen configuration
+        Handle new incoming intents (usually coming through a notification being opened)
      */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        // If the intent received a campaign, go directly to the detail view of that campaign
+        if (intent.extras != null && intent.extras.containsKey(EXTRA_CAMPAIGN)) {
+            getNavigator().goTo(DetailScreen(
+                    (intent.extras.getSerializable(EXTRA_CAMPAIGN) as Campaign)
+            ))
+        }
+    }
+
+    /*
+        Hide or show the Toolbar depending on each Screen configuration
+    */
     override fun onNavigate(actionBarConfig: ActionBarConfig) {
         // Do something with the toolbar if the screen changes
         if (actionBarConfig.visible()) {
@@ -112,7 +148,7 @@ class MainActivity : SingleActivity(), NavigationListener {
                                             permissions: Array<out String>,
                                             grantResults: IntArray) {
         when (requestCode) {
-            REQUEST_LOCATION -> {
+            REQUEST_CODE_LOCATION -> {
                 if (grantResults.isNotEmpty()
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -143,7 +179,7 @@ class MainActivity : SingleActivity(), NavigationListener {
                         DialogInterface.OnClickListener { _, _ ->
                             ActivityCompat.requestPermissions(this,
                                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                                    REQUEST_LOCATION)
+                                    REQUEST_CODE_LOCATION)
                         }
                 )
 
@@ -151,7 +187,7 @@ class MainActivity : SingleActivity(), NavigationListener {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
                         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        REQUEST_LOCATION)
+                        REQUEST_CODE_LOCATION)
             }
         }
     }

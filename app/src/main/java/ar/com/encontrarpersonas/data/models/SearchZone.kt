@@ -1,7 +1,7 @@
-package ar.com.encontrarpersonas.notifications
+package ar.com.encontrarpersonas.data.models
 
-import android.graphics.Bitmap
-import ar.com.encontrarpersonas.data.models.Campaign
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  * MIT License
@@ -25,12 +25,11 @@ import ar.com.encontrarpersonas.data.models.Campaign
  * DEALINGS IN THE SOFTWARE.
  *
  */
-interface INotificationHandler {
-
-    /**
-     * Builds a notification based on a provided RemoteMessage and displays it on the system's
-     * notifications tray
-     */
-    fun notify(campaign: Campaign, photoBitmap: Bitmap?)
-
-}
+data class SearchZone(
+        @SerializedName("id") val id: Int? = null,
+        @SerializedName("label") val label: String? = "",
+        @SerializedName("south_west_lat") val southWestLat: Double? = null,
+        @SerializedName("south_west_long") val southWestLong: Double? = null,
+        @SerializedName("north_east_lat") val northEastLat: Double? = null,
+        @SerializedName("north_east_long") val northEastLong: Double? = null
+) : Serializable

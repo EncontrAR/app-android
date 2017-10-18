@@ -11,7 +11,7 @@ import android.support.v4.content.ContextCompat
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.activities.MainActivity
 import ar.com.encontrarpersonas.data.UserRepository
-import ar.com.encontrarpersonas.data.models.MissingPerson
+import ar.com.encontrarpersonas.data.models.Campaign
 
 
 /**
@@ -39,13 +39,14 @@ import ar.com.encontrarpersonas.data.models.MissingPerson
 class TrayNotificationsHandler(val context: Context) : INotificationHandler {
 
     private val DEFAULT_NOTIFICATION_CHANNEL_ID = "default_notification_channel"
-    private val DEFAULT_NOTIFICATION_INDIVIDUAL_ID = System.currentTimeMillis().toInt() // Timestamp as notification id
+    // Use a timestamp as notification id
+    private val DEFAULT_NOTIFICATION_INDIVIDUAL_ID = System.currentTimeMillis().toInt()
 
-    override fun notify(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
+    override fun notify(campaign: Campaign, photoBitmap: Bitmap?) {
 
         // Check if the user has tray notifications enabled
         if (UserRepository.getSettingTrayNotifications()) {
-            buildNotification(missingPerson, photoBitmap)
+            buildNotification(campaign, photoBitmap)
         }
     }
 
@@ -53,10 +54,11 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
      * Builds a system (tray) notification with the data received on the push notification
      * and displays it.
      */
-    private fun buildNotification(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
+    private fun buildNotification(campaign: Campaign, photoBitmap: Bitmap?) {
         val notification = NotificationCompat
                 .Builder(context, DEFAULT_NOTIFICATION_CHANNEL_ID)
                 .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setColor(ContextCompat.getColor(context, R.color.theme_color_2))
                 .setLights(ContextCompat.getColor(context, R.color.theme_color_4), 500, 500)
                 .setVibrate(longArrayOf(0, 500, 250, 500, 250, 500))
@@ -64,8 +66,8 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
                 .setSmallIcon(R.drawable.ic_notification_small)
                 .setLargeIcon(photoBitmap)
                 .setContentTitle(context.getString(R.string.notification_missing_person_nearby))
-                .setSubText("${missingPerson.name} ${missingPerson.lastname}")
-                .setContentIntent(getNotificationOpenIntent())
+                .setSubText("${campaign.missingPerson?.name} ${campaign.missingPerson?.lastname}")
+                .setContentIntent(getNotificationOpenIntent(campaign))
                 .setStyle(NotificationCompat.BigPictureStyle()
                         .bigPicture(photoBitmap))
                 .build()
@@ -82,11 +84,14 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
      * Prepares an intent with deeplinking for the notification. This is used to open
      * the specific campaign details corresponding to the received notification.
      */
-    private fun getNotificationOpenIntent(): PendingIntent {
+    private fun getNotificationOpenIntent(campaign: Campaign): PendingIntent {
+        val mainActivityIntent = Intent(context, MainActivity::class.java)
+        mainActivityIntent.putExtra(MainActivity.EXTRA_CAMPAIGN, campaign)
+
         return PendingIntent.getActivity(
                 context,
                 0,
-                Intent(context, MainActivity::class.java),
+                mainActivityIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
 

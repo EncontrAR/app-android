@@ -21,7 +21,6 @@
     <string name="screen_settings_save">Guardar</string>
     <string name="screen_settings_notification_tray">Notificaciones convencionales</string>
     <string name="screen_settings_notification_wallpaper">Fondo de pantalla</string>
-    <string name="screen_settings_notification_lockscreen">Pantalla de bloqueo</string>
     <string name="screen_settings_tos">Ver Términos y Condiciones del servicio</string>
     <string name="screen_settings_saved_ok">Tus datos han sido actualizados</string>
     <string name="screen_settings_saved_failed">No podemos guardar tus datos en este momento</string>

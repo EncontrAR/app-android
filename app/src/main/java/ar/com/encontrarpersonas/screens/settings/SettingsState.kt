@@ -29,7 +29,6 @@ data class SettingsState(
         val lastName: String = UserRepository.getUserLastName(),
         val nationalIdNumber: String = UserRepository.getUserNationalId(),
         val trayNotificationsEnabled: Boolean = UserRepository.getSettingTrayNotifications(),
-        val lockScreenNotificationsEnabled: Boolean = UserRepository.getSettingLockscreenNotifications(),
         val wallpaperNotificationsEnabled: Boolean = UserRepository.getSettingWallpaperNotifications(),
         val isSynchronising: Boolean = false
 )

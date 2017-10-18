@@ -23,4 +23,8 @@
     <color name="button_red">#C62828</color>
     <color name="primary_background">#ECEFF1</color>
 
+    <!-- Maps colors -->
+    <color name="search_area_stroke">#FFC62828</color>
+    <color name="search_area_fill">#2208B8F6</color>
+
 </resources>

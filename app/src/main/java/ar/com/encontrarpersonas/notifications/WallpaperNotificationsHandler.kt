@@ -7,7 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.support.annotation.RequiresApi
 import ar.com.encontrarpersonas.data.UserRepository
-import ar.com.encontrarpersonas.data.models.MissingPerson
+import ar.com.encontrarpersonas.data.models.Campaign
 import ar.com.encontrarpersonas.services.JobDispatcher
 import java.util.*
 
@@ -35,7 +35,7 @@ import java.util.*
  */
 class WallpaperNotificationsHandler(val context: Context) : INotificationHandler {
 
-    override fun notify(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
+    override fun notify(campaign: Campaign, photoBitmap: Bitmap?) {
 
         // Check if the user has wallpaper notifications enabled
         if (UserRepository.getSettingWallpaperNotifications()) {

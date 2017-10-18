@@ -24,7 +24,7 @@ package ar.com.encontrarpersonas.services
  */
 
 import android.graphics.Bitmap
-import ar.com.encontrarpersonas.data.models.MissingPerson
+import ar.com.encontrarpersonas.data.models.Campaign
 import ar.com.encontrarpersonas.notifications.TrayNotificationsHandler
 import ar.com.encontrarpersonas.notifications.WallpaperNotificationsHandler
 import com.crashlytics.android.Crashlytics
@@ -60,21 +60,21 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
         if (remoteMessage != null) {
 
             // Deserialize push notification data
-            val missingPerson = Gson().fromJson(
-                    remoteMessage.data["missing_person"], MissingPerson::class.java
+            val campaign = Gson().fromJson(
+                    remoteMessage.data["message"], Campaign::class.java
             )
 
             // Fetch the image for the notification from the network
-            fetchImageFromNetwork(missingPerson.photoUrl,
+            fetchImageFromNetwork(campaign.missingPerson?.photoUrl,
                     object : BaseBitmapDataSubscriber() {
                         override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
                             Crashlytics.log("Couldn't retrieve image for notification from the " +
                                     "network")
-                            sendNotificationDataToHandlers(missingPerson, null)
+                            sendNotificationDataToHandlers(campaign, null)
                         }
 
                         override fun onNewResultImpl(bitmap: Bitmap?) {
-                            sendNotificationDataToHandlers(missingPerson, bitmap)
+                            sendNotificationDataToHandlers(campaign, bitmap)
                         }
                     })
 
@@ -95,11 +95,11 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
     /**
      * Delegate notification display to specific handlers for each type of notification
      */
-    private fun sendNotificationDataToHandlers(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
+    private fun sendNotificationDataToHandlers(campaign: Campaign, photoBitmap: Bitmap?) {
         // Display the received notification on the system tray
-        TrayNotificationsHandler(this).notify(missingPerson, photoBitmap)
+        TrayNotificationsHandler(this).notify(campaign, photoBitmap)
 
         // Display the received notification in the desktop wallpaper
-        WallpaperNotificationsHandler(this).notify(missingPerson, photoBitmap)
+        WallpaperNotificationsHandler(this).notify(campaign, photoBitmap)
     }
 }

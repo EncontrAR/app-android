@@ -69,7 +69,7 @@ class RemoteImageList(
                                 dip(360),
                                 items[viewHolder.adapterPosition].missingPerson?.photoUrl)
 
-                        // Callback to report a item being clicked
+                        // Callback to report a campaign being clicked
                         onClick { view ->
                             onItemSelected(view, items[viewHolder.adapterPosition])
                         }

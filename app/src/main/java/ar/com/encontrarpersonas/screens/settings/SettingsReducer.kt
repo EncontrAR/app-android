@@ -33,7 +33,6 @@ class SettingsReducer {
     data class SET_NATIONAL_ID(val nationalId: String) : Action
     data class SET_SETTINGS_TRAY_NOTIFICATIONS(val enabled: Boolean) : Action
     data class SET_SETTINGS_WALLPAPER_NOTIFICATIONS(val enabled: Boolean) : Action
-    data class SET_SETTINGS_LOCKSCREEN_NOTIFICATIONS(val enabled: Boolean) : Action
     data class IS_SYNCHRONISING(val isSynchronisingWithServer : Boolean) : Action
 
     // Reducer
@@ -44,7 +43,6 @@ class SettingsReducer {
             is SET_NATIONAL_ID -> oldState.copy(nationalIdNumber = action.nationalId)
             is SET_SETTINGS_TRAY_NOTIFICATIONS -> oldState.copy(trayNotificationsEnabled = action.enabled)
             is SET_SETTINGS_WALLPAPER_NOTIFICATIONS -> oldState.copy(wallpaperNotificationsEnabled = action.enabled)
-            is SET_SETTINGS_LOCKSCREEN_NOTIFICATIONS -> oldState.copy(lockScreenNotificationsEnabled = action.enabled)
             is IS_SYNCHRONISING -> oldState.copy(isSynchronising = action.isSynchronisingWithServer)
             else -> oldState
         }

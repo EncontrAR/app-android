@@ -25,5 +25,5 @@ import ar.com.encontrarpersonas.data.models.Campaign
  *
  */
 data class FullMapState(
-        val item: Campaign
+        val campaign: Campaign
 )

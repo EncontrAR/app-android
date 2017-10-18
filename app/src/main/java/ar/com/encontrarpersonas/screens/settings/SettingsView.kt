@@ -137,13 +137,6 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                                 screen.presenter.saveUserWallpaperNotificationsSetting(checked)
                             })
 
-                    NotificationTypeSwitchView(context,
-                            description = resources.getString(ar.com.encontrarpersonas.R.string.screen_settings_notification_lockscreen),
-                            isChecked = screen.store.state.lockScreenNotificationsEnabled,
-                            onChangeListener = CompoundButton.OnCheckedChangeListener { _, checked ->
-                                screen.presenter.saveUserLockscreenNotificatonsSetting(checked)
-                            })
-
                     // Dummy view to make an empty space before the ToS button
                     view {
                         size(MATCH, 0)

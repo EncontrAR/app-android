@@ -32,6 +32,6 @@ data class Campaign(
         @SerializedName("description") val description: String? = null,
         @SerializedName("created_at") val createdAt: Date? = null,
         @SerializedName("images") val imagesUrls: List<String>? = null,
-        @SerializedName("missing_person") val missingPerson: MissingPerson? = null
-
+        @SerializedName("missing_person") val missingPerson: MissingPerson? = null,
+        @SerializedName("last_zone") val lastSearchZone: SearchZone? = null
 ) : Serializable

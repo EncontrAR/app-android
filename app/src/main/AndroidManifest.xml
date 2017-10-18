@@ -42,7 +42,8 @@
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:launchMode="singleInstance">
         </activity>
 
         <!-- Service: Firebase Push Notifications Receiver -->

@@ -7,15 +7,12 @@ import android.widget.LinearLayout
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.components.lists.RemoteImageComponent
 import ar.com.encontrarpersonas.data.UserRepository
-import ar.com.encontrarpersonas.extensions.userHasGrantedLocationPermission
 import ar.com.encontrarpersonas.screens.chat.ChatScreen
 import ar.com.encontrarpersonas.screens.detail.components.MissingPersonFieldComponent
 import ar.com.encontrarpersonas.screens.fullScreenMap.FullMapScreen
 import ar.com.encontrarpersonas.screens.settings.SettingsScreen
-import com.google.android.gms.maps.CameraUpdateFactory
+import ar.com.encontrarpersonas.utils.MapUtils
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
 import com.wealthfront.magellan.BaseScreenView
 import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
@@ -65,20 +62,10 @@ class DetailView(context: Context) : BaseScreenView<DetailScreen>(context) {
                                             screen.navigator.goTo(FullMapScreen(campaign))
                                         }
 
-                                        val cameraPosition = CameraPosition.Builder()
-                                                .target(LatLng(-34.5986068, -58.4223893))
-                                                .zoom(14f)
-                                                .tilt(0f)
-                                                .build()
-
-                                        googleMap.animateCamera(
-                                                CameraUpdateFactory
-                                                        .newCameraPosition(cameraPosition)
-                                        )
-
-                                        if (context.userHasGrantedLocationPermission()) {
-                                            googleMap.isMyLocationEnabled = true
-                                        }
+                                        MapUtils().drawSearchArea(
+                                                context,
+                                                googleMap,
+                                                campaign)
 
                                     }
                                 }

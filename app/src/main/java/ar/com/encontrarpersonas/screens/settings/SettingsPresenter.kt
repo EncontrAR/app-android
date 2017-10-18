@@ -51,14 +51,6 @@ class SettingsPresenter(val store: Store<SettingsState>) {
     }
 
     /**
-     * Stores the user preferences for lockscreen notifications locally.
-     */
-    fun saveUserLockscreenNotificatonsSetting(enabled: Boolean) {
-        UserRepository.setSettingLockscreenNotifications(enabled)
-        store.dispatch(SettingsReducer.SET_SETTINGS_LOCKSCREEN_NOTIFICATIONS(enabled))
-    }
-
-    /**
      * Stores the user's personal data (first name, last name, national id, etc.) and sends
      * the data to the server.
      */

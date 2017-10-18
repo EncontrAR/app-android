@@ -63,7 +63,7 @@ class RemoteImageGrid(
                         RemoteImageGridItem(context, items[viewHolder.adapterPosition])
 
 
-                        // Callback to report an item being clicked
+                        // Callback to report an campaign being clicked
                         onClick { view ->
                             onItemSelected(view, items[viewHolder.adapterPosition])
                         }

@@ -38,7 +38,6 @@ object UserRepository {
     private val FIELD_USER_NATIONAL_ID = "userNationalId"
     private val FIELD_SETTINGS_NOTIFICATIONS_TRAY = "settingsNotificationsTray"
     private val FIELD_SETTINGS_NOTIFICATIONS_WALLPAPER = "settingsNotificationsWallpaper"
-    private val FIELD_SETTINGS_NOTIFICATIONS_LOCKSCREEN = "settingsNotificationsLockscreen"
     private val FIELD_USER_SAW_TOS = "userSawToS"
 
     // Since tokens are used frequently, store them in memory for faster access
@@ -160,20 +159,6 @@ object UserRepository {
      */
     fun setSettingWallpaperNotifications(enabled: Boolean) {
         sharedPreferences.edit().putBoolean(FIELD_SETTINGS_NOTIFICATIONS_WALLPAPER, enabled).apply()
-    }
-
-    /**
-     * Returns true if the user has lockscreen notifications enabled
-     */
-    fun getSettingLockscreenNotifications(): Boolean {
-        return sharedPreferences.getBoolean(FIELD_SETTINGS_NOTIFICATIONS_LOCKSCREEN, true)
-    }
-
-    /**
-     * Sets asynchronously the user's setting for lockscreen notifications
-     */
-    fun setSettingLockscreenNotifications(enabled: Boolean) {
-        sharedPreferences.edit().putBoolean(FIELD_SETTINGS_NOTIFICATIONS_LOCKSCREEN, enabled).apply()
     }
 
     /**
