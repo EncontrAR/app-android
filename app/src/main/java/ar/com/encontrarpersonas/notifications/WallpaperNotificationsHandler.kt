@@ -8,9 +8,8 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.data.models.MissingPerson
-import ar.com.encontrarpersonas.services.WallpaperRecoveryService
-import com.mcxiaoke.koi.ext.Bundle
-import com.mcxiaoke.koi.ext.startService
+import ar.com.encontrarpersonas.services.JobDispatcher
+import java.util.*
 
 /**
  * MIT License
@@ -36,8 +35,6 @@ import com.mcxiaoke.koi.ext.startService
  */
 class WallpaperNotificationsHandler(val context: Context) : INotificationHandler {
 
-    val USER_WALLPAPER_NAME = "userWallpaper.png"
-
     override fun notify(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
 
         // Check if the user has wallpaper notifications enabled
@@ -61,8 +58,11 @@ class WallpaperNotificationsHandler(val context: Context) : INotificationHandler
         // Sets the temporal wallpaper
         wallpaperManager.setBitmap(photoBitmap)
 
+        // Generate a random UUID for the auxiliary file containing the original user's wallpaper
+        val temporaryFileName = UUID.randomUUID().toString()
+
         // Save the user's origin wallpaper to a temporary file and free resources
-        val fileOutputStream = context.openFileOutput(USER_WALLPAPER_NAME, Context.MODE_PRIVATE)
+        val fileOutputStream = context.openFileOutput(temporaryFileName, Context.MODE_PRIVATE)
         userWallpaper.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
         fileOutputStream.close()
         userWallpaper.recycle()
@@ -70,11 +70,7 @@ class WallpaperNotificationsHandler(val context: Context) : INotificationHandler
         // Start a service to recover the original user's wallpaper after a while
         // Its important to do this in a service, since the app may get killed before it
         // recovers the original wallpaper.
-        context.startService<WallpaperRecoveryService>(
-                Bundle {
-                    putString(WallpaperRecoveryService.EXTRA_WALLPAPER_BITMAP, USER_WALLPAPER_NAME)
-                }
-        )
+        JobDispatcher.startWallpaperRecoveryJob(temporaryFileName)
     }
 
 }

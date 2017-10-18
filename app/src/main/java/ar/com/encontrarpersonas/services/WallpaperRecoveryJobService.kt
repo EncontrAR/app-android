@@ -1,8 +1,9 @@
 package ar.com.encontrarpersonas.services
 
-import android.app.IntentService
 import android.app.WallpaperManager
-import android.content.Intent
+import android.os.Bundle
+import com.firebase.jobdispatcher.JobParameters
+import com.firebase.jobdispatcher.JobService
 
 /**
  * MIT License
@@ -26,29 +27,43 @@ import android.content.Intent
  * DEALINGS IN THE SOFTWARE.
  *
  */
-class WallpaperRecoveryService : IntentService("WallpaperRecovery") {
-
-    val WALLPAPER_DURATION = 5000L
+class WallpaperRecoveryJobService : JobService() {
 
     companion object {
-        val EXTRA_WALLPAPER_BITMAP = "wallpaperPath"
+        val EXTRA_FILE_NAME = "fileNameToRecover"
     }
 
-    override fun onHandleIntent(intent: Intent) {
+    override fun onStartJob(params: JobParameters): Boolean {
+        // Execute code in a separate thread
+        Thread(Runnable {
 
-        // Wait a fixed amount of time before recovering the user's original wallpaper
-        Thread.sleep(WALLPAPER_DURATION)
+            if (params.extras != null) {
+                recoverOriginalWallpaper(params.extras!!)
+            }
 
-        // Get the wallpaer sent to the service as a File reference
-        val wallpaperPath = intent.getStringExtra(EXTRA_WALLPAPER_BITMAP)
-        val wallpaperFile = getFileStreamPath(wallpaperPath)
+            jobFinished(params, false) // Flags the job as done
+        }).start()
+
+        return true // Sets the job as "ongoing", must call jobFinished(..) later
+    }
+
+    override fun onStopJob(job: JobParameters?): Boolean {
+        return false // Answers the question: "Should this job be retried?"
+    }
+
+    private fun recoverOriginalWallpaper(extras: Bundle) {
+
+        // Get the wallpaper sent to the service as a File reference
+        val fileToRecoverName = extras.getString(EXTRA_FILE_NAME)
+        val wallpaperToRecover = getFileStreamPath(fileToRecoverName)
 
         // Set back the user's original wallpaper
         WallpaperManager
                 .getInstance(this)
-                .setStream(wallpaperFile.inputStream())
+                .setStream(wallpaperToRecover.inputStream())
 
         // Free resources
-        wallpaperFile.delete()
+        wallpaperToRecover.delete()
     }
+
 }

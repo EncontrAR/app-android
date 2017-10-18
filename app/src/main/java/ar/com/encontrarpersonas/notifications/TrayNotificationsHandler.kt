@@ -38,8 +38,8 @@ import ar.com.encontrarpersonas.data.models.MissingPerson
  */
 class TrayNotificationsHandler(val context: Context) : INotificationHandler {
 
-    private val DEFAULT_NOTIFICATION_CHANNEL_ID = "ABC123"
-    private val DEFAULT_NOTIFICATION_INDIVIDUAL_ID = 123
+    private val DEFAULT_NOTIFICATION_CHANNEL_ID = "default_notification_channel"
+    private val DEFAULT_NOTIFICATION_INDIVIDUAL_ID = System.currentTimeMillis().toInt() // Timestamp as notification id
 
     override fun notify(missingPerson: MissingPerson, photoBitmap: Bitmap?) {
 

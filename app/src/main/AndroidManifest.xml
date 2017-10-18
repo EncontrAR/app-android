@@ -61,14 +61,19 @@
             </intent-filter>
         </service>
 
-        <!-- Service: Wallpaper Recovery -->
-        <service
-            android:name=".services.WallpaperRecoveryService"/>
-
         <!-- Service (Firebase Job): Location Update -->
         <service
             android:exported="false"
             android:name=".services.LocationUpdateJobService">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
+        <!-- Service (Firebase Job): Wallpaper Recovery -->
+        <service
+            android:exported="false"
+            android:name=".services.WallpaperRecoveryJobService">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
             </intent-filter>

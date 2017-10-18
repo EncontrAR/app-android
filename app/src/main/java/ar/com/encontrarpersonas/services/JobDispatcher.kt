@@ -1,5 +1,6 @@
 package ar.com.encontrarpersonas.services
 
+import android.os.Bundle
 import ar.com.encontrarpersonas.App
 import com.firebase.jobdispatcher.*
 import java.util.concurrent.TimeUnit
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit
 object JobDispatcher {
 
     private val UPDATE_LOCATION_JOB_TAG = "LocationUpdateJob"
+    private val WALLPAPER_RECOVERY_JOB_TAG = "WallpaperRecoveryJob"
 
     private val firebaseDispatcher by lazy { FirebaseJobDispatcher(GooglePlayDriver(App.sInstance)) }
 
@@ -37,7 +39,7 @@ object JobDispatcher {
         val locationUpdateJob = firebaseDispatcher.newJobBuilder()
                 .setTag(UPDATE_LOCATION_JOB_TAG)
                 .setService(LocationUpdateJobService::class.java)
-                .setLifetime(Lifetime.FOREVER)  // Restart job after device reboot
+                .setLifetime(Lifetime.FOREVER)  // Persist job after device reboot
                 .setConstraints(Constraint.ON_ANY_NETWORK) // This jobs requires the network
                 .setReplaceCurrent(false) // Do not create a new job if there is an already scheduled one
                 .setRecurring(true) // This job is periodic, it will be re-scheduled after completion
@@ -45,9 +47,32 @@ object JobDispatcher {
                         TimeUnit.HOURS.toSeconds(1).toInt(),
                         TimeUnit.HOURS.toSeconds(2).toInt())
                 ) // Sets and execution window between 1 and 2 hours, ideally
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL) // Exponential backoff
                 .build()
 
         firebaseDispatcher.mustSchedule(locationUpdateJob)
+    }
+
+    fun startWallpaperRecoveryJob(pathToWallpaperToRecover: String) {
+        val bundleWithPath = Bundle()
+        bundleWithPath.putString(
+                WallpaperRecoveryJobService.EXTRA_FILE_NAME,
+                pathToWallpaperToRecover
+        )
+
+        val wallpaperRecoveryJob = firebaseDispatcher.newJobBuilder()
+                .setTag(WALLPAPER_RECOVERY_JOB_TAG)
+                .setService(WallpaperRecoveryJobService::class.java)
+                .setReplaceCurrent(true) // Replace the current job if a new recovery has been requested
+                .setRecurring(false) // This is a non periodic job, just run once
+                .setTrigger(Trigger.executionWindow(
+                        TimeUnit.SECONDS.toSeconds(4).toInt(),
+                        TimeUnit.SECONDS.toSeconds(6).toInt())
+                ) // Sets and execution window between 4 and 6 seconds, ideally
+                .setExtras(bundleWithPath) // Sets a bundle with the path to the file to recover
+                .build()
+
+        firebaseDispatcher.mustSchedule(wallpaperRecoveryJob)
     }
 
 }
