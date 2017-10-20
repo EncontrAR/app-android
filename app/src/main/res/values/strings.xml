@@ -38,6 +38,14 @@
     <!-- Screen: Chat -->
     <string name="screen_chat_title">Contacto</string>
     <string name="screen_chat_message_input_hint">Escribe algo…</string>
+    <string name="screen_chat_state_connecting">
+        Te estamos conectando con un representante de EncontrAR.\n
+        Un momento por favor…
+    </string>
+    <string name="screen_chat_state_error">
+        Se produjo un error al intentar conectarse con Encontrar. Por favor inténtelo más tarde.
+    </string>
+    <string name="screen_chat_state_disconnected">Desconectado</string>
 
     <!-- Screen: Legal -->
     <string name="screen_legal_title">Términos y Condiciones</string>

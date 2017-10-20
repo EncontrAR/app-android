@@ -26,13 +26,10 @@ import ar.com.encontrarpersonas.data.models.ChatMessage
  *
  */
 data class ChatState(
-        val item: Campaign,
-        val messagesList: List<ChatMessage> = listOf(ChatMessage(
-                "999", "Hola!"),
-                ChatMessage("999", "Bienvenido a Encontrar"),
-                ChatMessage("999","Este es un mensaje de prueba. En el futuro, podrás reportar por este medio " +
-                        "tus hallazgos. Cualquier detalle puede ser importante para recuperar a alguien."),
-                ChatMessage("123", "Ok"),
-                ChatMessage("123", "Entonces esta es una respuesta de prueba ;)")
-        )
+        val campaign: Campaign,
+        val messagesList: List<ChatMessage> = ArrayList(),
+        val messageEditor: String = "",
+        val isConnecting: Boolean = false,
+        val isConnected: Boolean = false,
+        val onError: Boolean = false
 )

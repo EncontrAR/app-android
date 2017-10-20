@@ -35,7 +35,7 @@ object EncontrarRestApi {
     private val BASE_URL = "http://api.encontrarpersonas.com"
     private val API_VERSION = "v1"
 
-    private val httpClient = OkHttpClient.Builder()
+    val httpClient = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(
                     if (BuildConfig.DEBUG)
                         HttpLoggingInterceptor.Level.BODY
@@ -53,7 +53,9 @@ object EncontrarRestApi {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-    val deviceUser = retrofitClient.create(DeviceUserService::class.java)
+    val deviceUser = retrofitClient.create(DeviceUserService::class.java)!!
 
-    val campaigns = retrofitClient.create(CampaignsService::class.java)
+    val campaigns = retrofitClient.create(CampaignsService::class.java)!!
+
+    val chat = retrofitClient.create(ChatService::class.java)!!
 }

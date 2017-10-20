@@ -1,5 +1,7 @@
 package ar.com.encontrarpersonas.screens.chat
 
+import ar.com.encontrarpersonas.data.models.ChatMessage
+import com.brianegan.bansa.Action
 import com.brianegan.bansa.Reducer
 
 /**
@@ -27,11 +29,23 @@ import com.brianegan.bansa.Reducer
 class ChatReducer {
 
     // Actions
-    // None
+    object CONNECTING : Action
+    object CONNECTED : Action
+    object DISCONNECTED : Action
+    object ON_ERROR : Action
+    data class MESSAGE_ARRIVED(val chatMessage: ChatMessage) : Action
+    data class SET_MESSAGE_EDITOR(val messageEditor: String) : Action
 
     // Reducer
-    val reducer = Reducer<ChatState> { state, action ->
-        // Implement actions if necessary...
-        state
+    val reducer = Reducer<ChatState> { oldState, action ->
+        when (action) {
+            is CONNECTING -> oldState.copy(isConnecting = true, isConnected = false, onError = false)
+            is CONNECTED -> oldState.copy(isConnecting = false, isConnected = true, onError = false)
+            is DISCONNECTED -> oldState.copy(isConnecting = false, isConnected = false, onError = false)
+            is ON_ERROR -> oldState.copy(isConnecting = false, isConnected = false, onError = true)
+            is MESSAGE_ARRIVED -> oldState.copy(messagesList = oldState.messagesList.plus(action.chatMessage))
+            is SET_MESSAGE_EDITOR -> oldState.copy(messageEditor = action.messageEditor)
+            else -> oldState
+        }
     }
 }

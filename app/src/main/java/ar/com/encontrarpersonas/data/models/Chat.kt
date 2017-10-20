@@ -1,7 +1,6 @@
 package ar.com.encontrarpersonas.data.models
 
 import com.google.gson.annotations.SerializedName
-import org.joda.time.DateTime
 import java.io.Serializable
 
 /**
@@ -26,16 +25,7 @@ import java.io.Serializable
  * DEALINGS IN THE SOFTWARE.
  *
  */
-data class ChatMessage(
-        @SerializedName("id") val messageId: Int? = null,
-        @SerializedName("content") val message: String? = null,
-        @SerializedName("sender") val sender: String? = null,
-        @SerializedName("created_at") val dateTime: DateTime? = null
-) : Serializable {
-
-    /**
-     * Returns true if the message was sent by the local user, false if it was sent by another one.
-     */
-    fun isMyMessage() = (message == "finder")
-
-}
+data class Chat(
+        @SerializedName("id") val id: Int,
+        @SerializedName("campaign_id") val campaignId: Int
+) : Serializable

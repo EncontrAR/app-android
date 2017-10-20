@@ -100,6 +100,18 @@ class MainActivity : SingleActivity(), NavigationListener {
         }
     }
 
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+
+        // TODO Revisar si esto sirvió de algo
+        // If the intent received a campaign, go directly to the detail view of that campaign
+        if (intent.extras != null && intent.extras.containsKey(EXTRA_CAMPAIGN)) {
+            getNavigator().goTo(DetailScreen(
+                    (intent.extras.getSerializable(EXTRA_CAMPAIGN) as Campaign)
+            ))
+        }
+    }
+
     /*
         Hide or show the Toolbar depending on each Screen configuration
     */

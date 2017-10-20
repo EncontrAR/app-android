@@ -9,7 +9,7 @@ import com.wealthfront.magellan.Screen
 import trikita.anvil.Anvil
 
 
-class ChatScreen(val item : Campaign) : Screen<ChatView>() {
+class ChatScreen(val item: Campaign) : Screen<ChatView>() {
 
     //Store
     val store = BaseStore(ChatState(item), ChatReducer().reducer)
@@ -19,6 +19,20 @@ class ChatScreen(val item : Campaign) : Screen<ChatView>() {
     override fun createView(context: Context): ChatView {
         store.subscribe { Anvil.render() }
         return ChatView(context)
+    }
+
+    override fun onShow(context: Context?) {
+        super.onShow(context)
+
+        // Trigger the connection with the server
+        presenter.connectChat()
+    }
+
+    override fun onHide(context: Context?) {
+        super.onHide(context)
+
+        // Disconnect from the server to free up server-side resources
+        presenter.disconnectChat()
     }
 
     override fun getTitle(context: Context?): String {

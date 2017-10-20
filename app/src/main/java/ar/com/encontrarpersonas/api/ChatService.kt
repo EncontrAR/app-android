@@ -1,8 +1,10 @@
-package ar.com.encontrarpersonas.data.models
+package ar.com.encontrarpersonas.api
 
-import com.google.gson.annotations.SerializedName
-import org.joda.time.DateTime
-import java.io.Serializable
+import ar.com.encontrarpersonas.data.models.Chat
+import ar.com.encontrarpersonas.data.models.ChatRequest
+import retrofit2.Call
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 /**
  * MIT License
@@ -26,16 +28,18 @@ import java.io.Serializable
  * DEALINGS IN THE SOFTWARE.
  *
  */
-data class ChatMessage(
-        @SerializedName("id") val messageId: Int? = null,
-        @SerializedName("content") val message: String? = null,
-        @SerializedName("sender") val sender: String? = null,
-        @SerializedName("created_at") val dateTime: DateTime? = null
-) : Serializable {
+interface ChatService {
 
     /**
-     * Returns true if the message was sent by the local user, false if it was sent by another one.
+     * Let the API know that the current user is requesting to start a conversation.
+     *
+     * If the chat between the current user and the backoffice hasn't been initialized for the
+     * given campaign ID, then this API call will result in the chat being created and ready to use.
+     *
+     * This API call should always be performed before connecting to a chat to ensure that the
+     * chat has been initialized server-side.
      */
-    fun isMyMessage() = (message == "finder")
+    @POST("conversations")
+    fun startConversation(@Body chatRequest: ChatRequest): Call<Chat>
 
 }

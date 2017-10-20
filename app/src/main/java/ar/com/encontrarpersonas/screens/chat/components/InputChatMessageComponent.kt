@@ -3,6 +3,7 @@ package ar.com.encontrarpersonas.screens.chat.components
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.text.InputType
+import android.text.TextWatcher
 import android.widget.ImageView
 import android.widget.LinearLayout
 import trikita.anvil.DSL.*
@@ -32,7 +33,10 @@ import trikita.anvil.RenderableView
  */
 class InputChatMessageComponent(context: Context,
                                 val w: Int = MATCH,
-                                val h: Int = WRAP) : RenderableView(context) {
+                                val h: Int = WRAP,
+                                val enabled: Boolean = true,
+                                val onMessageChange: TextWatcher,
+                                val onSendClick: OnClickListener) : RenderableView(context) {
 
     init {
         view()
@@ -52,6 +56,9 @@ class InputChatMessageComponent(context: Context,
                 inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
                 scaleType(ImageView.ScaleType.CENTER_INSIDE)
                 maxLines(3)
+                enabled(enabled)
+
+                onTextChanged(onMessageChange)
             }
 
             imageView {
@@ -60,6 +67,9 @@ class InputChatMessageComponent(context: Context,
                 imageResource(ar.com.encontrarpersonas.R.drawable.ic_send)
                 background(ContextCompat.getDrawable(context, ar.com.encontrarpersonas.R.drawable.shape_send_message_button_background))
                 layoutGravity(CENTER)
+                enabled(enabled)
+
+                onClick(onSendClick)
             }
         }
     }
