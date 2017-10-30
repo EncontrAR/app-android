@@ -65,18 +65,21 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
             )
 
             // Fetch the image for the notification from the network
-            fetchImageFromNetwork(campaign.missingPerson?.photoUrl,
-                    object : BaseBitmapDataSubscriber() {
-                        override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
-                            Crashlytics.log("Couldn't retrieve image for notification from the " +
-                                    "network")
-                            sendNotificationDataToHandlers(campaign, null)
-                        }
+            if (campaign.missingPerson?.photoUrl != null) {
+                fetchImageFromNetwork(campaign.missingPerson.photoUrl,
+                        object : BaseBitmapDataSubscriber() {
+                            override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
+                                Crashlytics.log("Couldn't retrieve image for notification from the " +
+                                        "network")
+                                sendNotificationDataToHandlers(campaign, null)
+                            }
 
-                        override fun onNewResultImpl(bitmap: Bitmap?) {
-                            sendNotificationDataToHandlers(campaign, bitmap)
-                        }
-                    })
+                            override fun onNewResultImpl(bitmap: Bitmap?) {
+                                sendNotificationDataToHandlers(campaign, bitmap)
+                            }
+                        })
+
+            }
 
         }
     }

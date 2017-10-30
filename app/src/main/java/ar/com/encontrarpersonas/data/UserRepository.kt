@@ -36,6 +36,7 @@ object UserRepository {
     private val FIELD_USER_FIRST_NAME = "userFirstName"
     private val FIELD_USER_LAST_NAME = "userLastName"
     private val FIELD_USER_NATIONAL_ID = "userNationalId"
+    private val FIELD_USER_EMAIL = "userEmail"
     private val FIELD_SETTINGS_NOTIFICATIONS_TRAY = "settingsNotificationsTray"
     private val FIELD_SETTINGS_NOTIFICATIONS_WALLPAPER = "settingsNotificationsWallpaper"
     private val FIELD_USER_SAW_TOS = "userSawToS"
@@ -134,6 +135,20 @@ object UserRepository {
     }
 
     /**
+     * Returns the user's national ID
+     */
+    fun getUserEmail(): String {
+        return sharedPreferences.getString(FIELD_USER_EMAIL, "")
+    }
+
+    /**
+     * Sets asynchronously the user's national ID
+     */
+    fun setUserEmail(email: String) {
+        sharedPreferences.edit().putString(FIELD_USER_EMAIL, email.trim()).apply()
+    }
+
+    /**
      * Returns true if the user has tray notifications enabled
      */
     fun getSettingTrayNotifications(): Boolean {
@@ -183,7 +198,8 @@ object UserRepository {
     fun userHasCompletePersonalDetails(): Boolean {
         return (getUserFirstname().isNotEmpty()
                 && getUserLastName().isNotEmpty()
-                && getUserNationalId().isNotEmpty())
+                && getUserNationalId().isNotEmpty()
+                && getUserEmail().isNotEmpty())
     }
 
     /**
@@ -195,7 +211,8 @@ object UserRepository {
                 .editLoggedDevice(DeviceUser(
                         name = getUserFirstname(),
                         lastname = getUserLastName(),
-                        nationalId = getUserNationalId()
+                        nationalId = getUserNationalId(),
+                        email = getUserEmail()
                 ))
                 .enqueue(callback)
     }

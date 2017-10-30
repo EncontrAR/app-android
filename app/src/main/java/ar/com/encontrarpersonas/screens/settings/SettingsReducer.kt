@@ -31,6 +31,7 @@ class SettingsReducer {
     data class SET_FIRST_NAME(val firstName: String) : Action
     data class SET_LAST_NAME(val lastName: String) : Action
     data class SET_NATIONAL_ID(val nationalId: String) : Action
+    data class SET_EMAIL(val email: String) : Action
     data class SET_SETTINGS_TRAY_NOTIFICATIONS(val enabled: Boolean) : Action
     data class SET_SETTINGS_WALLPAPER_NOTIFICATIONS(val enabled: Boolean) : Action
     data class IS_SYNCHRONISING(val isSynchronisingWithServer : Boolean) : Action
@@ -41,6 +42,7 @@ class SettingsReducer {
             is SET_FIRST_NAME -> oldState.copy(firstName = action.firstName)
             is SET_LAST_NAME -> oldState.copy(lastName = action.lastName)
             is SET_NATIONAL_ID -> oldState.copy(nationalIdNumber = action.nationalId)
+            is SET_EMAIL -> oldState.copy(email = action.email)
             is SET_SETTINGS_TRAY_NOTIFICATIONS -> oldState.copy(trayNotificationsEnabled = action.enabled)
             is SET_SETTINGS_WALLPAPER_NOTIFICATIONS -> oldState.copy(wallpaperNotificationsEnabled = action.enabled)
             is IS_SYNCHRONISING -> oldState.copy(isSynchronising = action.isSynchronisingWithServer)

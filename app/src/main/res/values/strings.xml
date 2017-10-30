@@ -18,6 +18,7 @@
     <string name="screen_settings_firstname">Nombre</string>
     <string name="screen_settings_lastname">Apellido</string>
     <string name="screen_settings_national_id_number">Nº Documento (ej: DNI)</string>
+    <string name="screen_settings_email">Correo electrónico</string>
     <string name="screen_settings_save">Guardar</string>
     <string name="screen_settings_notification_tray">Notificaciones convencionales</string>
     <string name="screen_settings_notification_wallpaper">Fondo de pantalla</string>

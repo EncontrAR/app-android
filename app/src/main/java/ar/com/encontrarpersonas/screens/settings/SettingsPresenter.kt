@@ -61,6 +61,7 @@ class SettingsPresenter(val store: Store<SettingsState>) {
             setUserFirstname(store.state.firstName)
             setUserLastName(store.state.lastName)
             setUserNationalId(store.state.nationalIdNumber)
+            setUserEmail(store.state.email)
 
             syncWithServer(object : Callback<Void> {
                 override fun onFailure(call: Call<Void>?, t: Throwable?) {
