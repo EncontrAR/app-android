@@ -30,10 +30,12 @@ class ChatReducer {
 
     // Actions
     object CONNECTING : Action
+
     object CONNECTED : Action
     object DISCONNECTED : Action
     object ON_ERROR : Action
     data class MESSAGE_ARRIVED(val chatMessage: ChatMessage) : Action
+    data class MULTIPLE_MESSAGES_ARRIVED(val chatMessages: List<ChatMessage>) : Action
     data class SET_MESSAGE_EDITOR(val messageEditor: String) : Action
 
     // Reducer
@@ -44,6 +46,12 @@ class ChatReducer {
             is DISCONNECTED -> oldState.copy(isConnecting = false, isConnected = false, onError = false)
             is ON_ERROR -> oldState.copy(isConnecting = false, isConnected = false, onError = true)
             is MESSAGE_ARRIVED -> oldState.copy(messagesList = oldState.messagesList.plus(action.chatMessage))
+            is MULTIPLE_MESSAGES_ARRIVED -> {
+                val joined = ArrayList<ChatMessage>()
+                joined.addAll(oldState.messagesList)
+                joined.addAll(action.chatMessages)
+                oldState.copy(messagesList = joined)
+            }
             is SET_MESSAGE_EDITOR -> oldState.copy(messageEditor = action.messageEditor)
             else -> oldState
         }

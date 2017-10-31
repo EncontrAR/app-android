@@ -2,9 +2,7 @@ package ar.com.encontrarpersonas.screens.chat
 
 import ar.com.encontrarpersonas.api.EncontrarRestApi
 import ar.com.encontrarpersonas.data.UserRepository
-import ar.com.encontrarpersonas.data.models.Chat
-import ar.com.encontrarpersonas.data.models.ChatMessage
-import ar.com.encontrarpersonas.data.models.ChatRequest
+import ar.com.encontrarpersonas.data.models.*
 import com.brianegan.bansa.Store
 import com.crashlytics.android.Crashlytics
 import com.google.gson.Gson
@@ -48,6 +46,9 @@ class ChatPresenter(val store: Store<ChatState>) {
     private val CHAT_CHANNEL = "ChatChannel"
     private val CHANNEL_PARAM_TOKEN = "finder_token"
     private val CHANNEL_PARAM_CONVERSATION_ID = "conversation_id"
+    private val PAYLOAD_TYPE = "type"
+    private val PAYLOAD_TYPE_HISTORIAL = "historial"
+    private val PAYLOAD_TYPE_NEW_MESSAGE = "new_message"
 
     private val chatUri by lazy { URI(SERVER_URL) }
     private val consumer by lazy {
@@ -116,8 +117,17 @@ class ChatPresenter(val store: Store<ChatState>) {
                             "subscribe for the chat channel")
                 }
                 .onReceived { jsonElement ->
-                    val chatMessage = Gson().fromJson(jsonElement, ChatMessage::class.java)
-                    store.dispatch(ChatReducer.MESSAGE_ARRIVED(chatMessage))
+
+                    if (jsonElement.asJsonObject.has(PAYLOAD_TYPE)) {
+                        if (jsonElement.asJsonObject.get(PAYLOAD_TYPE).asString == PAYLOAD_TYPE_NEW_MESSAGE) {
+                            val receivedPayload = Gson().fromJson(jsonElement, ChatPayloadMessage::class.java)
+                            store.dispatch(ChatReducer.MESSAGE_ARRIVED(receivedPayload.chatMessage))
+                        } else if (jsonElement.asJsonObject.get(PAYLOAD_TYPE).asString == PAYLOAD_TYPE_HISTORIAL) {
+                            val receivedPayload = Gson().fromJson(jsonElement, ChatPayloadHistorial::class.java)
+                            store.dispatch(ChatReducer.MULTIPLE_MESSAGES_ARRIVED(receivedPayload.messages))
+                        }
+                    }
+
                 }
                 .onDisconnected {
                     store.dispatch(ChatReducer.DISCONNECTED)

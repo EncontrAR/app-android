@@ -112,7 +112,7 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
 
                             onClick {
                                 // If the user hasn't been advised of the existence of the ToS,
-                                // they should be advised with a dialog before sending the data to the
+                                // they should be advised with a dialog before sending the messages to the
                                 // server.
                                 if (!UserRepository.hasUserSeenToS()) {
                                     AlertDialog.Builder(context)

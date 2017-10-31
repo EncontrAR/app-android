@@ -203,7 +203,7 @@ object UserRepository {
     }
 
     /**
-     * Forces an update of the user's data on the server
+     * Forces an update of the user's messages on the server
      */
     fun syncWithServer(callback: Callback<Void>) {
         EncontrarRestApi

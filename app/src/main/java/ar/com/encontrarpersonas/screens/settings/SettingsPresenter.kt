@@ -51,8 +51,8 @@ class SettingsPresenter(val store: Store<SettingsState>) {
     }
 
     /**
-     * Stores the user's personal data (first name, last name, national id, etc.) and sends
-     * the data to the server.
+     * Stores the user's personal messages (first name, last name, national id, etc.) and sends
+     * the messages to the server.
      */
     fun saveUserPersonalData() {
         store.dispatch(SettingsReducer.IS_SYNCHRONISING(true))

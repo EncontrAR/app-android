@@ -51,7 +51,7 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
     }
 
     /**
-     * Builds a system (tray) notification with the data received on the push notification
+     * Builds a system (tray) notification with the messages received on the push notification
      * and displays it.
      */
     private fun buildNotification(campaign: Campaign, photoBitmap: Bitmap?) {

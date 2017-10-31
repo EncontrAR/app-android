@@ -43,7 +43,7 @@ interface CampaignsService {
                          @Query("limit") limit: Int? = null): Call<CampaignsPage>
 
     /**
-     * Gets a specific Campaign data from Encontrar Rest API by providing its ID.
+     * Gets a specific Campaign messages from Encontrar Rest API by providing its ID.
      *
      * Authenticated endpoint.
      */

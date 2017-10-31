@@ -54,7 +54,7 @@ interface DeviceUserService {
 
 
     /**
-     * Edits the data of the current logged device on Encontrar Rest API.
+     * Edits the messages of the current logged device on Encontrar Rest API.
      *
      * Authenticated endpoint.
      */

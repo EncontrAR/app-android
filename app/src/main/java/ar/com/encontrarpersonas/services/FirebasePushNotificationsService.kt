@@ -59,7 +59,7 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
 
         if (remoteMessage != null) {
 
-            // Deserialize push notification data
+            // Deserialize push notification messagesList
             val campaign = Gson().fromJson(
                     remoteMessage.data["message"], Campaign::class.java
             )

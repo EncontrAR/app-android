@@ -6,7 +6,7 @@ import java.io.Serializable
 /**
  * MIT License
  *
- * Copyright (c) 2017 Proyecto Encontrar
+ * Copyright (c) 2017 Wolox S.A
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,16 +25,7 @@ import java.io.Serializable
  * DEALINGS IN THE SOFTWARE.
  *
  */
-data class ChatMessage(
-        @SerializedName("id") val messageId: Int? = null,
-        @SerializedName("content") val message: String? = null,
-        @SerializedName("sender") val sender: String? = null,
-        @SerializedName("created_at") val dateTime: String? = null
-) : Serializable {
-
-    /**
-     * Returns true if the message was sent by the local user, false if it was sent by another one.
-     */
-    fun isMyMessage() = (sender == "finder")
-
-}
+data class ChatPayloadMessage(
+        @SerializedName("type") val type: String,
+        @SerializedName("data") val chatMessage: ChatMessage
+) : Serializable

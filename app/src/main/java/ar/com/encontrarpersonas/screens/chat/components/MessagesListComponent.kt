@@ -59,6 +59,9 @@ class MessagesListComponent(context: Context,
                             LinearLayoutManager.VERTICAL,
                             false)
 
+            // Keeps the Linear Layout Manager anchor to the bottom
+            (recycler.layoutManager as LinearLayoutManager).stackFromEnd = true
+
             // Fixed height for improved performance
             recycler.setHasFixedSize(true)
 
@@ -69,7 +72,7 @@ class MessagesListComponent(context: Context,
                         val chatMessage = messagesList[viewHolder.adapterPosition]
 
                         linearLayout {
-                            size(WRAP, WRAP)
+                            size(MATCH, WRAP)
                             orientation(LinearLayout.VERTICAL)
 
                             // Separator after first message
@@ -106,6 +109,8 @@ class MessagesListComponent(context: Context,
                         }
                     }
 
+            // Scroll to last position
+            //recycler.scrollToPosition(recycler.adapter.itemCount)
         }
     }
 

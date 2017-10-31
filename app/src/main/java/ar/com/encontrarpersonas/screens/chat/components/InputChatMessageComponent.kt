@@ -34,6 +34,7 @@ import trikita.anvil.RenderableView
 class InputChatMessageComponent(context: Context,
                                 val w: Int = MATCH,
                                 val h: Int = WRAP,
+                                val text: String = "",
                                 val enabled: Boolean = true,
                                 val onMessageChange: TextWatcher,
                                 val onSendClick: OnClickListener) : RenderableView(context) {
@@ -57,6 +58,7 @@ class InputChatMessageComponent(context: Context,
                 scaleType(ImageView.ScaleType.CENTER_INSIDE)
                 maxLines(3)
                 enabled(enabled)
+                text(text)
 
                 onTextChanged(onMessageChange)
             }
