@@ -8,7 +8,6 @@ import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.screens.chat.components.*
-import com.mcxiaoke.koi.ext.hideSoftKeyboard
 import com.wealthfront.magellan.BaseScreenView
 import trikita.anvil.Anvil
 import trikita.anvil.DSL.*
@@ -25,7 +24,7 @@ class ChatView(context: Context) : BaseScreenView<ChatScreen>(context) {
                 linearLayout {
                     size(MATCH, MATCH)
                     orientation(LinearLayout.VERTICAL)
-                    margin(dip(12))
+                    margin(dip(12), 0, dip(12), dip(12))
 
                     // Display a connecting message
                     if (screen.store.state.isConnecting) {
@@ -78,7 +77,6 @@ class ChatView(context: Context) : BaseScreenView<ChatScreen>(context) {
                             onSendClick = OnClickListener {
                                 screen.presenter.sendMessage(screen.store.state.messageEditor)
                                 screen.store.dispatch(ChatReducer.SET_MESSAGE_EDITOR(""))
-                                hideSoftKeyboard()
                             }
                     )
                 }

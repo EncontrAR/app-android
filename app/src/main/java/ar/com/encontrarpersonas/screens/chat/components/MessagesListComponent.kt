@@ -75,11 +75,9 @@ class MessagesListComponent(context: Context,
                             size(MATCH, WRAP)
                             orientation(LinearLayout.VERTICAL)
 
-                            // Separator after first message
-                            if (viewHolder.adapterPosition > 0) {
-                                view {
-                                    size(WRAP, dip(16))
-                                }
+                            // Messages separator
+                            view {
+                                size(MATCH, dip(16))
                             }
 
                             if (chatMessage.isMyMessage()) {
@@ -91,6 +89,7 @@ class MessagesListComponent(context: Context,
                                     textColor(ContextCompat.getColor(context, R.color.text_primary))
                                     textSize(sip(16f))
                                     padding(dip(16), dip(20))
+                                    margin(dip(96), 0, 0, 0)
                                     background(ContextCompat.getDrawable(context, R.drawable.patch_chat_sent))
                                 }
                             } else {
@@ -102,6 +101,7 @@ class MessagesListComponent(context: Context,
                                     textColor(ContextCompat.getColor(context, R.color.text_secondary))
                                     textSize(sip(16f))
                                     padding(dip(16), dip(20))
+                                    margin(0, 0, dip(96), 0)
                                     background(ContextCompat.getDrawable(context, R.drawable.patch_chat_received))
                                 }
                             }
@@ -109,8 +109,6 @@ class MessagesListComponent(context: Context,
                         }
                     }
 
-            // Scroll to last position
-            //recycler.scrollToPosition(recycler.adapter.itemCount)
         }
     }
 

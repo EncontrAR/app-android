@@ -54,7 +54,9 @@ class InputChatMessageComponent(context: Context,
                 weight(1f)
                 hint(ar.com.encontrarpersonas.R.string.screen_chat_message_input_hint)
                 margin(dip(16), dip(0), dip(16), dip(0))
-                inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
+                inputType(InputType.TYPE_CLASS_TEXT
+                        or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                        or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
                 scaleType(ImageView.ScaleType.CENTER_INSIDE)
                 maxLines(3)
                 enabled(enabled)
