@@ -24,6 +24,7 @@ package ar.com.encontrarpersonas.services
  */
 
 import android.graphics.Bitmap
+import ar.com.encontrarpersonas.api.AnalyticsManager
 import ar.com.encontrarpersonas.data.models.Campaign
 import ar.com.encontrarpersonas.notifications.TrayNotificationsHandler
 import ar.com.encontrarpersonas.notifications.WallpaperNotificationsHandler
@@ -59,7 +60,12 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
 
         if (remoteMessage != null) {
 
-            // Deserialize push notification messagesList
+            // Deserialize push notification alert ID
+            val alertId = Gson().fromJson(
+                    remoteMessage.data["alert_id"], Int::class.java
+            )
+
+            // Deserialize push notification data
             val campaign = Gson().fromJson(
                     remoteMessage.data["message"], Campaign::class.java
             )
@@ -71,11 +77,11 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
                             override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
                                 Crashlytics.log("Couldn't retrieve image for notification from the " +
                                         "network")
-                                sendNotificationDataToHandlers(campaign, null)
+                                sendNotificationDataToHandlers(alertId, campaign, null)
                             }
 
                             override fun onNewResultImpl(bitmap: Bitmap?) {
-                                sendNotificationDataToHandlers(campaign, bitmap)
+                                sendNotificationDataToHandlers(alertId, campaign, bitmap)
                             }
                         })
 
@@ -98,11 +104,17 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
     /**
      * Delegate notification display to specific handlers for each type of notification
      */
-    private fun sendNotificationDataToHandlers(campaign: Campaign, photoBitmap: Bitmap?) {
+    private fun sendNotificationDataToHandlers(alertId: Int, campaign: Campaign, photoBitmap: Bitmap?) {
         // Display the received notification on the system tray
-        TrayNotificationsHandler(this).notify(campaign, photoBitmap)
+        val trayNotificationMade = TrayNotificationsHandler(this).notify(campaign, photoBitmap)
 
         // Display the received notification in the desktop wallpaper
-        WallpaperNotificationsHandler(this).notify(campaign, photoBitmap)
+        val wallpaperNotificationMade = WallpaperNotificationsHandler(this).notify(campaign, photoBitmap)
+
+        // If any form of notification was successfully performed (that means, it was shown to the
+        // user), then log that as a metric
+        if (trayNotificationMade || wallpaperNotificationMade) {
+            AnalyticsManager.logNotificationSeen(alertId)
+        }
     }
 }

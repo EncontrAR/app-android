@@ -55,33 +55,93 @@ class SettingsPresenter(val store: Store<SettingsState>) {
      * the messages to the server.
      */
     fun saveUserPersonalData() {
-        store.dispatch(SettingsReducer.IS_SYNCHRONISING(true))
 
-        with(UserRepository) {
-            setUserFirstname(store.state.firstName)
-            setUserLastName(store.state.lastName)
-            setUserNationalId(store.state.nationalIdNumber)
-            setUserEmail(store.state.email)
+        if (checkUserDataPreconditions()) {
+            store.dispatch(SettingsReducer.IS_SYNCHRONISING(true))
 
-            syncWithServer(object : Callback<Void> {
-                override fun onFailure(call: Call<Void>?, t: Throwable?) {
-                    App.sInstance.toast(R.string.error_network)
-                    store.dispatch(SettingsReducer.IS_SYNCHRONISING(false))
-                }
+            with(UserRepository) {
+                setUserFirstname(store.state.firstName)
+                setUserLastName(store.state.lastName)
+                setUserNationalId(store.state.nationalIdNumber)
+                setUserEmail(store.state.email)
 
-                override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
-                    if (response != null && response.isSuccessful) {
-                        App.sInstance.toast(R.string.screen_settings_saved_ok)
-                    } else {
-                        Crashlytics.log("Couldn't save user's preferences: $response")
-                        App.sInstance.toast(R.string.screen_settings_saved_failed)
+                syncWithServer(object : Callback<Void> {
+                    override fun onFailure(call: Call<Void>?, t: Throwable?) {
+                        App.sInstance.toast(R.string.error_network)
+                        store.dispatch(SettingsReducer.IS_SYNCHRONISING(false))
                     }
 
-                    store.dispatch(SettingsReducer.IS_SYNCHRONISING(false))
-                }
+                    override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
+                        if (response != null && response.isSuccessful) {
+                            App.sInstance.toast(R.string.screen_settings_saved_ok)
+                        } else {
+                            Crashlytics.log("Couldn't save user's preferences: $response")
+                            App.sInstance.toast(R.string.screen_settings_saved_failed)
+                        }
 
-            })
+                        store.dispatch(SettingsReducer.IS_SYNCHRONISING(false))
+                    }
+
+                })
+            }
         }
+    }
+
+    /**
+     * Returns true if the user data is valid, false otherwise. This method will dispatch any
+     * appropriate actions if it encounters an error.
+     */
+    private fun checkUserDataPreconditions(): Boolean {
+
+        // The first name may be empty or contain only latin letters
+        if (store.state.firstName.isNotEmpty() && !containsOnlyLetters(store.state.firstName)) {
+            store.dispatch(SettingsReducer.ERROR_FIRST_NAME)
+            return false
+        }
+
+        // The last name may be empty or contain only latin letters
+        if (store.state.lastName.isNotEmpty() && !containsOnlyLetters(store.state.lastName)) {
+            store.dispatch(SettingsReducer.ERROR_LAST_NAME)
+            return false
+        }
+
+        // The National ID can be empty or contain only numbers
+        if (store.state.nationalIdNumber.isNotEmpty() && !containsOnlyNumbers(store.state.nationalIdNumber)) {
+            store.dispatch(SettingsReducer.ERROR_NATIONAL_ID)
+            return false
+        }
+
+        // The email field may be empty or with a valid email address,
+        // but cannot contain invalid email addressees
+        if (store.state.email.isNotEmpty() && !isValidEmail(store.state.email)) {
+            store.dispatch(SettingsReducer.ERROR_EMAIL)
+            return false
+        }
+
+        // If every previous precondition was successful, then return true
+        return true
+    }
+
+    /**
+     * Returns true if the given string only contains letters (uppercase and lowercase) that are
+     * present on the Unicode latin charset, false otherwise
+     */
+    private fun containsOnlyLetters(string: String): Boolean {
+        return string.trim().matches(Regex("\\p{L}+"))
+    }
+
+    /**
+     * Returns true if the given string only contains numbers, false otherwise
+     */
+    private fun containsOnlyNumbers(string: String): Boolean {
+        return string.trim().matches(Regex("[0-9]+"))
+    }
+
+    /**
+     * Returns true if the provided string matches an email pattern, false otherwise
+     */
+    private fun isValidEmail(email: String): Boolean {
+        return email.trim().isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()
     }
 
 }

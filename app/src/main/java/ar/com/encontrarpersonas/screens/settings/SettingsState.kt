@@ -31,5 +31,9 @@ data class SettingsState(
         val email: String = UserRepository.getUserEmail(),
         val trayNotificationsEnabled: Boolean = UserRepository.getSettingTrayNotifications(),
         val wallpaperNotificationsEnabled: Boolean = UserRepository.getSettingWallpaperNotifications(),
-        val isSynchronising: Boolean = false
+        val isSynchronising: Boolean = false,
+        val hasInvalidFirstName: Boolean = false,
+        val hasInvalidLastName: Boolean = false,
+        val hasInvalidIdNumber: Boolean = false,
+        val hasInvalidEmail: Boolean = false
 )

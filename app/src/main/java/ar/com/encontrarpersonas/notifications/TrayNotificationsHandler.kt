@@ -42,11 +42,14 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
     // Use a timestamp as notification id
     private val DEFAULT_NOTIFICATION_INDIVIDUAL_ID = System.currentTimeMillis().toInt()
 
-    override fun notify(campaign: Campaign, photoBitmap: Bitmap?) {
+    override fun notify(campaign: Campaign, photoBitmap: Bitmap?): Boolean {
 
         // Check if the user has tray notifications enabled
         if (UserRepository.getSettingTrayNotifications()) {
             buildNotification(campaign, photoBitmap)
+            return true
+        } else {
+            return false
         }
     }
 

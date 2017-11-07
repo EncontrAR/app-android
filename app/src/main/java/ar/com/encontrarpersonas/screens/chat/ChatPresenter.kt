@@ -39,6 +39,11 @@ import java.net.URI
  */
 class ChatPresenter(val store: Store<ChatState>) {
 
+    companion object {
+        // This is the maximum length that will be allowed for each new message sent by the finder
+        val MESSAGE_MAX_LENGTH = 140
+    }
+
     // Constants
     private val SERVER_URL = "ws://encontrar-stage.herokuapp.com/cable/"
     private val ACTION_GET_HISTORY = "historial"
@@ -90,7 +95,7 @@ class ChatPresenter(val store: Store<ChatState>) {
                 .enqueue(object : Callback<Chat> {
                     override fun onResponse(call: Call<Chat>?, response: Response<Chat>?) {
                         if (response != null && response.isSuccessful) {
-                            startSubscription(response.body()!!.campaignId)
+                            startSubscription(response.body()!!.id)
                         } else {
                             store.dispatch(ChatReducer.ON_ERROR)
                         }
@@ -169,7 +174,9 @@ class ChatPresenter(val store: Store<ChatState>) {
             if (message.isNotEmpty()) {
                 subscription?.perform(
                         ACTION_NEW_MESSAGE,
-                        Gson().toJsonTree((ChatMessage(message = message.trim()))).asJsonObject
+                        Gson().toJsonTree(
+                                (ChatMessage(message = trimMessageToMaxAllowedSize(message)))
+                        ).asJsonObject
                 )
             }
         } else {
@@ -177,6 +184,17 @@ class ChatPresenter(val store: Store<ChatState>) {
             Crashlytics.log("Can't send new messages on a non-initialized subscription. " +
                     "Must call ChatPresenter#connectChat() before.")
         }
+    }
+
+    /**
+     * Trims the message to be sent to the maximum allowed length for each message
+     */
+    private fun trimMessageToMaxAllowedSize(message: String): String {
+        val messageWithoutSpaces = message.trim()
+        return messageWithoutSpaces.substring(
+                0,
+                Math.min(messageWithoutSpaces.length, MESSAGE_MAX_LENGTH)
+        )
     }
 
 }

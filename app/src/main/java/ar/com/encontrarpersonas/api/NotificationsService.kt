@@ -1,7 +1,8 @@
-package ar.com.encontrarpersonas.notifications
+package ar.com.encontrarpersonas.api
 
-import android.graphics.Bitmap
-import ar.com.encontrarpersonas.data.models.Campaign
+import retrofit2.Call
+import retrofit2.http.POST
+import retrofit2.http.Path
 
 /**
  * MIT License
@@ -25,14 +26,15 @@ import ar.com.encontrarpersonas.data.models.Campaign
  * DEALINGS IN THE SOFTWARE.
  *
  */
-interface INotificationHandler {
+interface NotificationsService {
 
     /**
-     * Builds a notification based on a provided RemoteMessage and displays it on the system's
-     * notifications tray.
+     * Reports that a notification has been seen by the user to the API. This is used for campaign's
+     * analytics.
      *
-     * Returns true if the notification was successfully made or false otherwise.
+     * Authenticated endpoint.
      */
-    fun notify(campaign: Campaign, photoBitmap: Bitmap?) : Boolean
+    @POST("alerts/{alertId}/view")
+    fun notificationReceived(@Path("alertId") alertId: Int): Call<Void>
 
 }

@@ -2,10 +2,12 @@ package ar.com.encontrarpersonas.screens.chat.components
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.text.InputFilter
 import android.text.InputType
 import android.text.TextWatcher
 import android.widget.ImageView
 import android.widget.LinearLayout
+import ar.com.encontrarpersonas.screens.chat.ChatPresenter
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView
 
@@ -61,6 +63,7 @@ class InputChatMessageComponent(context: Context,
                 maxLines(3)
                 enabled(enabled)
                 text(text)
+                filters(arrayOf(InputFilter.LengthFilter(ChatPresenter.MESSAGE_MAX_LENGTH)))
 
                 onTextChanged(onMessageChange)
             }

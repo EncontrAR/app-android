@@ -23,7 +23,7 @@ class LegalView(context: Context) : BaseScreenView<LegalScreen>(context) {
 
                         webView.webViewClient = WebViewClient()
                         // The "https://www." protocol prefix is mandatory, otherwise it won't work
-                        webView.loadUrl("https://www.google.com")
+                        webView.loadUrl("https://www.encontrarpersonas.com/tos.html")
                     }
                 }
 

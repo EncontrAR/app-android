@@ -35,15 +35,23 @@ import java.util.*
  */
 class WallpaperNotificationsHandler(val context: Context) : INotificationHandler {
 
-    override fun notify(campaign: Campaign, photoBitmap: Bitmap?) {
+    override fun notify(campaign: Campaign, photoBitmap: Bitmap?): Boolean {
 
         // Check if the user has wallpaper notifications enabled
         if (UserRepository.getSettingWallpaperNotifications()) {
 
             // Ensure that there is an image to set as a wallpaper
             if (photoBitmap != null) {
-                useOnlyWallpaperMethod(photoBitmap)
+                // Change the device's wallpaper
+                changeWallpaper(photoBitmap)
+
+                return true
+            } else {
+
+                return false
             }
+        } else {
+            return false
         }
     }
 
@@ -51,7 +59,7 @@ class WallpaperNotificationsHandler(val context: Context) : INotificationHandler
      * This method uses the system's WallpaperManager to modify the desktop general wallpaper.
      */
     @RequiresApi(Build.VERSION_CODES.ECLAIR)
-    private fun useOnlyWallpaperMethod(photoBitmap: Bitmap) {
+    private fun changeWallpaper(photoBitmap: Bitmap) {
         val wallpaperManager = WallpaperManager.getInstance(context)
         val userWallpaper = (wallpaperManager.drawable as BitmapDrawable).bitmap
 

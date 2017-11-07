@@ -8,21 +8,21 @@ import android.text.InputFilter
 import android.text.InputType
 import android.widget.CompoundButton
 import android.widget.LinearLayout
+import ar.com.encontrarpersonas.BuildConfig
 import ar.com.encontrarpersonas.R
 import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.screens.legal.LegalScreen
 import ar.com.encontrarpersonas.screens.settings.components.NotificationTypeSwitchView
 import com.mcxiaoke.koi.ext.longToast
 import com.wealthfront.magellan.BaseScreenView
-import trikita.anvil.BaseDSL
 import trikita.anvil.DSL.*
 import trikita.anvil.RenderableView
 
 class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
 
     //Constants
-    private val MAX_FIRST_NAME_LENGTH = 32
-    private val MAX_LAST_NAME_LENGTH = 32
+    private val MAX_FIRST_NAME_LENGTH = 75
+    private val MAX_LAST_NAME_LENGTH = 75
     private val MAX_NATIONAL_ID_LENGTH = 9
     private val MAX_EMAIL_LENGTH = 64
 
@@ -49,7 +49,7 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
 
                         textView {
                             size(WRAP, WRAP)
-                            text(ar.com.encontrarpersonas.R.string.screen_settings_personal_data)
+                            text(ar.com.encontrarpersonas.R.string.screen_settings_title_personal_data)
                             textSize(sip(24f))
                             textColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.text_primary))
                         }
@@ -61,6 +61,8 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             inputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                             filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_FIRST_NAME_LENGTH)))
                             margin(0, dip(8))
+                            if (screen.store.state.hasInvalidFirstName)
+                                error(context.getString(R.string.screen_settings_error_firstname))
                             onTextChanged { text ->
                                 screen.store.dispatch(SettingsReducer.SET_FIRST_NAME(text.toString()))
                             }
@@ -73,6 +75,8 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             inputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                             filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_LAST_NAME_LENGTH)))
                             margin(0, dip(8))
+                            if (screen.store.state.hasInvalidLastName)
+                                error(context.getString(R.string.screen_settings_error_lastname))
                             onTextChanged { text ->
                                 screen.store.dispatch(SettingsReducer.SET_LAST_NAME(text.toString()))
                             }
@@ -85,6 +89,8 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             inputType(InputType.TYPE_CLASS_NUMBER)
                             filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_NATIONAL_ID_LENGTH)))
                             margin(0, dip(8))
+                            if (screen.store.state.hasInvalidIdNumber)
+                                error(context.getString(R.string.screen_settings_error_national_id_number))
                             onTextChanged { text ->
                                 screen.store.dispatch(SettingsReducer.SET_NATIONAL_ID(text.toString()))
                             }
@@ -97,6 +103,8 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             inputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
                             filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_EMAIL_LENGTH)))
                             margin(0, dip(8))
+                            if (screen.store.state.hasInvalidEmail)
+                                error(context.getString(R.string.screen_settings_error_email))
                             onTextChanged { text ->
                                 screen.store.dispatch(SettingsReducer.SET_EMAIL(text.toString()))
                             }
@@ -107,6 +115,8 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             text(ar.com.encontrarpersonas.R.string.screen_settings_save)
                             layoutGravity(END)
                             margin(0, dip(16))
+                            textColor(ContextCompat.getColor(context, R.color.text_secondary))
+                            backgroundColor(ContextCompat.getColor(context, R.color.theme_color_2))
 
                             enabled(!screen.store.state.isSynchronising)
 
@@ -140,6 +150,16 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             }
                         }
 
+                        // Section: Notifications
+
+                        textView {
+                            size(WRAP, WRAP)
+                            text(ar.com.encontrarpersonas.R.string.screen_settings_title_notifications)
+                            textSize(sip(24f))
+                            textColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.text_primary))
+                            margin(0, dip(16), 0, dip(16))
+                        }
+
                         NotificationTypeSwitchView(context,
                                 description = resources.getString(ar.com.encontrarpersonas.R.string.screen_settings_notification_tray),
                                 isChecked = screen.store.state.trayNotificationsEnabled,
@@ -154,6 +174,8 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                                     screen.presenter.saveUserWallpaperNotificationsSetting(checked)
                                 })
 
+                        // Section: Terms of Service
+
                         textView {
                             size(MATCH, WRAP)
                             gravity(BOTTOM or CENTER)
@@ -161,11 +183,21 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             textSize(sip(16f))
                             textColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.text_primary))
                             padding(dip(16))
-                            BaseDSL.margin(0, dip(32), 0, 0)
+                            margin(0, dip(32), 0, 0)
 
                             onClick {
                                 screen.navigator.goTo(LegalScreen())
                             }
+                        }
+
+                        // Section: App version
+                        textView {
+                            size(MATCH, WRAP)
+                            gravity(BOTTOM or CENTER)
+                            text(context.getString(R.string.general_app_name) + " " + BuildConfig.VERSION_NAME)
+                            textSize(sip(12f))
+                            textColor(ContextCompat.getColor(context, ar.com.encontrarpersonas.R.color.text_primary))
+                            padding(dip(16))
                         }
 
                     }

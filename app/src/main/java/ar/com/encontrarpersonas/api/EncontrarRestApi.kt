@@ -58,4 +58,6 @@ object EncontrarRestApi {
     val campaigns = retrofitClient.create(CampaignsService::class.java)!!
 
     val chat = retrofitClient.create(ChatService::class.java)!!
+
+    val notifications = retrofitClient.create(NotificationsService::class.java)!!
 }

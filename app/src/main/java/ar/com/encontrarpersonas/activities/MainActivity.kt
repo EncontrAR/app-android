@@ -1,27 +1,37 @@
 package ar.com.encontrarpersonas.activities
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.annotation.RequiresPermission
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import ar.com.encontrarpersonas.App
 import ar.com.encontrarpersonas.R
+import ar.com.encontrarpersonas.api.EncontrarRestApi
 import ar.com.encontrarpersonas.data.models.Campaign
+import ar.com.encontrarpersonas.data.models.Position
 import ar.com.encontrarpersonas.extensions.userHasGrantedLocationPermission
 import ar.com.encontrarpersonas.screens.detail.DetailScreen
 import ar.com.encontrarpersonas.screens.home.HomeScreen
 import ar.com.encontrarpersonas.screens.settings.SettingsScreen
 import ar.com.encontrarpersonas.services.JobDispatcher
+import com.crashlytics.android.Crashlytics
+import com.google.android.gms.location.LocationServices
 import com.wealthfront.magellan.ActionBarConfig
 import com.wealthfront.magellan.NavigationListener
 import com.wealthfront.magellan.Navigator
 import com.wealthfront.magellan.support.SingleActivity
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * MIT License
@@ -55,28 +65,6 @@ class MainActivity : SingleActivity(), NavigationListener {
     // Private constants
     private val REQUEST_CODE_LOCATION = 9001
 
-    /*
-        Set up a Magellan Navigator with the root Screen
-     */
-    override fun createNavigator(): Navigator {
-        if (intent.extras != null && intent.extras.containsKey(EXTRA_CAMPAIGN)) {
-            val campaign = (intent.extras.getSerializable(EXTRA_CAMPAIGN) as Campaign)
-
-            val navigator = Navigator
-                    .withRoot(DetailScreen(campaign))
-                    .build()
-
-            navigator.rewriteHistory(this, {
-                HomeScreen()
-                DetailScreen(campaign)
-            })
-
-            return navigator
-        } else {
-            return Navigator.withRoot(HomeScreen()).build()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -100,6 +88,29 @@ class MainActivity : SingleActivity(), NavigationListener {
         }
     }
 
+    /*
+        Set up a Magellan Navigator with the root Screen
+    */
+    override fun createNavigator(): Navigator {
+        if (intent.extras != null && intent.extras.containsKey(EXTRA_CAMPAIGN)) {
+            val campaign = (intent.extras.getSerializable(EXTRA_CAMPAIGN) as Campaign)
+
+            val navigator = Navigator
+                    .withRoot(DetailScreen(campaign))
+                    .build()
+
+            navigator.rewriteHistory(this, {
+                HomeScreen()
+                DetailScreen(campaign)
+            })
+
+            return navigator
+        } else {
+            return Navigator.withRoot(HomeScreen()).build()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
@@ -109,6 +120,12 @@ class MainActivity : SingleActivity(), NavigationListener {
             getNavigator().goTo(DetailScreen(
                     (intent.extras.getSerializable(EXTRA_CAMPAIGN) as Campaign)
             ))
+        }
+
+        // If location permission has been previously granted, send the location each time
+        // the app is opened
+        if (userHasGrantedLocationPermission()) {
+            sendCurrentLocationToApi()
         }
     }
 
@@ -156,15 +173,21 @@ class MainActivity : SingleActivity(), NavigationListener {
     /*
         Handle runtime permissions
      */
+    @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<out String>,
                                             grantResults: IntArray) {
         when (requestCode) {
             REQUEST_CODE_LOCATION -> {
+                // Check if the location permission has been granted
                 if (grantResults.isNotEmpty()
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // Location permission granted, start the location update job.
+                    // Right after the user has accepted the location permission, send the current
+                    // location for the first time
+                    sendCurrentLocationToApi()
+
+                    // Start the location update background cronjob
                     JobDispatcher.startRecurrentLocationUpdateJob()
 
                 } else {
@@ -216,6 +239,48 @@ class MainActivity : SingleActivity(), NavigationListener {
                 .setPositiveButton(getString(R.string.permission_message_ok), onOkClick)
                 .create()
                 .show()
+    }
+
+    /**
+     * Request the last known position (usually the current one) of the device to the location
+     * manager and sends it to the API.
+     */
+    @SuppressLint("MissingPermission")
+    @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    private fun sendCurrentLocationToApi() {
+        LocationServices
+                .getFusedLocationProviderClient(App.sInstance)
+                .lastLocation
+                .addOnSuccessListener { lastKnownLocation ->
+                    if (lastKnownLocation != null) {
+                        EncontrarRestApi
+                                .deviceUser
+                                .updateLoggedDevicePosition(
+                                        Position(
+                                                lastKnownLocation.latitude.toString(),
+                                                lastKnownLocation.longitude.toString())
+                                )
+                                .enqueue(object : Callback<List<Campaign>> {
+                                    override fun onResponse(call: Call<List<Campaign>>?,
+                                                            response: Response<List<Campaign>>?) {
+                                        if (response == null || !response.isSuccessful) {
+                                            Crashlytics.log("The server rejected the latest" +
+                                                    " position update: $lastKnownLocation")
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<List<Campaign>>?,
+                                                           t: Throwable?) {
+                                        Crashlytics.log("Couldn't send the latest position" +
+                                                " to the server: $lastKnownLocation")
+                                    }
+
+                                })
+                    } else {
+                        Crashlytics.log("Last known location was null, most probably" +
+                                " the device has the location setting disabled by the user.")
+                    }
+                }
     }
 
 }
