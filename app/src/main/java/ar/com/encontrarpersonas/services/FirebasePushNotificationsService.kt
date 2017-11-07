@@ -105,11 +105,16 @@ class FirebasePushNotificationsService : FirebaseMessagingService() {
      * Delegate notification display to specific handlers for each type of notification
      */
     private fun sendNotificationDataToHandlers(alertId: Int, campaign: Campaign, photoBitmap: Bitmap?) {
-        // Display the received notification on the system tray
-        val trayNotificationMade = TrayNotificationsHandler(this).notify(campaign, photoBitmap)
 
         // Display the received notification in the desktop wallpaper
+        //
+        // Recommendation: Call this handler before any other one, since it is the slowest one
+        // and if not called at first, there may be a delay between the wallpaper and any other
+        // form of notification
         val wallpaperNotificationMade = WallpaperNotificationsHandler(this).notify(campaign, photoBitmap)
+
+        // Display the received notification on the system tray
+        val trayNotificationMade = TrayNotificationsHandler(this).notify(campaign, photoBitmap)
 
         // If any form of notification was successfully performed (that means, it was shown to the
         // user), then log that as a metric

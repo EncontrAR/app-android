@@ -5,11 +5,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
+import android.os.PowerManager
 import android.support.annotation.RequiresApi
 import ar.com.encontrarpersonas.data.UserRepository
 import ar.com.encontrarpersonas.data.models.Campaign
 import ar.com.encontrarpersonas.services.JobDispatcher
 import java.util.*
+import java.util.concurrent.TimeUnit
+
 
 /**
  * MIT License
@@ -74,6 +77,16 @@ class WallpaperNotificationsHandler(val context: Context) : INotificationHandler
         userWallpaper.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
         fileOutputStream.close()
         userWallpaper.recycle()
+
+        // Turn on the device's screen if it is shut down
+        val powerManger = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        val wakeLock = powerManger.newWakeLock(
+                PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                "wallpaperReceived"
+        )
+
+        // Acquire and release the wake lock once the wallpaper has been shown
+        wakeLock.acquire(TimeUnit.SECONDS.toMillis(JobDispatcher.WALLPAPER_DURATION_SECONDS))
 
         // Start a service to recover the original user's wallpaper after a while
         // Its important to do this in a service, since the app may get killed before it

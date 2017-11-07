@@ -30,6 +30,8 @@ import java.util.concurrent.TimeUnit
  */
 object JobDispatcher {
 
+    val WALLPAPER_DURATION_SECONDS = 5L
+
     private val UPDATE_LOCATION_JOB_TAG = "LocationUpdateJob"
     private val WALLPAPER_RECOVERY_JOB_TAG = "WallpaperRecoveryJob"
 
@@ -66,8 +68,8 @@ object JobDispatcher {
                 .setReplaceCurrent(true) // Replace the current job if a new recovery has been requested
                 .setRecurring(false) // This is a non periodic job, just run once
                 .setTrigger(Trigger.executionWindow(
-                        TimeUnit.SECONDS.toSeconds(4).toInt(),
-                        TimeUnit.SECONDS.toSeconds(6).toInt())
+                        TimeUnit.SECONDS.toSeconds(WALLPAPER_DURATION_SECONDS - 1).toInt(),
+                        TimeUnit.SECONDS.toSeconds(WALLPAPER_DURATION_SECONDS + 1).toInt())
                 ) // Sets and execution window between 4 and 6 seconds, ideally
                 .setExtras(bundleWithPath) // Sets a bundle with the path to the file to recover
                 .build()
