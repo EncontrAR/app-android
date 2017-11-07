@@ -61,8 +61,10 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             inputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                             filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_FIRST_NAME_LENGTH)))
                             margin(0, dip(8))
-                            if (screen.store.state.hasInvalidFirstName)
+                            if (screen.store.state.hasInvalidFirstName) {
+                                error(null) // Dispose previous error object
                                 error(context.getString(R.string.screen_settings_error_firstname))
+                            }
                             onTextChanged { text ->
                                 screen.store.dispatch(SettingsReducer.SET_FIRST_NAME(text.toString()))
                             }
@@ -75,8 +77,10 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             inputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                             filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_LAST_NAME_LENGTH)))
                             margin(0, dip(8))
-                            if (screen.store.state.hasInvalidLastName)
+                            if (screen.store.state.hasInvalidLastName) {
+                                error(null) // Dispose previous error object
                                 error(context.getString(R.string.screen_settings_error_lastname))
+                            }
                             onTextChanged { text ->
                                 screen.store.dispatch(SettingsReducer.SET_LAST_NAME(text.toString()))
                             }
@@ -89,8 +93,10 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             inputType(InputType.TYPE_CLASS_NUMBER)
                             filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_NATIONAL_ID_LENGTH)))
                             margin(0, dip(8))
-                            if (screen.store.state.hasInvalidIdNumber)
+                            if (screen.store.state.hasInvalidIdNumber) {
+                                error(null) // Dispose previous error object
                                 error(context.getString(R.string.screen_settings_error_national_id_number))
+                            }
                             onTextChanged { text ->
                                 screen.store.dispatch(SettingsReducer.SET_NATIONAL_ID(text.toString()))
                             }
@@ -103,8 +109,10 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                             inputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
                             filters(arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_EMAIL_LENGTH)))
                             margin(0, dip(8))
-                            if (screen.store.state.hasInvalidEmail)
+                            if (screen.store.state.hasInvalidEmail) {
+                                error(null) // Dispose previous error object
                                 error(context.getString(R.string.screen_settings_error_email))
+                            }
                             onTextChanged { text ->
                                 screen.store.dispatch(SettingsReducer.SET_EMAIL(text.toString()))
                             }

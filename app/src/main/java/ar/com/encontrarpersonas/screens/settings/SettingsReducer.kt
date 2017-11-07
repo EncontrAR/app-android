@@ -32,13 +32,13 @@ class SettingsReducer {
     data class SET_LAST_NAME(val lastName: String) : Action
     data class SET_NATIONAL_ID(val nationalId: String) : Action
     data class SET_EMAIL(val email: String) : Action
-    data class SET_SETTINGS_TRAY_NOTIFICATIONS(val enabled: Boolean) : Action
-    data class SET_SETTINGS_WALLPAPER_NOTIFICATIONS(val enabled: Boolean) : Action
-    data class IS_SYNCHRONISING(val isSynchronisingWithServer: Boolean) : Action
     object ERROR_FIRST_NAME : Action
     object ERROR_LAST_NAME : Action
     object ERROR_NATIONAL_ID : Action
     object ERROR_EMAIL : Action
+    data class SET_SETTINGS_TRAY_NOTIFICATIONS(val enabled: Boolean) : Action
+    data class SET_SETTINGS_WALLPAPER_NOTIFICATIONS(val enabled: Boolean) : Action
+    data class IS_SYNCHRONISING(val isSynchronisingWithServer: Boolean) : Action
 
     // Reducer
     val reducer = Reducer<SettingsState> { oldState, action ->
@@ -47,13 +47,13 @@ class SettingsReducer {
             is SET_LAST_NAME -> oldState.copy(lastName = action.lastName, hasInvalidLastName = false)
             is SET_NATIONAL_ID -> oldState.copy(nationalIdNumber = action.nationalId, hasInvalidIdNumber = false)
             is SET_EMAIL -> oldState.copy(email = action.email, hasInvalidEmail = false)
-            is SET_SETTINGS_TRAY_NOTIFICATIONS -> oldState.copy(trayNotificationsEnabled = action.enabled)
-            is SET_SETTINGS_WALLPAPER_NOTIFICATIONS -> oldState.copy(wallpaperNotificationsEnabled = action.enabled)
-            is IS_SYNCHRONISING -> oldState.copy(isSynchronising = action.isSynchronisingWithServer)
             is ERROR_FIRST_NAME -> oldState.copy(hasInvalidFirstName = true)
             is ERROR_LAST_NAME -> oldState.copy(hasInvalidLastName = true)
             is ERROR_NATIONAL_ID -> oldState.copy(hasInvalidIdNumber = true)
             is ERROR_EMAIL -> oldState.copy(hasInvalidEmail = true)
+            is SET_SETTINGS_TRAY_NOTIFICATIONS -> oldState.copy(trayNotificationsEnabled = action.enabled)
+            is SET_SETTINGS_WALLPAPER_NOTIFICATIONS -> oldState.copy(wallpaperNotificationsEnabled = action.enabled)
+            is IS_SYNCHRONISING -> oldState.copy(isSynchronising = action.isSynchronisingWithServer)
             else -> oldState
         }
     }

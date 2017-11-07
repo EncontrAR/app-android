@@ -23,7 +23,7 @@
     <string name="screen_settings_national_id_number">Nº Documento (ej: DNI)</string>
     <string name="screen_settings_error_national_id_number">Solo puede contener números</string>
     <string name="screen_settings_email">Correo electrónico</string>
-    <string name="screen_settings_error_email">Correo electrónico inválido</string>
+    <string name="screen_settings_error_email">Debe ser un correo válido</string>
     <string name="screen_settings_save">Guardar</string>
     <string name="screen_settings_notification_tray">Convencionales</string>
     <string name="screen_settings_notification_wallpaper">Fondo de pantalla</string>

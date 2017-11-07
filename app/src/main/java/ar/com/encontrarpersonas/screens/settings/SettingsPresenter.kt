@@ -124,10 +124,10 @@ class SettingsPresenter(val store: Store<SettingsState>) {
 
     /**
      * Returns true if the given string only contains letters (uppercase and lowercase) that are
-     * present on the Unicode latin charset, false otherwise
+     * present on the Unicode latin charset or whitespaces in the middle, false otherwise
      */
     private fun containsOnlyLetters(string: String): Boolean {
-        return string.trim().matches(Regex("\\p{L}+"))
+        return string.trim().matches(Regex("[\\p{L}\\s]+"))
     }
 
     /**
