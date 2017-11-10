@@ -38,6 +38,8 @@ class SplashActivity : AppCompatActivity() {
         Handler().postDelayed({
             runOnUiThread {
                 startActivity<MainActivity>()
+                // Fade out animation
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 finish()
             }
         }, SPLASH_DELAY)
