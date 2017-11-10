@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationServices
 import com.mcxiaoke.koi.async.asyncDelay
 import com.wealthfront.magellan.ActionBarConfig
 import com.wealthfront.magellan.NavigationListener
+import com.wealthfront.magellan.NavigationType
 import com.wealthfront.magellan.Navigator
 import com.wealthfront.magellan.support.SingleActivity
 import retrofit2.Call
@@ -84,6 +85,9 @@ class MainActivity : SingleActivity(), NavigationListener {
 
         // If the intent received a campaign, go directly to the detail view of that campaign
         if (intent.extras != null && intent.extras.containsKey(EXTRA_CAMPAIGN)) {
+
+            // Set the HomeScreen as the root, it may not be the case when the notification arrives
+            getNavigator().goBackToRoot(NavigationType.NO_ANIM)
             getNavigator().goTo(DetailScreen(
                     (intent.extras.getSerializable(EXTRA_CAMPAIGN) as Campaign)
             ))
