@@ -36,6 +36,7 @@ class SettingsReducer {
     object ERROR_LAST_NAME : Action
     object ERROR_NATIONAL_ID : Action
     object ERROR_EMAIL : Action
+    object CLEAR_ERRORS : Action
     data class SET_SETTINGS_TRAY_NOTIFICATIONS(val enabled: Boolean) : Action
     data class SET_SETTINGS_WALLPAPER_NOTIFICATIONS(val enabled: Boolean) : Action
     data class IS_SYNCHRONISING(val isSynchronisingWithServer: Boolean) : Action
@@ -51,6 +52,11 @@ class SettingsReducer {
             is ERROR_LAST_NAME -> oldState.copy(hasInvalidLastName = true)
             is ERROR_NATIONAL_ID -> oldState.copy(hasInvalidIdNumber = true)
             is ERROR_EMAIL -> oldState.copy(hasInvalidEmail = true)
+            is CLEAR_ERRORS -> oldState.copy(
+                    hasInvalidFirstName = false,
+                    hasInvalidLastName = false,
+                    hasInvalidIdNumber = false,
+                    hasInvalidEmail = false)
             is SET_SETTINGS_TRAY_NOTIFICATIONS -> oldState.copy(trayNotificationsEnabled = action.enabled)
             is SET_SETTINGS_WALLPAPER_NOTIFICATIONS -> oldState.copy(wallpaperNotificationsEnabled = action.enabled)
             is IS_SYNCHRONISING -> oldState.copy(isSynchronising = action.isSynchronisingWithServer)

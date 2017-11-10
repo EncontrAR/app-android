@@ -152,6 +152,7 @@ class SettingsView(context: Context) : BaseScreenView<SettingsScreen>(context) {
                                             .create()
                                             .show()
                                 } else {
+                                    screen.store.dispatch(SettingsReducer.CLEAR_ERRORS)
                                     showProgressDialog()
                                     screen.presenter.saveUserPersonalData()
                                 }
