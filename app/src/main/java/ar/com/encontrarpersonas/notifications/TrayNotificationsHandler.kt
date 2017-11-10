@@ -39,7 +39,7 @@ import ar.com.encontrarpersonas.data.models.Campaign
 class TrayNotificationsHandler(val context: Context) : INotificationHandler {
 
     private val DEFAULT_NOTIFICATION_CHANNEL_ID = "default_notification_channel"
-    // Use a timestamp as notification id
+    // Use a timestamp as default notification id
     private val DEFAULT_NOTIFICATION_INDIVIDUAL_ID = System.currentTimeMillis().toInt()
 
     override fun notify(campaign: Campaign, photoBitmap: Bitmap?): Boolean {
@@ -79,7 +79,7 @@ class TrayNotificationsHandler(val context: Context) : INotificationHandler {
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         notificationManager.notify(
-                DEFAULT_NOTIFICATION_INDIVIDUAL_ID,
+                campaign.id ?: DEFAULT_NOTIFICATION_INDIVIDUAL_ID,
                 notification)
     }
 

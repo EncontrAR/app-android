@@ -25,6 +25,7 @@ import ar.com.encontrarpersonas.screens.settings.SettingsScreen
 import ar.com.encontrarpersonas.services.JobDispatcher
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.location.LocationServices
+import com.mcxiaoke.koi.async.asyncDelay
 import com.wealthfront.magellan.ActionBarConfig
 import com.wealthfront.magellan.NavigationListener
 import com.wealthfront.magellan.Navigator
@@ -75,7 +76,8 @@ class MainActivity : SingleActivity(), NavigationListener {
     }
 
     /*
-        Handle new incoming intents (usually coming through a notification being opened)
+        Handle new incoming intents (usually coming through a notification being opened) when
+        the Activity is already started
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -92,34 +94,28 @@ class MainActivity : SingleActivity(), NavigationListener {
         Set up a Magellan Navigator with the root Screen
     */
     override fun createNavigator(): Navigator {
-        if (intent.extras != null && intent.extras.containsKey(EXTRA_CAMPAIGN)) {
-            val campaign = (intent.extras.getSerializable(EXTRA_CAMPAIGN) as Campaign)
-
-            val navigator = Navigator
-                    .withRoot(DetailScreen(campaign))
-                    .build()
-
-            navigator.rewriteHistory(this, {
-                HomeScreen()
-                DetailScreen(campaign)
-            })
-
-            return navigator
-        } else {
-            return Navigator.withRoot(HomeScreen()).build()
-        }
+        return Navigator.withRoot(HomeScreen()).build()
     }
 
     @SuppressLint("MissingPermission")
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        // TODO Revisar si esto sirvió de algo
         // If the intent received a campaign, go directly to the detail view of that campaign
         if (intent.extras != null && intent.extras.containsKey(EXTRA_CAMPAIGN)) {
-            getNavigator().goTo(DetailScreen(
-                    (intent.extras.getSerializable(EXTRA_CAMPAIGN) as Campaign)
-            ))
+
+            // There is no callback for being notified when Magellan is done loading the views,
+            // and we MUST be sure that Google services are initialized before going to
+            // the Detail View. Since this won't happen until the UI thread is done with the setup,
+            // we free the UI thread for a while. Even 1 millisecond should be enough, we just need
+            // to let Magellan's and Anvil's lifecycles finnish. ¯\_(ツ)_/¯
+            asyncDelay(800, {
+                runOnUiThread {
+                    getNavigator().goTo(DetailScreen(
+                            (intent.extras.getSerializable(EXTRA_CAMPAIGN) as Campaign)
+                    ))
+                }
+            })
         }
 
         // If location permission has been previously granted, send the location each time
@@ -128,6 +124,7 @@ class MainActivity : SingleActivity(), NavigationListener {
             sendCurrentLocationToApi()
         }
     }
+
 
     /*
         Hide or show the Toolbar depending on each Screen configuration

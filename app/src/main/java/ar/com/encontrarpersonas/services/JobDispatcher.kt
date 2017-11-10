@@ -65,7 +65,7 @@ object JobDispatcher {
         val wallpaperRecoveryJob = firebaseDispatcher.newJobBuilder()
                 .setTag(WALLPAPER_RECOVERY_JOB_TAG)
                 .setService(WallpaperRecoveryJobService::class.java)
-                .setReplaceCurrent(true) // Replace the current job if a new recovery has been requested
+                .setReplaceCurrent(false) // Do not create a new job if there is an already scheduled one
                 .setRecurring(false) // This is a non periodic job, just run once
                 .setTrigger(Trigger.executionWindow(
                         TimeUnit.SECONDS.toSeconds(WALLPAPER_DURATION_SECONDS - 1).toInt(),
