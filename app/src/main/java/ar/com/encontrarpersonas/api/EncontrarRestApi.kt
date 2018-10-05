@@ -32,6 +32,9 @@ import java.util.concurrent.TimeUnit
  */
 object EncontrarRestApi {
 
+    // Production:  https://encontrar.herokuapp.com/
+    // Stage:       http://api.encontrarpersonas.com
+
     private val BASE_URL = "http://api.encontrarpersonas.com"
     private val API_VERSION = "v1"
 
